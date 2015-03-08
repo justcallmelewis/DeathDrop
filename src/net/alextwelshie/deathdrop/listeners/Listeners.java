@@ -174,18 +174,25 @@ public class Listeners implements Listener {
         if (loc.getY() <= 55 && block.getType() != Material.AIR) {
             if (Main.getPlugin().getState() == GameState.INGAME) {
                 player.setHealth(20D);
+                Bukkit.broadcastMessage("set health 20"); //debug
                 if (Main.getPlugin().whosDropping == null) {
                 } else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
+                	Bukkit.broadcastMessage("found who's dropping"); //debug
                     if (block.getTypeId() == 9) {
                         for (Player all : Bukkit.getOnlinePlayers()) {
                             onepointeight.sendTitle(all, "§aSuccess!", 5, 20, 5);
+                            Bukkit.broadcastMessage("sent title to " + all.getName()); //debug
                         }
 
                         block.setType(Main.getPlugin().blocks.get(player.getName()));
+                        Bukkit.broadcastMessage("set block type"); //debug
                         block.setData(Main.getPlugin().blockData.get(player.getName()));
+                        Bukkit.broadcastMessage("set block data"); //debug
 
                         DropAPI.getInstance().launchFirework("success", block.getLocation().subtract(0, 2, 0));
+                        Bukkit.broadcastMessage("firework done"); //debug
                         DropAPI.getInstance().finishDrop(player);
+                        Bukkit.broadcastMessage("tp to spawn"); //debug
                         Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + "§a" + DropAPI.getInstance().pickSuccessMessage());
                         if (Main.getPlugin().getType() == GameType.Enhanced) {
                         	int count = 0;
@@ -193,8 +200,8 @@ public class Listeners implements Listener {
                         	for(BlockFace bf : faces) {  
                         		Location block1 = loc.getBlock().getRelative(bf).getLocation();
                         		
-                        			if(block1.getBlock().getType() != Material.WATER){
-                        			count++;
+                        			if(block1.getBlock().getType() != Material.WATER && block1.getBlock().getType() != Material.COAL_BLOCK){
+                        				count++;
                         			}
                         		
                         		}
@@ -224,6 +231,7 @@ public class Listeners implements Listener {
                         }
                         AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRST_LAND_SUCCESS);
                         DropAPI.getInstance().setupNextTurn();
+                        Bukkit.broadcastMessage("new turn"); //debug
                     }
                 } else {
                 }
