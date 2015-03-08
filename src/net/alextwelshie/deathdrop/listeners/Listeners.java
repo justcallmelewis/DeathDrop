@@ -355,6 +355,8 @@ public class Listeners implements Listener {
                 }
             } else if (Main.getPlugin().getState() == GameState.LOBBY) {
                 event.setCancelled(true);
+            } else if(event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
+                event.setCancelled(true);
             }
         }
     }

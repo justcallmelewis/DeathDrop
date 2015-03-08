@@ -69,12 +69,10 @@ public class DropAPI {
 
     public void teleportToMapSpawn(Player player) {
         player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 47.5, 643.5, 180, 0));
-        player.damage(0.0D);
     }
 
     public void teleportToDropZone(Player player) {
         player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 92.5, 631.5));
-        player.damage(0.0D);
     }
 
     public String pickSuccessMessage() {
