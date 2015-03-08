@@ -194,63 +194,57 @@ public class Listeners implements Listener {
             if (Main.getPlugin().getState() == GameState.INGAME) {
                 if (Main.getPlugin().whosDropping == null) {
                 } else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
-                	Bukkit.broadcastMessage("found who's dropping"); //debug
-                    if (block.getTypeId() == 9) {
-                        for (Player all : Bukkit.getOnlinePlayers()) {
-                            onepointeight.sendTitle(all, "§aSuccess!", 5, 20, 5);
-                            Bukkit.broadcastMessage("sent title to " + all.getName()); //debug
-                        }
+                	
+                	switch(block.getTypeId()){
+                		case 9:
+                			for (Player all : Bukkit.getOnlinePlayers()) {
+                                onepointeight.sendTitle(all, "§aSuccess!", 5, 20, 5);
+                                Bukkit.broadcastMessage("sent title to " + all.getName()); //debug
+                            }
 
-                        block.setType(Main.getPlugin().blocks.get(player.getName()));
-                        Bukkit.broadcastMessage("set block type"); //debug
-                        block.setData(Main.getPlugin().blockData.get(player.getName()));
-                        Bukkit.broadcastMessage("set block data"); //debug
+                            block.setType(Main.getPlugin().blocks.get(player.getName()));
+                            block.setData(Main.getPlugin().blockData.get(player.getName()));
 
-                        DropAPI.getInstance().launchFirework("success", block.getLocation().subtract(0, 2, 0));
-                        Bukkit.broadcastMessage("firework done"); //debug
-                        DropAPI.getInstance().finishDrop(player);
-                        Bukkit.broadcastMessage("tp to spawn"); //debug
-                        Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + "§a" + DropAPI.getInstance().pickSuccessMessage());
-                        if (Main.getPlugin().getType() == GameType.Enhanced) {
-                        	int count = 0;
-                        	BlockFace[] faces = new BlockFace[] {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
-                        	for(BlockFace bf : faces) {  
-                        		Location block1 = loc.getBlock().getRelative(bf).getLocation();
-                        		
-                        			if(block1.getBlock().getType() != Material.WATER && block1.getBlock().getType() != Material.COAL_BLOCK){
-                        				count++;
-                        			}
-                        		
-                        		}
-                        	
-                        	switch(count) {
-                        		case 2:
-                        			Main.getPlugin().updateScore(player, 2);
-                        			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + " §bscored a §a§lDOUBLE!!");
-                        			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+2 points this round)");
-                        	     break;
-                        		case 3:
-                        			Main.getPlugin().updateScore(player, 3);
-                        			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + " §bscored a §a§lTRIPLE!!");
-                        			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+3 points this round)");
-                        	     break;
-                        	    case 4:
-                        	    	Main.getPlugin().updateScore(player, 4);
-                        	        Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + " §bscored a §a§lQUAD!!");
-                        	        Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+4 points this round)");
-                        	        break;
-                        	    default:
-                        	        Main.getPlugin().increaseScore(player);
-                        	        break;
-                        	}
-                        } else {
-                            Main.getPlugin().increaseScore(player);
-                        }
-                        AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRST_LAND_SUCCESS);
-                        DropAPI.getInstance().setupNextTurn();
-                        Bukkit.broadcastMessage("new turn"); //debug end
-                    }
-                } else {
+                            DropAPI.getInstance().launchFirework("success", block.getLocation().subtract(0, 2, 0));
+                            DropAPI.getInstance().finishDrop(player);
+                            Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + "§a" + DropAPI.getInstance().pickSuccessMessage());
+                            if (Main.getPlugin().getType() == GameType.Enhanced) {
+                            	int count = 0;
+                            	BlockFace[] faces = new BlockFace[] {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
+                            	for(BlockFace bf : faces) {  
+                            		Location block1 = loc.getBlock().getRelative(bf).getLocation();
+                            		
+                            			if(block1.getBlock().getType() != Material.WATER && block1.getBlock().getType() != Material.COAL_BLOCK){
+                            				count++;
+                            			}
+                            		
+                            		}                           	
+                            	switch(count) {
+                            		case 2:
+                            			Main.getPlugin().updateScore(player, 2);
+                            			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + " §bscored a §a§lDOUBLE!!");
+                            			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+2 points this round)");
+                            	     break;
+                            		case 3:
+                            			Main.getPlugin().updateScore(player, 3);
+                            			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + " §bscored a §a§lTRIPLE!!");
+                            			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+3 points this round)");
+                            	     break;
+                            	    case 4:
+                            	    	Main.getPlugin().updateScore(player, 4);
+                            	        Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + " §bscored a §a§lQUAD!!");
+                            	        Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+4 points this round)");
+                            	        break;
+                            	    default:
+                            	        Main.getPlugin().increaseScore(player);
+                            	        break;
+                            	}
+                            } else {
+                                Main.getPlugin().increaseScore(player);
+                            }  
+                            break;
+                	}
+                	DropAPI.getInstance().setupNextTurn();
                 }
             }
         }
