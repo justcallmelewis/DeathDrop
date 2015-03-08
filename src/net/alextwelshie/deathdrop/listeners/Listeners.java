@@ -57,7 +57,60 @@ import com.google.common.io.ByteStreams;
 public class Listeners implements Listener {
 
     int message = 0;
+    
     OnePointEight onepointeight = OnePointEight.getInstance();
+    
+    private void countBlocks(Player player, Location loc){
+    	int count = 0;
+    	BlockFace[] faces = new BlockFace[] {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
+    	for(BlockFace bf : faces) {  
+    		Location block1 = loc.getBlock().getRelative(bf).getLocation();
+    			if(block1.getBlock().getType() != Material.WATER && block1.getBlock().getType() != Material.COAL_BLOCK){
+    				count++;
+    			}
+    		}
+    	
+    	switch(count) {
+    		case 2:
+    			Main.getPlugin().updateScore(player, 2);
+    			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + " §bscored a §a§lDOUBLE!!");
+    			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+2 points)");
+    	     break;
+    		case 3:
+    			Main.getPlugin().updateScore(player, 3);
+    			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + " §bscored a §a§lTRIPLE!!");
+    			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+3 points)");
+    	     break;
+    	    case 4:
+    	    	Main.getPlugin().updateScore(player, 4);
+    	        Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + " §bscored a §a§lQUAD!!");
+    	        Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+4 points)");
+    	        break;
+    	    default:
+    	        Main.getPlugin().increaseScore(player);
+    	        break;
+    	}
+    }
+    
+    private void givePlayerItems(Player player){
+    	 ItemStack clay = new ItemStack(Material.STAINED_CLAY, 1, (short) new Random().nextInt(15));
+         ItemMeta claymeta = clay.getItemMeta();
+         claymeta.setDisplayName("§bBlock §cChooser");
+         clay.setItemMeta(claymeta);
+         player.getInventory().setItem(0, clay);
+
+         ItemStack achieve = new ItemStack(Material.BEACON, 1);
+         ItemMeta achievemeta = achieve.getItemMeta();
+         achievemeta.setDisplayName("§aAchievement §eMenu");
+         achieve.setItemMeta(achievemeta);
+         player.getInventory().setItem(4, achieve);
+
+         ItemStack quartz = new ItemStack(Material.QUARTZ, 1);
+         ItemMeta quartzmeta = quartz.getItemMeta();
+         quartzmeta.setDisplayName("§eReturn to Hub");
+         quartz.setItemMeta(quartzmeta);
+         player.getInventory().setItem(8, quartz);
+    }
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
@@ -101,33 +154,17 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        final Player player = event.getPlayer();
+        Player player = event.getPlayer();
         player.getInventory().clear();
-        event.setJoinMessage(Main.getPlugin().prefix + "§ePlayer §a" + event.getPlayer().getName() + " §ehas joined us!");
-        Main.getPlugin().registerPlayerOnScoreboard(event.getPlayer());
+        event.setJoinMessage(Main.getPlugin().prefix + "§ePlayer §a" + player.getName() + " §ehas joined us!");
+        Main.getPlugin().registerPlayerOnScoreboard(player);
         AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRSTJOIN);
-        onepointeight.sendTitleAndSubtitle(event.getPlayer(), "§eWelcome to §6DeathDrop!", "§b(Early beta, expect bugs!)", 40, 80, 40);
+        onepointeight.sendTitleAndSubtitle(player, "§eWelcome to §6DeathDrop!", "§b(Early beta, expect bugs!)", 40, 80, 40);
         onepointeight.sendHeaderAndFooter(player, "§eSurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6DD1");
 
-        ItemStack clay = new ItemStack(Material.STAINED_CLAY, 1, (short) new Random().nextInt(15));
-        ItemMeta claymeta = clay.getItemMeta();
-        claymeta.setDisplayName("§bBlock §cChooser");
-        clay.setItemMeta(claymeta);
-        event.getPlayer().getInventory().setItem(0, clay);
-
-        ItemStack achieve = new ItemStack(Material.BEACON, 1);
-        ItemMeta achievemeta = achieve.getItemMeta();
-        achievemeta.setDisplayName("§aAchievement §eMenu");
-        achieve.setItemMeta(achievemeta);
-        event.getPlayer().getInventory().setItem(4, achieve);
-
-        ItemStack slime = new ItemStack(Material.QUARTZ, 1);
-        ItemMeta slimemeta = slime.getItemMeta();
-        slimemeta.setDisplayName("§eReturn to Hub");
-        slime.setItemMeta(slimemeta);
-        event.getPlayer().getInventory().setItem(8, slime);
-
-        event.getPlayer().teleport(new Location(Bukkit.getWorld("world"), -1386.5, 10, 941.5, 0, 0));
+        player.teleport(new Location(Bukkit.getWorld("world"), -1386.5, 10, 941.5, 0, 0));
+        
+        givePlayerItems(player);
 
         if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
             if (!Main.getPlugin().shortened) {
@@ -146,8 +183,8 @@ public class Listeners implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        event.setQuitMessage(Main.getPlugin().prefix + "§ePlayer §6" + event.getPlayer().getName() + " §ehas left us!");
-        Main.getPlugin().removePlayerFromScoreboard(event.getPlayer());
+        event.setQuitMessage(Main.getPlugin().prefix + "§ePlayer §6" + player.getName() + " §ehas left us!");
+        Main.getPlugin().removePlayerFromScoreboard(player);
 
         RankHandler.getInstance().clearRank(player);
         if (Bukkit.getOnlinePlayers().size() <= 0) {
@@ -169,20 +206,12 @@ public class Listeners implements Listener {
     
     @EventHandler
     public void onSignChange(SignChangeEvent e) {
-    	Player player = e.getPlayer();
     	if(e.getLine(0).equalsIgnoreCase("hub")) {
     		e.setLine(0, null);
     		e.setLine(1, "Return to");
     		e.setLine(2, "§d[Hub]");
     		e.setLine(3, null);
     	}
-    	
-    	if (player.hasPermission("srv.owner") || player.hasPermission("srv.admin")) {
-            e.setLine(0, ChatColor.translateAlternateColorCodes('&', e.getLine(0)));
-            e.setLine(1, ChatColor.translateAlternateColorCodes('&', e.getLine(1)));
-            e.setLine(2, ChatColor.translateAlternateColorCodes('&', e.getLine(2)));
-            e.setLine(3, ChatColor.translateAlternateColorCodes('&', e.getLine(3)));
-        }
     }
 
     @EventHandler
@@ -194,57 +223,21 @@ public class Listeners implements Listener {
             if (Main.getPlugin().getState() == GameState.INGAME) {
                 if (Main.getPlugin().whosDropping == null) {
                 } else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
-                	
-                	switch(block.getTypeId()){
-                		case 9:
-                			for (Player all : Bukkit.getOnlinePlayers()) {
-                                onepointeight.sendTitle(all, "§aSuccess!", 5, 20, 5);
-                                Bukkit.broadcastMessage("sent title to " + all.getName()); //debug
-                            }
+                    if (block.getTypeId() == 9) {
 
-                            block.setType(Main.getPlugin().blocks.get(player.getName()));
-                            block.setData(Main.getPlugin().blockData.get(player.getName()));
+                        block.setType(Main.getPlugin().blocks.get(player.getName()));
+                        block.setData(Main.getPlugin().blockData.get(player.getName()));
 
-                            DropAPI.getInstance().launchFirework("success", block.getLocation().subtract(0, 2, 0));
-                            DropAPI.getInstance().finishDrop(player);
-                            Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + "§a" + DropAPI.getInstance().pickSuccessMessage());
-                            if (Main.getPlugin().getType() == GameType.Enhanced) {
-                            	int count = 0;
-                            	BlockFace[] faces = new BlockFace[] {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
-                            	for(BlockFace bf : faces) {  
-                            		Location block1 = loc.getBlock().getRelative(bf).getLocation();
-                            		
-                            			if(block1.getBlock().getType() != Material.WATER && block1.getBlock().getType() != Material.COAL_BLOCK){
-                            				count++;
-                            			}
-                            		
-                            		}                           	
-                            	switch(count) {
-                            		case 2:
-                            			Main.getPlugin().updateScore(player, 2);
-                            			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + " §bscored a §a§lDOUBLE!!");
-                            			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+2 points this round)");
-                            	     break;
-                            		case 3:
-                            			Main.getPlugin().updateScore(player, 3);
-                            			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + " §bscored a §a§lTRIPLE!!");
-                            			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+3 points this round)");
-                            	     break;
-                            	    case 4:
-                            	    	Main.getPlugin().updateScore(player, 4);
-                            	        Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + " §bscored a §a§lQUAD!!");
-                            	        Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+4 points this round)");
-                            	        break;
-                            	    default:
-                            	        Main.getPlugin().increaseScore(player);
-                            	        break;
-                            	}
-                            } else {
-                                Main.getPlugin().increaseScore(player);
-                            }  
-                            break;
-                	}
-                	DropAPI.getInstance().setupNextTurn();
+                        DropAPI.getInstance().launchFirework("success", block.getLocation().subtract(0, 2, 0));
+                        DropAPI.getInstance().finishDrop(player);
+                        Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e" + player.getName() + "§a" + DropAPI.getInstance().pickSuccessMessage());
+                        if (Main.getPlugin().getType() == GameType.Enhanced) {
+                        	countBlocks(player, loc);
+                        } else {
+                            Main.getPlugin().increaseScore(player);
+                        }
+                        DropAPI.getInstance().setupNextTurn();
+                    }
                 }
             }
         }
@@ -286,17 +279,14 @@ public class Listeners implements Listener {
                     player.sendPluginMessage(Main.getPlugin(), "BungeeCord", quartzout.toByteArray());
                     break;
                 case WALL_SIGN:
-                case SIGN:
-                case SIGN_POST:
                 	Sign sign = (Sign) event.getClickedBlock().getState();
-                	if(sign.getLine(1).equals("Return to") && sign.getLine(2).contains("Hub")) {
+                	if(sign.getLine(1).equals("Return to") && sign.getLine(2).contains("§d[Hub]")) {
                 			ByteArrayDataOutput signout = ByteStreams.newDataOutput();
                 			signout.writeUTF("Connect");
                 			signout.writeUTF("hub");
                             player.sendPluginMessage(Main.getPlugin(), "BungeeCord", signout.toByteArray());
                             sign.update();
                 	}
-                	
                 	break;
                 default:
                     break;
@@ -346,7 +336,7 @@ public class Listeners implements Listener {
 
                     if (inventory.contains(clicked)) {
                     	if(player.getItemInHand().getType() == Material.STAINED_CLAY && !player.getItemInHand().containsEnchantment(Enchantment.DURABILITY)) {
-                    		player.getItemInHand().addEnchantment(Enchantment.DURABILITY, 1);
+                    		player.getItemInHand().getItemMeta().addEnchant(Enchantment.DURABILITY, 1, true);
                     	}
                         Main.getPlugin().blocks.put(player.getName(), material);
                         Main.getPlugin().blockData.put(player.getName(), data);
@@ -367,14 +357,14 @@ public class Listeners implements Listener {
     }
 
     @EventHandler
-    public void onDamage(EntityDamageEvent event
-    ) {
+    public void onDamage(EntityDamageEvent event) {
         Player player = (Player) event.getEntity();
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            Block block = (Block) player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+            Block block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
             if (Main.getPlugin().getState() == GameState.INGAME) {
                 if (block.getTypeId() != 8 || block.getTypeId() != 9) {
                     if (Main.getPlugin().whosDropping == null) {
+                    	
                     } else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
                         event.setCancelled(true);
 
