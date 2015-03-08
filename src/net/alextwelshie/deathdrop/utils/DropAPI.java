@@ -1,10 +1,10 @@
 package net.alextwelshie.deathdrop.utils;
 
-import net.alextwelshie.deathdrop.runnables.EffectAddInRunnable;
-import net.alextwelshie.deathdrop.runnables.KickInRunnable;
 import java.util.ArrayList;
 import java.util.Random;
+
 import net.alextwelshie.deathdrop.Main;
+import net.alextwelshie.deathdrop.runnables.EffectAddInRunnable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -18,6 +18,9 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Score;
+
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 
 @SuppressWarnings({"deprecation", "unchecked"})
 public class DropAPI {
@@ -152,13 +155,25 @@ public class DropAPI {
                 Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cRestarting in §4§l10 seconds.");
                 Main.getPlugin().board.getObjective("scoreboard").setDisplaySlot(null);
                 Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.getPlugin(), new Runnable() {
-
                     @Override
                     public void run() {
-                        Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new KickInRunnable());
-                        Bukkit.shutdown();
+                        for(Player all : Bukkit.getOnlinePlayers()) {
+                        	ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                            out.writeUTF("Connect");
+                            out.writeUTF("hub");
+                            all.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+                        }
                     }
                 }, 220L);
+                
+                Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(), new Runnable() {
+                    @Override
+                    public void run() {
+                        if(Bukkit.getOnlinePlayers().size() <= 0) {
+                        	Bukkit.shutdown();
+                        }
+                    }
+                }, 0L, 40L);
 
                 Main.getPlugin().setState(GameState.RESTARTING);
             } else {
