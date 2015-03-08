@@ -1,0 +1,11 @@
+name: DeathDrop
+main: net.alextwelshie.deathdrop.Main
+version: 1.0
+authors: [HowlingAbyss, AlexTWelshie, MylesLovesMemes]
+commands:
+   bg:
+      usage: /bg
+   eg:
+      usage: /eg
+   setconfig:
+      usage: /setconfig

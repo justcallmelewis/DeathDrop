@@ -1,0 +1,10 @@
+# DeathDrop Default Config - for SurvivalMC.eu by AlexTWelshie <3
+
+# Basic Game Structure
+neededToStart: 2
+maxPlayers: 16
+maxRounds: 7
+
+# Current gametypes available: Enhanced, Normal and Auto
+gametype: Enhanced
+
