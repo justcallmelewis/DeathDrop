@@ -25,6 +25,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -320,6 +321,9 @@ public class Listeners implements Listener {
                     player.closeInventory();
 
                     if (inventory.contains(clicked)) {
+                    	if(player.getItemInHand().getType() == Material.STAINED_CLAY && !player.getItemInHand().containsEnchantment(Enchantment.DURABILITY)) {
+                    		player.getItemInHand().addEnchantment(Enchantment.DURABILITY, 1);
+                    	}
                         Main.getPlugin().blocks.put(player.getName(), material);
                         Main.getPlugin().blockData.put(player.getName(), data);
                         AchievementAPI.getInstance().grantAchievement(player, Achievement.PICKBLOCK);
