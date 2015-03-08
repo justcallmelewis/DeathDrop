@@ -173,7 +173,7 @@ public class Listeners implements Listener {
         if (loc.getY() <= 55 && block.getType() != Material.AIR) {
             if (Main.getPlugin().getState() == GameState.INGAME) {
                 player.setHealth(20D);
-                Bukkit.broadcastMessage("set health 20"); //debug
+                Bukkit.broadcastMessage("set health 20"); //debug begin
                 if (Main.getPlugin().whosDropping == null) {
                 } else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
                 	Bukkit.broadcastMessage("found who's dropping"); //debug
@@ -230,7 +230,7 @@ public class Listeners implements Listener {
                         }
                         AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRST_LAND_SUCCESS);
                         DropAPI.getInstance().setupNextTurn();
-                        Bukkit.broadcastMessage("new turn"); //debug
+                        Bukkit.broadcastMessage("new turn"); //debug end
                     }
                 } else {
                 }
