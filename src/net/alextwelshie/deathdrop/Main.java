@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Random;
 import net.alextwelshie.deathdrop.commands.EndGame;
 import net.alextwelshie.deathdrop.commands.SetConfig;
-import net.alextwelshie.deathdrop.ranks.RankHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -62,16 +61,6 @@ public class Main extends JavaPlugin {
         fillSuccessMessages();
         fillBlockChooser();
         registration();
-    }
-
-    public String getTabListName(Player player) {
-        if (player.getName().length() == 16) {
-            return RankHandler.getInstance().getRankColour(player) + player.getName().substring(0, 14);
-        } else if (player.getName().length() == 15) {
-            return RankHandler.getInstance().getRankColour(player) + player.getName().substring(0, 15);
-        } else {
-            return RankHandler.getInstance().getRankColour(player) + player.getName();
-        }
     }
 
     private void setupScoreboards() {

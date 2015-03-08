@@ -139,7 +139,6 @@ public class Listeners implements Listener {
         }
 
         RankHandler.getInstance().setRankTeam(player);
-        player.setPlayerListName(Main.getPlugin().getTabListName(player));
     }
 
     @EventHandler
