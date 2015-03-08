@@ -33,6 +33,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -353,11 +354,9 @@ public class Listeners implements Listener {
                         DropAPI.getInstance().setupNextTurn();
                     }
                 }
-            } else if (Main.getPlugin().getState() == GameState.LOBBY) {
+            } else if (Main.getPlugin().getState() == GameState.LOBBY || event.getCause() == DamageCause.SUFFOCATION) {
                 event.setCancelled(true);
-            } else if(event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
-                event.setCancelled(true);
-            }
+            } 
         }
     }
 

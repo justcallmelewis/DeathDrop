@@ -30,12 +30,16 @@ public class LobbyTimer implements Runnable {
             case 61:
                 Main.getPlugin().setState(GameState.LOBBY);
                 break;
+            
+            case 20:
+            	for(Player all : Bukkit.getOnlinePlayers()){
+            		OnePointEight.getInstance().sendTitleAndSubtitle(all, "§bChoose your Block", "§e20 Seconds remaining..", 15, 80, 15);
+            	}
+            	break;
             case 11:
                 if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
                     Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new LoadWorldInRunnable());
                     DropAPI.getInstance().broadcastMapData("Brickwork");
-                } else {
-                    
                 }
                 break;
             case 0:
