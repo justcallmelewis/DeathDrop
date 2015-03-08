@@ -1,16 +1,16 @@
 package net.alextwelshie.deathdrop;
 
-import net.alextwelshie.deathdrop.commands.EndGame;
-import net.alextwelshie.deathdrop.commands.SetConfig;
-import net.alextwelshie.deathdrop.commands.StartGame;
-import net.alextwelshie.deathdrop.listeners.Listeners;
+import net.alextwelshie.deathdrop.utils.GameType;
 import net.alextwelshie.deathdrop.timers.LobbyTimer;
+import net.alextwelshie.deathdrop.listeners.Listeners;
 import net.alextwelshie.deathdrop.utils.BlockChooserGUI;
 import net.alextwelshie.deathdrop.utils.DropAPI;
 import net.alextwelshie.deathdrop.utils.GameState;
-import net.alextwelshie.deathdrop.utils.GameType;
+import net.alextwelshie.deathdrop.commands.StartGame;
 import java.util.HashMap;
 import java.util.Random;
+import net.alextwelshie.deathdrop.commands.EndGame;
+import net.alextwelshie.deathdrop.commands.SetConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
