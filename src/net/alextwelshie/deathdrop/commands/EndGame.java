@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import net.alextwelshie.deathdrop.Main;
 import net.alextwelshie.deathdrop.ranks.RankHandler;
-import net.alextwelshie.deathdrop.runnables.KickInRunnable;
 import net.alextwelshie.deathdrop.utils.DropAPI;
 import net.alextwelshie.deathdrop.utils.GameState;
 
@@ -14,6 +13,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Score;
+
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 
 public class EndGame implements CommandExecutor {
 
@@ -33,7 +35,6 @@ public class EndGame implements CommandExecutor {
                                 DropAPI.getInstance().teleportToMapSpawn(player);
                             }
 
-                            if (Main.getPlugin().round == (Main.getPlugin().maxRounds + 1)) {
                                 Main.getPlugin().round = 0;
 
                                 int highest = 0;
@@ -66,14 +67,25 @@ public class EndGame implements CommandExecutor {
                                 Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cRestarting in §4§l10 seconds.");
                                 Main.getPlugin().board.getObjective("scoreboard").setDisplaySlot(null);
                                 Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.getPlugin(), new Runnable() {
-
-                                    @SuppressWarnings("unchecked")
-									@Override
+                                    @Override
                                     public void run() {
-                                        Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new KickInRunnable());
-                                        Bukkit.shutdown();
+                                        for(Player all : Bukkit.getOnlinePlayers()) {
+                                        	ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                                            out.writeUTF("Connect");
+                                            out.writeUTF("hub");
+                                            all.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+                                        }
                                     }
                                 }, 220L);
+                                
+                                Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(), new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(Bukkit.getOnlinePlayers().size() <= 0) {
+                                        	Bukkit.shutdown();
+                                        }
+                                    }
+                                }, 0L, 40L);
 
                                 Main.getPlugin().setState(GameState.RESTARTING);
                                 player.sendMessage("§eGame ended.");
@@ -91,7 +103,6 @@ public class EndGame implements CommandExecutor {
                 }
             }
 
-        }
         return true;
-    }
+    }    
 }
