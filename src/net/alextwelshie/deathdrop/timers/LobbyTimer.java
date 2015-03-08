@@ -16,7 +16,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 
 public class LobbyTimer implements Runnable {
 
-    public static int lobbyTimer = 61;
+    public static int lobbyTimer = 181;
 
     @SuppressWarnings({"deprecation", "unchecked"})
     @Override
@@ -27,14 +27,18 @@ public class LobbyTimer implements Runnable {
         }
 
         switch (lobbyTimer) {
-            case 61:
+            case 181:
                 Main.getPlugin().setState(GameState.LOBBY);
                 break;
-            
+            case 30:
+            	Bukkit.broadcastMessage(Main.getPlugin().prefix + "");
+            	break;
             case 20:
-            	for(Player all : Bukkit.getOnlinePlayers()){
-            		OnePointEight.getInstance().sendTitleAndSubtitle(all, "§bChoose your Block", "§e20 Seconds remaining..", 15, 80, 15);
-            	}
+            	if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
+            		for(Player all : Bukkit.getOnlinePlayers()){
+                		OnePointEight.getInstance().sendTitleAndSubtitle(all, "§bChoose your Block", "§e20 Seconds remaining..", 15, 80, 15);
+                	}
+                }
             	break;
             case 11:
                 if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {

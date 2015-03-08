@@ -4,6 +4,7 @@
 neededToStart: 2
 maxPlayers: 16
 maxRounds: 7
+lobbytimer: 180
 
 # Current gametypes available: Enhanced, Normal and Auto
 gametype: Enhanced

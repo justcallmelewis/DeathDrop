@@ -1,13 +1,5 @@
 package net.alextwelshie.deathdrop.listeners;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-
-import net.alextwelshie.deathdrop.utils.BlockChooserGUI;
-import net.alextwelshie.deathdrop.utils.DropAPI;
-import net.alextwelshie.deathdrop.utils.OnePointEight;
-import net.alextwelshie.deathdrop.utils.GameState;
-
 import java.util.Random;
 
 import net.alextwelshie.deathdrop.Main;
@@ -16,7 +8,11 @@ import net.alextwelshie.deathdrop.achievements.AchievementAPI;
 import net.alextwelshie.deathdrop.achievements.AchievementMenu;
 import net.alextwelshie.deathdrop.ranks.RankHandler;
 import net.alextwelshie.deathdrop.timers.LobbyTimer;
+import net.alextwelshie.deathdrop.utils.BlockChooserGUI;
+import net.alextwelshie.deathdrop.utils.DropAPI;
+import net.alextwelshie.deathdrop.utils.GameState;
 import net.alextwelshie.deathdrop.utils.GameType;
+import net.alextwelshie.deathdrop.utils.OnePointEight;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,6 +21,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,6 +30,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -51,6 +49,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 
 @SuppressWarnings("deprecation")
 public class Listeners implements Listener {
@@ -165,6 +166,24 @@ public class Listeners implements Listener {
 			e.setNewCurrent(100);
 		}
 	}
+    
+    @EventHandler
+    public void onSignChange(SignChangeEvent e) {
+    	Player player = e.getPlayer();
+    	if(e.getLine(0).equalsIgnoreCase("hub")) {
+    		e.setLine(0, null);
+    		e.setLine(1, "Return to");
+    		e.setLine(2, "§d[Hub]");
+    		e.setLine(3, null);
+    	}
+    	
+    	if (player.hasPermission("srv.owner") || player.hasPermission("srv.admin")) {
+            e.setLine(0, ChatColor.translateAlternateColorCodes('&', e.getLine(0)));
+            e.setLine(1, ChatColor.translateAlternateColorCodes('&', e.getLine(1)));
+            e.setLine(2, ChatColor.translateAlternateColorCodes('&', e.getLine(2)));
+            e.setLine(3, ChatColor.translateAlternateColorCodes('&', e.getLine(3)));
+        }
+    }
 
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
@@ -269,11 +288,24 @@ public class Listeners implements Listener {
                     player.sendMessage(Main.getPlugin().prefix + "§cAchievements aren't enabled at the moment due to certain reasons beyond our control. Please check back later.");
                     break;
                 case QUARTZ:
-                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                    out.writeUTF("Connect");
-                    out.writeUTF("hub");
-                    player.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+                    ByteArrayDataOutput quartzout = ByteStreams.newDataOutput();
+                    quartzout.writeUTF("Connect");
+                    quartzout.writeUTF("hub");
+                    player.sendPluginMessage(Main.getPlugin(), "BungeeCord", quartzout.toByteArray());
                     break;
+                case WALL_SIGN:
+                case SIGN:
+                case SIGN_POST:
+                	Sign sign = (Sign) event.getClickedBlock().getState();
+                	if(sign.getLine(1).equals("Return to")) {
+                		if(sign.getLine(2).contains("Hub")) {
+                			ByteArrayDataOutput signout = ByteStreams.newDataOutput();
+                			signout.writeUTF("Connect");
+                			signout.writeUTF("hub");
+                            player.sendPluginMessage(Main.getPlugin(), "BungeeCord", signout.toByteArray());
+                		}
+                	}
+                	break;
                 default:
                     break;
             }

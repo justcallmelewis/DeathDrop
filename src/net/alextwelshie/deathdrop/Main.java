@@ -165,11 +165,14 @@ public class Main extends JavaPlugin {
         int needed = config.getInt("neededToStart");
         int max = config.getInt("maxPlayers");
         int maxrounds = config.getInt("maxRounds");
+        int lobbytimer = config.getInt("lobbytimer");
         String gametype = config.getString("gametype");
 
         this.neededToStart = needed;
         this.maxPlayers = max;
         this.maxRounds = maxrounds;
+        LobbyTimer.lobbyTimer = lobbytimer + 1;
+        
         switch (gametype) {
             case "Enhanced":
                 setType(GameType.Enhanced);
@@ -201,6 +204,10 @@ public class Main extends JavaPlugin {
 
         if (getType() == null) {
             setType(GameType.Normal);
+        }
+        
+        if(LobbyTimer.lobbyTimer == 999) {
+        	LobbyTimer.lobbyTimer = 181;
         }
     }
 
