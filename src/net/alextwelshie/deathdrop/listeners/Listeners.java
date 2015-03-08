@@ -295,14 +295,14 @@ public class Listeners implements Listener {
                 case SIGN:
                 case SIGN_POST:
                 	Sign sign = (Sign) event.getClickedBlock().getState();
-                	if(sign.getLine(1).equals("Return to")) {
-                		if(sign.getLine(2).contains("Hub")) {
+                	if(sign.getLine(1).equals("Return to") && sign.getLine(2).contains("Hub")) {
                 			ByteArrayDataOutput signout = ByteStreams.newDataOutput();
                 			signout.writeUTF("Connect");
                 			signout.writeUTF("hub");
                             player.sendPluginMessage(Main.getPlugin(), "BungeeCord", signout.toByteArray());
-                		}
+                            sign.update();
                 	}
+                	
                 	break;
                 default:
                     break;
