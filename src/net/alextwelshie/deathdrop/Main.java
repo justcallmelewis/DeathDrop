@@ -1,5 +1,7 @@
 package net.alextwelshie.deathdrop;
 
+import java.util.HashMap;
+
 import net.alextwelshie.deathdrop.commands.EndGame;
 import net.alextwelshie.deathdrop.commands.SetConfig;
 import net.alextwelshie.deathdrop.commands.StartGame;
@@ -9,8 +11,7 @@ import net.alextwelshie.deathdrop.utils.BlockChooserGUI;
 import net.alextwelshie.deathdrop.utils.DropAPI;
 import net.alextwelshie.deathdrop.utils.GameState;
 import net.alextwelshie.deathdrop.utils.GameType;
-import java.util.HashMap;
-import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -25,209 +26,206 @@ import org.bukkit.scoreboard.ScoreboardManager;
 @SuppressWarnings("deprecation")
 public class Main extends JavaPlugin {
 
-    public String prefix = "§6[DeathDrop] ";
-    public Scoreboard board;
-    public int lobbyTimer = 23;
-    public String mapName = "Brickwork";
-    public World mapWorld = null;
-    public Integer neededToStart = null;
-    public Integer maxPlayers = null;
-    public String whosDropping = null;
-    public int turns = 0;
-    public int round = 1;
-    public Integer maxRounds = null;
-    public boolean began = false;
-    public boolean ended = false;
-    public boolean shortened = false;
+	public String			prefix			= "§6DeathDrop §8| ";
+	public Scoreboard		board;
+	public int				lobbyTimer		= 23;
+	public String			mapName			= "Brickwork";
+	public World			mapWorld		= null;
+	public Integer			neededToStart	= null;
+	public Integer			maxPlayers		= null;
+	public String			whosDropping	= null;
+	public int				turns			= 0;
+	public int				round			= 1;
+	public Integer			maxRounds		= null;
+	public boolean			began			= false;
+	public boolean			ended			= false;
+	public boolean			shortened		= false;
 
-    public Configuration config;
+	public Configuration	config;
 
-    public GameState state;
-    public GameType type;
+	public GameState		state;
+	public GameType			type;
 
-    public static Main getPlugin() {
-        return Main.getPlugin(Main.class);
-    }
+	public static Main getPlugin() {
+		return JavaPlugin.getPlugin(Main.class);
+	}
 
-    public HashMap<String, Material> blocks = new HashMap<>();
-    public HashMap<String, Byte> blockData = new HashMap<>();
+	public HashMap<String, Material>	blocks		= new HashMap<>();
+	public HashMap<String, Byte>		blockData	= new HashMap<>();
 
-    @Override
-    public void onEnable() {
-        setupConfig();
-        setupScoreboards();
-        setupMechanics();
-        fillErrorMessages();
-        fillSuccessMessages();
-        fillBlockChooser();
-        registration();
-    }
+	@Override
+	public void onEnable() {
+		setupConfig();
+		setupScoreboards();
+		setupMechanics();
+		fillErrorMessages();
+		fillSuccessMessages();
+		fillBlockChooser();
+		registration();
+	}
 
-    private void setupScoreboards() {
-        ScoreboardManager manager = Bukkit.getScoreboardManager();
-        board = manager.getNewScoreboard();
-        Objective objective = board.registerNewObjective("scoreboard", "dummy");
-        objective.setDisplayName("§e#1 §7" + mapName);
-    }
+	private void setupScoreboards() {
+		ScoreboardManager manager = Bukkit.getScoreboardManager();
+		board = manager.getNewScoreboard();
+		Objective objective = board.registerNewObjective("scoreboard", "dummy");
+		objective.setDisplayName("§e#1 §7" + mapName);
+	}
 
-    private void setupConfig() {
-        config = getConfig();
-        saveDefaultConfig();
-    }
+	private void setupConfig() {
+		config = getConfig();
+		saveDefaultConfig();
+	}
 
-    public void registerPlayerOnScoreboard(Player player) {
-        Score score = board.getObjective("scoreboard").getScore(player.getDisplayName()); //Get a fake offline player
-        score.setScore(0);
+	public void registerPlayerOnScoreboard(Player player) {
+		Score score = board.getObjective("scoreboard").getScore(
+				player.getDisplayName()); //Get a fake offline player
+		score.setScore(0);
 
-        for (Player all : Bukkit.getOnlinePlayers()) {
-            all.setScoreboard(board);
-        }
-    }
+		for (Player all : Bukkit.getOnlinePlayers()) {
+			all.setScoreboard(board);
+		}
+	}
 
-    public GameState getState() {
-        return state;
-    }
+	public GameState getState() {
+		return state;
+	}
 
-    public void setState(GameState state) {
-        this.state = state;
-    }
+	public void setState(GameState state) {
+		this.state = state;
+	}
 
-    public GameType getType() {
-        return type;
-    }
+	public GameType getType() {
+		return type;
+	}
 
-    public void setType(GameType type) {
-        this.type = type;
-    }
+	public void setType(GameType type) {
+		this.type = type;
+	}
 
-    public void removePlayerFromScoreboard(Player player) {
-        board.resetScores(player.getDisplayName());
+	public void removePlayerFromScoreboard(Player player) {
+		board.resetScores(player.getDisplayName());
 
-        for (Player all : Bukkit.getOnlinePlayers()) {
-            all.setScoreboard(board);
-        }
-    }
+		for (Player all : Bukkit.getOnlinePlayers()) {
+			all.setScoreboard(board);
+		}
+	}
 
-    public Integer getScore(Player player) {
-        Score score = board.getObjective("scoreboard").getScore(player.getDisplayName()); //Get a fake offline player
-        return score.getScore();
-    }
+	public Integer getScore(Player player) {
+		Score score = board.getObjective("scoreboard").getScore(
+				player.getDisplayName()); //Get a fake offline player
+		return score.getScore();
+	}
 
-    public void updateScore(Player player, int amount) {
-        Score score = board.getObjective("scoreboard").getScore(player.getDisplayName()); //Get a fake offline player
-        score.setScore(getScore(player) + amount);
+	public void updateScore(Player player, int amount) {
+		Score score = board.getObjective("scoreboard").getScore(
+				player.getDisplayName()); //Get a fake offline player
+		score.setScore(getScore(player) + amount);
 
-        for (Player all : Bukkit.getOnlinePlayers()) {
-            all.setScoreboard(board);
-        }
-    }
+		for (Player all : Bukkit.getOnlinePlayers()) {
+			all.setScoreboard(board);
+		}
+	}
 
-    public void increaseScore(Player player) {
-        Score score = board.getObjective("scoreboard").getScore(player.getDisplayName()); //Get a fake offline player
-        score.setScore(getScore(player) + 1);
+	public void increaseScore(Player player) {
+		Score score = board.getObjective("scoreboard").getScore(
+				player.getDisplayName()); //Get a fake offline player
+		score.setScore(getScore(player) + 1);
 
-        for (Player all : Bukkit.getOnlinePlayers()) {
-            all.setScoreboard(board);
-        }
-    }
+		for (Player all : Bukkit.getOnlinePlayers()) {
+			all.setScoreboard(board);
+		}
+	}
 
-    public void fillSuccessMessages() {
-        DropAPI drop = DropAPI.getInstance();
-        drop.successMessages.add(" landed like a cat!");
-        drop.successMessages.add(" splooshed successfully into the water.");
-        drop.successMessages.add(" pooped out a block. Yaay.");
-        drop.successMessages.add(" wedi glanio yn y ddŵr.");
-        drop.successMessages.add(" cheated.. probably.");
-    }
+	public void fillSuccessMessages() {
+		DropAPI drop = DropAPI.getInstance();
+		drop.successMessages.add(" landed like a cat!");
+		drop.successMessages.add(" splooshed successfully into the water.");
+		drop.successMessages.add(" pooped out a block. Yaay.");
+		drop.successMessages.add(" wedi glanio yn y ddŵr.");
+		drop.successMessages.add(" cheated.. probably.");
+	}
 
-    public void fillErrorMessages() {
-        DropAPI drop = DropAPI.getInstance();
-        drop.failMessages.add(" did a Sherlock Holmes.");
-        drop.failMessages.add(" did the flop.");
-        drop.failMessages.add(" failed to become Tom Daley.");
-        drop.failMessages.add("'s face became the floor.");
-        drop.failMessages.add(" suicided. Maybe on purpose?");
-    }
+	public void fillErrorMessages() {
+		DropAPI drop = DropAPI.getInstance();
+		drop.failMessages.add(" did a Sherlock Holmes.");
+		drop.failMessages.add(" did the flop.");
+		drop.failMessages.add(" failed to become Tom Daley.");
+		drop.failMessages.add("'s face became the floor.");
+		drop.failMessages.add(" suicided. Maybe on purpose?");
+	}
 
-    private void registration() {
-        getCommand("bg").setExecutor(new StartGame());
-        getCommand("eg").setExecutor(new EndGame());
-        getCommand("setconfig").setExecutor(new SetConfig());
-        Bukkit.getPluginManager().registerEvents(new Listeners(), this);
-        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-    }
+	private void registration() {
+		getCommand("bg").setExecutor(new StartGame());
+		getCommand("eg").setExecutor(new EndGame());
+		getCommand("setconfig").setExecutor(new SetConfig());
+		Bukkit.getPluginManager().registerEvents(new Listeners(), this);
+		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+	}
 
-    private void setupMechanics() {
-        lobbyTimer = Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new LobbyTimer(), 0L, 20L);
+	private void setupMechanics() {
+		lobbyTimer = Bukkit.getScheduler().scheduleAsyncRepeatingTask(this,
+				new LobbyTimer(), 0L, 20L);
 
-        setState(GameState.LOBBY);
+		setState(GameState.LOBBY);
 
-        int needed = config.getInt("neededToStart");
-        int max = config.getInt("maxPlayers");
-        int maxrounds = config.getInt("maxRounds");
-        int lobbytimer = config.getInt("lobbytimer");
-        String gametype = config.getString("gametype");
+		int needed = config.getInt("neededToStart");
+		int max = config.getInt("maxPlayers");
+		int maxrounds = config.getInt("maxRounds");
+		int lobbytimer = config.getInt("lobbytimer");
+		String gametype = config.getString("gametype");
 
-        this.neededToStart = needed;
-        this.maxPlayers = max;
-        this.maxRounds = maxrounds;
-        LobbyTimer.lobbyTimer = lobbytimer + 1;
-        
-        switch (gametype) {
-            case "Enhanced":
-                setType(GameType.Enhanced);
-                break;
-            case "Normal":
-                setType(GameType.Normal);
-                break;
-            case "Auto":
-                int random = new Random().nextInt(2);
-                if (random == 0 || random == 1) {
-                    setType(GameType.Enhanced);
-                } else {
-                    setType(GameType.Normal);
-                }
-                break;
-        }
+		this.neededToStart = needed;
+		this.maxPlayers = max;
+		this.maxRounds = maxrounds;
+		LobbyTimer.lobbyTimer = lobbytimer + 1;
 
-        if (this.neededToStart == null) {
-            neededToStart = 2;
-        }
+		switch (gametype) {
+		case "Enhanced":
+			setType(GameType.Enhanced);
+			break;
+		case "Normal":
+			setType(GameType.Normal);
+			break;
+		}
 
-        if (this.maxPlayers == null) {
-            maxPlayers = 16;
-        }
+		if (this.neededToStart == null) {
+			neededToStart = 2;
+		}
 
-        if (this.maxRounds == null) {
-            maxRounds = 7;
-        }
+		if (this.maxPlayers == null) {
+			maxPlayers = 16;
+		}
 
-        if (getType() == null) {
-            setType(GameType.Normal);
-        }
-        
-        if(LobbyTimer.lobbyTimer == 999) {
-        	LobbyTimer.lobbyTimer = 181;
-        }
-    }
+		if (this.maxRounds == null) {
+			maxRounds = 7;
+		}
 
-    private void fillBlockChooser() {
-        for (int i = 0; i < 16; i++) {
-            BlockChooserGUI.normal.put((byte) i, Material.STAINED_CLAY);
-        }
+		if (getType() == null) {
+			setType(GameType.Normal);
+		}
 
-        BlockChooserGUI.premium.put(Material.TNT, (byte) 0);
-        BlockChooserGUI.premium.put(Material.IRON_BLOCK, (byte) 0);
-        BlockChooserGUI.premium.put(Material.GOLD_BLOCK, (byte) 0);
-        BlockChooserGUI.premium.put(Material.EMERALD_BLOCK, (byte) 0);
-        BlockChooserGUI.premium.put(Material.DIAMOND_BLOCK, (byte) 0);
-        BlockChooserGUI.premium.put(Material.PUMPKIN, (byte) 0);
-        BlockChooserGUI.premium.put(Material.STONE, (byte) 0);
-        BlockChooserGUI.premium.put(Material.BRICK, (byte) 0);
-        BlockChooserGUI.premium.put(Material.SANDSTONE, (byte) 0);
+		if (LobbyTimer.lobbyTimer == 999) {
+			LobbyTimer.lobbyTimer = 181;
+		}
+	}
 
-        BlockChooserGUI.staff.put(Material.COMMAND, (byte) 0);
-        BlockChooserGUI.staff.put(Material.BEACON, (byte) 0);
-    }
+	private void fillBlockChooser() {
+		for (int i = 0; i < 16; i++) {
+			BlockChooserGUI.normal.put((byte) i, Material.STAINED_CLAY);
+		}
+
+		BlockChooserGUI.premium.put(Material.TNT, (byte) 0);
+		BlockChooserGUI.premium.put(Material.IRON_BLOCK, (byte) 0);
+		BlockChooserGUI.premium.put(Material.GOLD_BLOCK, (byte) 0);
+		BlockChooserGUI.premium.put(Material.EMERALD_BLOCK, (byte) 0);
+		BlockChooserGUI.premium.put(Material.DIAMOND_BLOCK, (byte) 0);
+		BlockChooserGUI.premium.put(Material.PUMPKIN, (byte) 0);
+		BlockChooserGUI.premium.put(Material.STONE, (byte) 0);
+		BlockChooserGUI.premium.put(Material.BRICK, (byte) 0);
+		BlockChooserGUI.premium.put(Material.SANDSTONE, (byte) 0);
+
+		BlockChooserGUI.staff.put(Material.COMMAND, (byte) 0);
+		BlockChooserGUI.staff.put(Material.BEACON, (byte) 0);
+	}
 
 }
