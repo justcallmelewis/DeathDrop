@@ -1,5 +1,5 @@
-# DeathDrop
-DeathDrop MiniGame for SurvivalMC.eu
+# MineDrop
+MineDrop MiniGame for SurvivalMC.eu
 
 This plugin is currently in beta stages and still contains bugs.
 
