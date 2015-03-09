@@ -1,11 +1,11 @@
-package net.alextwelshie.deathdrop.commands;
+package net.alextwelshie.minedrop.commands;
 
-import net.alextwelshie.deathdrop.Main;
-import net.alextwelshie.deathdrop.ranks.RankHandler;
-import net.alextwelshie.deathdrop.timers.LobbyTimer;
-import net.alextwelshie.deathdrop.utils.DropAPI;
-import net.alextwelshie.deathdrop.utils.GameState;
-import net.alextwelshie.deathdrop.utils.GameType;
+import net.alextwelshie.minedrop.Main;
+import net.alextwelshie.minedrop.ranks.RankHandler;
+import net.alextwelshie.minedrop.timers.LobbyTimer;
+import net.alextwelshie.minedrop.utils.DropAPI;
+import net.alextwelshie.minedrop.utils.GameState;
+import net.alextwelshie.minedrop.utils.GameType;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -16,8 +16,7 @@ import org.bukkit.entity.Player;
 public class SetConfig implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label,
-			String[] args) {
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			if (RankHandler.getInstance().isStaff(player)) {
@@ -38,23 +37,18 @@ public class SetConfig implements CommandExecutor {
 						} else {
 							if (value.equals("Enhanced")) {
 								Main.getPlugin().config.set(variable, value);
-								Main.getPlugin().setType(
-										GameType.valueOf(value.toString()));
+								Main.getPlugin().setType(GameType.valueOf(value.toString()));
 
-								player.sendMessage(Main.getPlugin().prefix
-										+ "§eValue of " + variable
+								player.sendMessage(Main.getPlugin().prefix + "§6Value of " + variable
 										+ " set to: " + value);
 							} else if (value.equals("Normal")) {
 								Main.getPlugin().config.set(variable, value);
-								Main.getPlugin().setType(
-										GameType.valueOf(value.toString()));
+								Main.getPlugin().setType(GameType.valueOf(value.toString()));
 
-								player.sendMessage(Main.getPlugin().prefix
-										+ "§eValue of " + variable
+								player.sendMessage(Main.getPlugin().prefix + "§6Value of " + variable
 										+ " set to: " + value);
 							} else {
-								player.sendMessage(Main.getPlugin().prefix
-										+ "§cGametype does not exist.");
+								player.sendMessage(Main.getPlugin().prefix + "§cGametype does not exist.");
 							}
 						}
 					} else if (variable.equalsIgnoreCase("maxrounds")) {
@@ -64,23 +58,18 @@ public class SetConfig implements CommandExecutor {
 						} else {
 							if (value.toString().matches("[0-9]+")) {
 								Main.getPlugin().config.set(variable, value);
-								Main.getPlugin().maxRounds = Integer
-										.parseInt(value.toString());
+								Main.getPlugin().maxRounds = Integer.parseInt(value.toString());
 
-								if (Main.getPlugin().maxRounds <= Main
-										.getPlugin().round) {
+								if (Main.getPlugin().maxRounds <= Main.getPlugin().round) {
 									DropAPI.getInstance().setupNextTurn();
 									player.sendMessage(Main.getPlugin().prefix
-											+ "§eDue to this change, max rounds is now less than current round.");
-									player.sendMessage(Main.getPlugin().prefix
-											+ "§eEnding game..");
+											+ "§6Due to this change, max rounds is now less than current round.");
+									player.sendMessage(Main.getPlugin().prefix + "§cEnding game..");
 								}
-								player.sendMessage(Main.getPlugin().prefix
-										+ "§eValue of " + variable
+								player.sendMessage(Main.getPlugin().prefix + "§6Value of " + variable
 										+ " set to: " + value);
 							} else {
-								player.sendMessage(Main.getPlugin().prefix
-										+ "§cValue is not numeric.");
+								player.sendMessage(Main.getPlugin().prefix + "§cValue is not numeric.");
 							}
 						}
 					} else if (variable.equalsIgnoreCase("needed")) {
@@ -90,23 +79,18 @@ public class SetConfig implements CommandExecutor {
 						} else {
 							if (value.toString().matches("[0-9]+")) {
 								Main.getPlugin().config.set(variable, value);
-								Main.getPlugin().neededToStart = Integer
-										.parseInt(value.toString());
+								Main.getPlugin().neededToStart = Integer.parseInt(value.toString());
 
-								player.sendMessage(Main.getPlugin().prefix
-										+ "§eValue of " + variable
+								player.sendMessage(Main.getPlugin().prefix + "§6Value of " + variable
 										+ " set to: " + value);
-								if (Bukkit.getOnlinePlayers().size() >= Main
-										.getPlugin().neededToStart) {
+								if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
 									LobbyTimer.lobbyTimer = 1;
 									player.sendMessage(Main.getPlugin().prefix
-											+ "§eDue to this change, players needed is now less than online player count.");
-									player.sendMessage(Main.getPlugin().prefix
-											+ "§eBeginning game..");
+											+ "§6Due to this change, players needed is now less than online player count.");
+									player.sendMessage(Main.getPlugin().prefix + "§aBeginning game..");
 								}
 							} else {
-								player.sendMessage(Main.getPlugin().prefix
-										+ "§cValue is not numeric.");
+								player.sendMessage(Main.getPlugin().prefix + "§cValue is not numeric.");
 							}
 						}
 					} else if (variable.equalsIgnoreCase("maxplayers")) {
@@ -116,20 +100,16 @@ public class SetConfig implements CommandExecutor {
 						} else {
 							if (value.toString().matches("[0-9]+")) {
 								Main.getPlugin().config.set(variable, value);
-								Main.getPlugin().maxPlayers = Integer
-										.parseInt(value.toString());
+								Main.getPlugin().maxPlayers = Integer.parseInt(value.toString());
 
-								player.sendMessage(Main.getPlugin().prefix
-										+ "§eValue of " + variable
+								player.sendMessage(Main.getPlugin().prefix + "§6Value of " + variable
 										+ " set to: " + value);
 							} else {
-								player.sendMessage(Main.getPlugin().prefix
-										+ "§cValue is not numeric.");
+								player.sendMessage(Main.getPlugin().prefix + "§cValue is not numeric.");
 							}
 						}
 					} else {
-						player.sendMessage(Main.getPlugin().prefix
-								+ "§cVariable does not exist in config.");
+						player.sendMessage(Main.getPlugin().prefix + "§cVariable does not exist in config.");
 					}
 					break;
 				}

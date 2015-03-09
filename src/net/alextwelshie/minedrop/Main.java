@@ -1,16 +1,16 @@
-package net.alextwelshie.deathdrop;
+package net.alextwelshie.minedrop;
 
 import java.util.HashMap;
 
-import net.alextwelshie.deathdrop.commands.EndGame;
-import net.alextwelshie.deathdrop.commands.SetConfig;
-import net.alextwelshie.deathdrop.commands.StartGame;
-import net.alextwelshie.deathdrop.listeners.Listeners;
-import net.alextwelshie.deathdrop.timers.LobbyTimer;
-import net.alextwelshie.deathdrop.utils.BlockChooserGUI;
-import net.alextwelshie.deathdrop.utils.DropAPI;
-import net.alextwelshie.deathdrop.utils.GameState;
-import net.alextwelshie.deathdrop.utils.GameType;
+import net.alextwelshie.minedrop.commands.EndGame;
+import net.alextwelshie.minedrop.commands.SetConfig;
+import net.alextwelshie.minedrop.commands.StartGame;
+import net.alextwelshie.minedrop.listeners.Listeners;
+import net.alextwelshie.minedrop.timers.LobbyTimer;
+import net.alextwelshie.minedrop.utils.BlockChooserGUI;
+import net.alextwelshie.minedrop.utils.DropAPI;
+import net.alextwelshie.minedrop.utils.GameState;
+import net.alextwelshie.minedrop.utils.GameType;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -26,7 +26,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 @SuppressWarnings("deprecation")
 public class Main extends JavaPlugin {
 
-	public String			prefix			= "§6DeathDrop §8| ";
+	public String			prefix			= "§cMineDrop §8| ";
 	public Scoreboard		board;
 	public int				lobbyTimer		= 23;
 	public String			mapName			= "Brickwork";
@@ -68,7 +68,7 @@ public class Main extends JavaPlugin {
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
 		board = manager.getNewScoreboard();
 		Objective objective = board.registerNewObjective("scoreboard", "dummy");
-		objective.setDisplayName("§e#1 §7" + mapName);
+		objective.setDisplayName("§6#1 §7" + mapName);
 	}
 
 	private void setupConfig() {
@@ -77,8 +77,7 @@ public class Main extends JavaPlugin {
 	}
 
 	public void registerPlayerOnScoreboard(Player player) {
-		Score score = board.getObjective("scoreboard").getScore(
-				player.getDisplayName()); //Get a fake offline player
+		Score score = board.getObjective("scoreboard").getScore(player.getDisplayName()); //Get a fake offline player
 		score.setScore(0);
 
 		for (Player all : Bukkit.getOnlinePlayers()) {
@@ -111,14 +110,12 @@ public class Main extends JavaPlugin {
 	}
 
 	public Integer getScore(Player player) {
-		Score score = board.getObjective("scoreboard").getScore(
-				player.getDisplayName()); //Get a fake offline player
+		Score score = board.getObjective("scoreboard").getScore(player.getDisplayName()); //Get a fake offline player
 		return score.getScore();
 	}
 
 	public void updateScore(Player player, int amount) {
-		Score score = board.getObjective("scoreboard").getScore(
-				player.getDisplayName()); //Get a fake offline player
+		Score score = board.getObjective("scoreboard").getScore(player.getDisplayName()); //Get a fake offline player
 		score.setScore(getScore(player) + amount);
 
 		for (Player all : Bukkit.getOnlinePlayers()) {
@@ -127,8 +124,7 @@ public class Main extends JavaPlugin {
 	}
 
 	public void increaseScore(Player player) {
-		Score score = board.getObjective("scoreboard").getScore(
-				player.getDisplayName()); //Get a fake offline player
+		Score score = board.getObjective("scoreboard").getScore(player.getDisplayName()); //Get a fake offline player
 		score.setScore(getScore(player) + 1);
 
 		for (Player all : Bukkit.getOnlinePlayers()) {
@@ -163,8 +159,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void setupMechanics() {
-		lobbyTimer = Bukkit.getScheduler().scheduleAsyncRepeatingTask(this,
-				new LobbyTimer(), 0L, 20L);
+		lobbyTimer = Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new LobbyTimer(), 0L, 20L);
 
 		setState(GameState.LOBBY);
 

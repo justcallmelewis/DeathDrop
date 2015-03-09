@@ -1,4 +1,4 @@
-package net.alextwelshie.deathdrop.utils;
+package net.alextwelshie.minedrop.utils;
 
 import java.lang.reflect.Field;
 
@@ -21,16 +21,12 @@ public class OnePointEight {
 		return instance;
 	}
 
-	public void sendTitle(Player player, String title, int fadeIn, int stay,
-			int fadeOut) {
+	public void sendTitle(Player player, String title, int fadeIn, int stay, int fadeOut) {
 		CraftPlayer craftplayer = (CraftPlayer) player;
 		PlayerConnection connection = craftplayer.getHandle().playerConnection;
-		IChatBaseComponent titleJSON = ChatSerializer.a("{\"text\": \"" + title
-				+ "\"}");
-		PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(
-				EnumTitleAction.TITLE, titleJSON);
-		PacketPlayOutTitle length = new PacketPlayOutTitle(fadeIn, stay,
-				fadeOut);
+		IChatBaseComponent titleJSON = ChatSerializer.a("{\"text\": \"" + title + "\"}");
+		PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(EnumTitleAction.TITLE, titleJSON);
+		PacketPlayOutTitle length = new PacketPlayOutTitle(fadeIn, stay, fadeOut);
 		connection.sendPacket(titlePacket);
 		connection.sendPacket(length);
 	}
@@ -38,65 +34,50 @@ public class OnePointEight {
 	public void sendTitle(Player player, String title) {
 		CraftPlayer craftplayer = (CraftPlayer) player;
 		PlayerConnection connection = craftplayer.getHandle().playerConnection;
-		IChatBaseComponent titleJSON = ChatSerializer.a("{\"text\": \"" + title
-				+ "\"}");
-		PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(
-				EnumTitleAction.TITLE, titleJSON);
+		IChatBaseComponent titleJSON = ChatSerializer.a("{\"text\": \"" + title + "\"}");
+		PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(EnumTitleAction.TITLE, titleJSON);
 		connection.sendPacket(titlePacket);
 	}
 
-	public void sendTitleAndSubtitle(Player player, String title,
-			String subtitle, int fadeIn, int stay, int fadeOut) {
+	public void sendTitleAndSubtitle(Player player, String title, String subtitle, int fadeIn, int stay,
+			int fadeOut) {
 		CraftPlayer craftplayer = (CraftPlayer) player;
 		PlayerConnection connection = craftplayer.getHandle().playerConnection;
-		IChatBaseComponent titleJSON = ChatSerializer.a("{\"text\": \"" + title
-				+ "\"}");
-		IChatBaseComponent subtitleJSON = ChatSerializer.a("{\"text\": \""
-				+ subtitle + "\"}");
-		PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(
-				EnumTitleAction.TITLE, titleJSON);
-		PacketPlayOutTitle subtitlePacket = new PacketPlayOutTitle(
-				EnumTitleAction.SUBTITLE, subtitleJSON);
-		PacketPlayOutTitle length = new PacketPlayOutTitle(fadeIn, stay,
-				fadeOut);
+		IChatBaseComponent titleJSON = ChatSerializer.a("{\"text\": \"" + title + "\"}");
+		IChatBaseComponent subtitleJSON = ChatSerializer.a("{\"text\": \"" + subtitle + "\"}");
+		PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(EnumTitleAction.TITLE, titleJSON);
+		PacketPlayOutTitle subtitlePacket = new PacketPlayOutTitle(EnumTitleAction.SUBTITLE, subtitleJSON);
+		PacketPlayOutTitle length = new PacketPlayOutTitle(fadeIn, stay, fadeOut);
 		connection.sendPacket(titlePacket);
 		connection.sendPacket(subtitlePacket);
 		connection.sendPacket(length);
 	}
 
-	public void sendTitleAndSubtitle(Player player, String title,
-			String subtitle) {
+	public void sendTitleAndSubtitle(Player player, String title, String subtitle) {
 		CraftPlayer craftplayer = (CraftPlayer) player;
 		PlayerConnection connection = craftplayer.getHandle().playerConnection;
-		IChatBaseComponent titleJSON = ChatSerializer.a("{\"text\": \"" + title
-				+ "\"}");
-		IChatBaseComponent subtitleJSON = ChatSerializer.a("{\"text\": \""
-				+ subtitle + "\"}");
-		PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(
-				EnumTitleAction.TITLE, titleJSON);
-		PacketPlayOutTitle subtitlePacket = new PacketPlayOutTitle(
-				EnumTitleAction.SUBTITLE, subtitleJSON);
+		IChatBaseComponent titleJSON = ChatSerializer.a("{\"text\": \"" + title + "\"}");
+		IChatBaseComponent subtitleJSON = ChatSerializer.a("{\"text\": \"" + subtitle + "\"}");
+		PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(EnumTitleAction.TITLE, titleJSON);
+		PacketPlayOutTitle subtitlePacket = new PacketPlayOutTitle(EnumTitleAction.SUBTITLE, subtitleJSON);
 		connection.sendPacket(titlePacket);
 		connection.sendPacket(subtitlePacket);
 	}
 
 	public void sendActionBarText(Player p, String msg) {
-		IChatBaseComponent cbc = ChatSerializer
-				.a("{\"text\": \"" + msg + "\"}");
+		IChatBaseComponent cbc = ChatSerializer.a("{\"text\": \"" + msg + "\"}");
 		PacketPlayOutChat ppoc = new PacketPlayOutChat(cbc, (byte) 2);
 		((CraftPlayer) p).getHandle().playerConnection.sendPacket(ppoc);
 	}
 
 	public void sendChatMessage(Player p, String msg) {
-		IChatBaseComponent cbc = ChatSerializer
-				.a("{\"text\": \"" + msg + "\"}");
+		IChatBaseComponent cbc = ChatSerializer.a("{\"text\": \"" + msg + "\"}");
 		PacketPlayOutChat ppoc = new PacketPlayOutChat(cbc, (byte) 1);
 		((CraftPlayer) p).getHandle().playerConnection.sendPacket(ppoc);
 	}
 
 	public void sendMessage(Player p, String msg) {
-		IChatBaseComponent cbc = ChatSerializer
-				.a("{\"text\": \"" + msg + "\"}");
+		IChatBaseComponent cbc = ChatSerializer.a("{\"text\": \"" + msg + "\"}");
 		PacketPlayOutChat ppoc = new PacketPlayOutChat(cbc);
 		((CraftPlayer) p).getHandle().playerConnection.sendPacket(ppoc);
 	}
@@ -104,10 +85,8 @@ public class OnePointEight {
 	public void sendHeaderAndFooter(Player p, String head, String foot) {
 		CraftPlayer craftplayer = (CraftPlayer) p;
 		PlayerConnection connection = craftplayer.getHandle().playerConnection;
-		IChatBaseComponent header = ChatSerializer.a("{\"text\": \"" + head
-				+ "\"}");
-		IChatBaseComponent footer = ChatSerializer.a("{\"text\": \"" + foot
-				+ "\"}");
+		IChatBaseComponent header = ChatSerializer.a("{\"text\": \"" + head + "\"}");
+		IChatBaseComponent footer = ChatSerializer.a("{\"text\": \"" + foot + "\"}");
 		PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
 
 		try {
@@ -120,8 +99,7 @@ public class OnePointEight {
 			footerField.setAccessible(true);
 			footerField.set(packet, footer);
 			footerField.setAccessible(!footerField.isAccessible());
-		} catch (NoSuchFieldException | SecurityException
-				| IllegalArgumentException | IllegalAccessException e) {
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			System.out.println(e.toString());
 		}
 		connection.sendPacket(packet);

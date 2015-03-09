@@ -1,8 +1,8 @@
-package net.alextwelshie.deathdrop.runnables;
+package net.alextwelshie.minedrop.runnables;
 
 import java.util.concurrent.Callable;
 
-import net.alextwelshie.deathdrop.utils.DropAPI;
+import net.alextwelshie.minedrop.utils.DropAPI;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

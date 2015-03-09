@@ -1,4 +1,4 @@
-package net.alextwelshie.deathdrop.ranks;
+package net.alextwelshie.minedrop.ranks;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,8 +17,7 @@ public class ConnectionPoolManager {
 		initialize();
 	}
 
-	public ConnectionPoolManager(String databaseUrl, String userName,
-			String password) {
+	public ConnectionPoolManager(String databaseUrl, String userName, String password) {
 		this.databaseUrl = databaseUrl;
 		this.userName = userName;
 		this.password = password;
@@ -51,8 +50,7 @@ public class ConnectionPoolManager {
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection(databaseUrl, userName,
-					password);
+			connection = DriverManager.getConnection(databaseUrl, userName, password);
 		} catch (SQLException sqle) {
 			System.err.println("SQLException: " + sqle);
 			return null;

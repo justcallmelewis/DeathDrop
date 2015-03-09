@@ -1,4 +1,4 @@
-package net.alextwelshie.deathdrop.ranks;
+package net.alextwelshie.minedrop.ranks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -66,26 +66,21 @@ public class RankHandler {
 		case "Admin":
 			return "§4";
 		case "Owner":
-			return "§e";
+			return "§6";
 		default:
 			return null;
 		}
 	}
 
 	public boolean isPremium(Player player) {
-		return PlayerManager.getInstance().getRank(player)
-				.equalsIgnoreCase("Hive")
-				|| PlayerManager.getInstance().getRank(player)
-				.equalsIgnoreCase("Special");
+		return PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Hive")
+				|| PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Special");
 	}
 
 	public boolean isStaff(Player player) {
-		return PlayerManager.getInstance().getRank(player)
-				.equalsIgnoreCase("Mod")
-				| PlayerManager.getInstance().getRank(player)
-				.equalsIgnoreCase("Admin")
-				|| PlayerManager.getInstance().getRank(player)
-				.equalsIgnoreCase("Owner");
+		return PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Mod")
+				| PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Admin")
+				|| PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Owner");
 	}
 
 }

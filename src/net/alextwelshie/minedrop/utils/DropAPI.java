@@ -1,10 +1,10 @@
-package net.alextwelshie.deathdrop.utils;
+package net.alextwelshie.minedrop.utils;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import net.alextwelshie.deathdrop.Main;
-import net.alextwelshie.deathdrop.runnables.EffectAddInRunnable;
+import net.alextwelshie.minedrop.Main;
+import net.alextwelshie.minedrop.runnables.EffectAddInRunnable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -36,45 +37,35 @@ public class DropAPI {
 		return instance;
 	}
 
+	Scoreboard		board			= Bukkit.getScoreboardManager().getMainScoreboard();
+
 	OnePointEight	onepointeight	= OnePointEight.getInstance();
 
 	public void setupPlayer(Player player) {
 		notHadTurn.remove(player.getName());
 		Main.getPlugin().whosDropping = player.getName();
-		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§aPlayer §e"
+		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§aPlayer " + board.getPlayerTeam(player).getPrefix()
 				+ player.getName() + "§a, you're up!");
 		teleportToDropZone(player);
 		if (Main.getPlugin().round == 1 && Main.getPlugin().turns == 0) {
-			Bukkit.getScheduler().callSyncMethod(
-					Main.getPlugin(),
-					new EffectAddInRunnable(player, PotionEffectType.SLOW, 30,
-							255));
+			Bukkit.getScheduler().callSyncMethod(Main.getPlugin(),
+					new EffectAddInRunnable(player, PotionEffectType.SLOW, 30, 255));
 		} else {
-			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30,
-					255));
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 255));
 		}
-		onepointeight.sendTitleAndSubtitle(player, "§aNext player is..", "§e"
+		onepointeight.sendTitleAndSubtitle(player, "§aNext player is..", board.getPlayerTeam(player).getPrefix()
 				+ player.getName(), 5, 40, 5);
 	}
 
 	public void broadcastMapData(String mapname) {
 		if (mapname.equalsIgnoreCase("Brickwork")) {
-			Bukkit.broadcastMessage(Main.getPlugin().prefix
-					+ "§eMap: §bBrickwork");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eAuthor: §bN/A");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eGametype: §b"
-					+ Main.getPlugin().getType().name());
-			Bukkit.broadcastMessage(Main.getPlugin().prefix
-					+ "§eWater Blocks: §b49");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §bBrickwork");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Author: §bN/A");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Gametype: §b" + Main.getPlugin().getType().name());
 		} else {
-			Bukkit.broadcastMessage(Main.getPlugin().prefix
-					+ "§eMap: §bUnknownMap");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix
-					+ "§eAuthor: §bUnknownAuthor");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eGametype: §b"
-					+ Main.getPlugin().getType().name());
-			Bukkit.broadcastMessage(Main.getPlugin().prefix
-					+ "§eWater Blocks: §bUnknownAmount");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §bUnknownMap");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Author: §bUnknownAuthor");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Gametype: §b" + Main.getPlugin().getType().name());
 		}
 	}
 
@@ -84,13 +75,11 @@ public class DropAPI {
 	}
 
 	public void teleportToMapSpawn(Player player) {
-		player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 47.5,
-				643.5, 180, 0));
+		player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 47.5, 643.5, 180, 0));
 	}
 
 	public void teleportToDropZone(Player player) {
-		player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 92.5,
-				631.5));
+		player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 92.5, 631.5));
 	}
 
 	public String pickSuccessMessage() {
@@ -116,12 +105,11 @@ public class DropAPI {
 		} else if (occasion.equalsIgnoreCase("fail")) {
 			colour = Color.RED;
 		}
-		Firework fw = (Firework) location.getWorld().spawnEntity(location,
-				EntityType.FIREWORK);
+		Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
 		FireworkMeta fwm = fw.getFireworkMeta();
 
-		FireworkEffect effect = FireworkEffect.builder().flicker(false)
-				.withColor(colour).with(Type.BURST).trail(true).build();
+		FireworkEffect effect = FireworkEffect.builder().flicker(false).withColor(colour).with(Type.BURST)
+				.trail(true).build();
 
 		fwm.addEffect(effect);
 		fwm.setPower(1);
@@ -135,8 +123,7 @@ public class DropAPI {
 		int highest = 0;
 		ArrayList<String> winners = new ArrayList<>();
 		for (Player all : Bukkit.getOnlinePlayers()) {
-			Score score = Main.getPlugin().board.getObjective("scoreboard")
-					.getScore(all.getName());
+			Score score = Main.getPlugin().board.getObjective("scoreboard").getScore(all.getName());
 			if (score.getScore() >= highest) {
 				highest = score.getScore();
 				winners.add(score.getPlayer().getName());
@@ -147,51 +134,44 @@ public class DropAPI {
 			String[] winnerName = new String[winners.size()];
 			for (int i = 0; i < winners.size(); i++) {
 				winnerName[i] = winners.get(i);
-				Bukkit.broadcastMessage(Main.getPlugin().prefix
-						+ "§e§lWINNER: §a" + winnerName[i]);
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §a" + winnerName[i]);
 			}
-			Bukkit.broadcastMessage(Main.getPlugin().prefix
-					+ "§b§lCONGRATULATIONS!!");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§b§lCONGRATULATIONS!!");
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + " ");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix
-					+ "§3All players were tied at §d" + highest + " §3points.");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§3All players were tied at §d" + highest
+					+ " §3points.");
 		} else {
 			Player winner = Bukkit.getPlayer(winners.get(0));
 			Bukkit.broadcastMessage("");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e§lWINNER: §a"
-					+ winner.getName() + "§8 - §b" + highest + " §ePoints");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix
-					+ "§b§lCONGRATULATIONS!!");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §a"
+					+ board.getPlayerTeam(winner).getPrefix() + winner.getName() + "§8 - §b" + highest
+					+ " §6Points");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§b§lCONGRATULATIONS!!");
 			Bukkit.broadcastMessage("");
 		}
 
-		Bukkit.broadcastMessage(Main.getPlugin().prefix
-				+ "§cRestarting in §4§l10 seconds.");
+		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cRestarting in §4§l10 seconds.");
 		Main.getPlugin().board.getObjective("scoreboard").setDisplaySlot(null);
-		Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.getPlugin(),
-				new Runnable() {
+		Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
 				for (Player all : Bukkit.getOnlinePlayers()) {
-					ByteArrayDataOutput out = ByteStreams
-							.newDataOutput();
+					ByteArrayDataOutput out = ByteStreams.newDataOutput();
 					out.writeUTF("Connect");
 					out.writeUTF("hub");
-					all.sendPluginMessage(Main.getPlugin(),
-							"BungeeCord", out.toByteArray());
+					all.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
 				}
 			}
 		}, 220L);
 
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(),
-				new Runnable() {
-					@Override
-					public void run() {
-						if (Bukkit.getOnlinePlayers().size() <= 0) {
-							Bukkit.shutdown();
-						}
-					}
-				}, 0L, 40L);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(), new Runnable() {
+			@Override
+			public void run() {
+				if (Bukkit.getOnlinePlayers().size() <= 0) {
+					Bukkit.shutdown();
+				}
+			}
+		}, 0L, 40L);
 
 		Main.getPlugin().setState(GameState.RESTARTING);
 
@@ -199,20 +179,16 @@ public class DropAPI {
 
 	private void newRound() {
 
-		Main.getPlugin().board.getObjective("scoreboard").setDisplayName(
-				"§b§lNEW ROUND!!");
+		Main.getPlugin().board.getObjective("scoreboard").setDisplayName("§b§lNEW ROUND!!");
 		for (Player all : Bukkit.getOnlinePlayers()) {
-			onepointeight.sendTitleAndSubtitle(all, "§b§lNEW ROUND!!",
-					"§aRound §e" + Main.getPlugin().round, 10, 40, 10);
+			onepointeight.sendTitleAndSubtitle(all, "§b§lNEW ROUND!!", "§aRound §6" + Main.getPlugin().round, 10,
+					40, 10);
 		}
-		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(),
-				new Runnable() {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
-				Main.getPlugin().board.getObjective("scoreboard")
-				.setDisplayName(
-						"§e#" + Main.getPlugin().round + " §7"
-								+ Main.getPlugin().mapName);
+				Main.getPlugin().board.getObjective("scoreboard").setDisplayName(
+						"§6#" + Main.getPlugin().round + " §7" + Main.getPlugin().mapName);
 			}
 		}, 80L);
 
@@ -221,14 +197,12 @@ public class DropAPI {
 			notHadTurn.add(all.getName());
 		}
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(),
-				new Runnable() {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
 				Random random = new Random();
 				int playerInt = random.nextInt(notHadTurn.size());
-				setupPlayer(Bukkit.getPlayerExact(notHadTurn
-						.get(playerInt)));
+				setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
 			}
 
 		}, 60l);
@@ -246,14 +220,12 @@ public class DropAPI {
 				newRound();
 			}
 		} else {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(),
-					new Runnable() {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
 				@Override
 				public void run() {
 					Random random = new Random();
 					int playerInt = random.nextInt(notHadTurn.size());
-					setupPlayer(Bukkit.getPlayerExact(notHadTurn
-							.get(playerInt)));
+					setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
 				}
 
 			}, 40l);

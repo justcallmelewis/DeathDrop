@@ -1,18 +1,18 @@
-package net.alextwelshie.deathdrop.listeners;
+package net.alextwelshie.minedrop.listeners;
 
 import java.util.Random;
 
-import net.alextwelshie.deathdrop.Main;
-import net.alextwelshie.deathdrop.achievements.Achievement;
-import net.alextwelshie.deathdrop.achievements.AchievementAPI;
-import net.alextwelshie.deathdrop.achievements.AchievementMenu;
-import net.alextwelshie.deathdrop.ranks.RankHandler;
-import net.alextwelshie.deathdrop.timers.LobbyTimer;
-import net.alextwelshie.deathdrop.utils.BlockChooserGUI;
-import net.alextwelshie.deathdrop.utils.DropAPI;
-import net.alextwelshie.deathdrop.utils.GameState;
-import net.alextwelshie.deathdrop.utils.GameType;
-import net.alextwelshie.deathdrop.utils.OnePointEight;
+import net.alextwelshie.minedrop.Main;
+import net.alextwelshie.minedrop.achievements.Achievement;
+import net.alextwelshie.minedrop.achievements.AchievementAPI;
+import net.alextwelshie.minedrop.achievements.AchievementMenu;
+import net.alextwelshie.minedrop.ranks.RankHandler;
+import net.alextwelshie.minedrop.timers.LobbyTimer;
+import net.alextwelshie.minedrop.utils.BlockChooserGUI;
+import net.alextwelshie.minedrop.utils.DropAPI;
+import net.alextwelshie.minedrop.utils.GameState;
+import net.alextwelshie.minedrop.utils.GameType;
+import net.alextwelshie.minedrop.utils.OnePointEight;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -47,6 +47,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scoreboard.Scoreboard;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -54,14 +55,15 @@ import com.google.common.io.ByteStreams;
 @SuppressWarnings("deprecation")
 public class Listeners implements Listener {
 
+	Scoreboard		board			= Bukkit.getScoreboardManager().getMainScoreboard();
+
 	int				message			= 0;
 
 	OnePointEight	onepointeight	= OnePointEight.getInstance();
 
 	private void countBlocks(Player player, Location loc) {
 		int count = 0;
-		BlockFace[] faces = new BlockFace[] { BlockFace.EAST, BlockFace.WEST,
-				BlockFace.NORTH, BlockFace.SOUTH };
+		BlockFace[] faces = new BlockFace[] { BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH };
 		for (BlockFace bf : faces) {
 			Location block1 = loc.getBlock().getRelative(bf).getLocation();
 			if (block1.getBlock().getType() != Material.WATER
@@ -73,21 +75,21 @@ public class Listeners implements Listener {
 		switch (count) {
 		case 2:
 			Main.getPlugin().updateScore(player, 2);
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e"
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §bscored a §a§lDOUBLE!!");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+2 points)");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6(+2 points)");
 			break;
 		case 3:
 			Main.getPlugin().updateScore(player, 3);
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e"
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §bscored a §a§lTRIPLE!!");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+3 points)");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6(+3 points)");
 			break;
 		case 4:
 			Main.getPlugin().updateScore(player, 4);
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e"
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §bscored a §a§lQUAD!!");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e(+4 points)");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6(+4 points)");
 			break;
 		default:
 			Main.getPlugin().increaseScore(player);
@@ -96,8 +98,7 @@ public class Listeners implements Listener {
 	}
 
 	private void givePlayerItems(Player player) {
-		ItemStack clay = new ItemStack(Material.STAINED_CLAY, 1,
-				(short) new Random().nextInt(15));
+		ItemStack clay = new ItemStack(Material.STAINED_CLAY, 1, (short) new Random().nextInt(15));
 		ItemMeta claymeta = clay.getItemMeta();
 		claymeta.setDisplayName("§bBlock §cChooser");
 		clay.setItemMeta(claymeta);
@@ -105,13 +106,13 @@ public class Listeners implements Listener {
 
 		ItemStack achieve = new ItemStack(Material.BEACON, 1);
 		ItemMeta achievemeta = achieve.getItemMeta();
-		achievemeta.setDisplayName("§aAchievement §eMenu");
+		achievemeta.setDisplayName("§aAchievement §6Menu");
 		achieve.setItemMeta(achievemeta);
 		player.getInventory().setItem(4, achieve);
 
 		ItemStack quartz = new ItemStack(Material.QUARTZ, 1);
 		ItemMeta quartzmeta = quartz.getItemMeta();
-		quartzmeta.setDisplayName("§eReturn to Hub");
+		quartzmeta.setDisplayName("§6Return to Hub");
 		quartz.setItemMeta(quartzmeta);
 		player.getInventory().setItem(8, quartz);
 	}
@@ -119,14 +120,12 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
-		event.setFormat(Bukkit.getScoreboardManager().getMainScoreboard()
-				.getPlayerTeam(player).getPrefix()
-				+ "%s" + ChatColor.DARK_GRAY + " » " + ChatColor.WHITE + "%s");
+		event.setFormat(board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY + " » "
+				+ ChatColor.WHITE + "%s");
 
 		if (Main.getPlugin().getState() == GameState.RESTARTING) {
 			if (event.getMessage().toLowerCase().contains("gg")) {
-				AchievementAPI.getInstance().grantAchievement(
-						event.getPlayer(), Achievement.GOODGAME);
+				AchievementAPI.getInstance().grantAchievement(player, Achievement.GOODGAME);
 			}
 		}
 	}
@@ -135,14 +134,12 @@ public class Listeners implements Listener {
 	public void onLogin(PlayerLoginEvent event) {
 		if (Main.getPlugin().getState() == GameState.LOBBY) {
 			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().maxPlayers) {
-				event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST,
-						"The game is full! Sorry :(");
+				event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "The game is full! Sorry :(");
 			} else {
 				event.allow();
 			}
 		} else {
-			event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST,
-					"The game has started. Please come back later.");
+			event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "The game has started. Please come back later.");
 		}
 	}
 
@@ -164,18 +161,16 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		event.setJoinMessage(Main.getPlugin().prefix + "§ePlayer §a"
-				+ player.getName() + " §ehas joined us!");
+		event.setJoinMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix() + player.getName()
+				+ " §6has joined the game");
 		Main.getPlugin().registerPlayerOnScoreboard(player);
 		//AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRSTJOIN);
-		onepointeight.sendTitleAndSubtitle(player, "§eWelcome to §6DeathDrop!",
-				"§b(Early beta, expect bugs!)", 40, 80, 40);
-		onepointeight.sendHeaderAndFooter(player,
-				"§eSurvivalMC§8.§aeu §3- §aPrivate Server",
-				"§aPlaying on §6DD1");
+		onepointeight.sendTitleAndSubtitle(player, "§6Welcome to §6MineDrop!", "§3(Early beta, expect bugs!)", 40,
+				80, 40);
+		onepointeight
+		.sendHeaderAndFooter(player, "§6SurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6DD1");
 
-		player.teleport(new Location(Bukkit.getWorld("world"), -1386.5, 10,
-				941.5, 0, 0));
+		player.teleport(new Location(Bukkit.getWorld("world"), -1386.5, 10, 941.5, 0, 0));
 
 		givePlayerItems(player);
 
@@ -184,10 +179,8 @@ public class Listeners implements Listener {
 				Main.getPlugin().shortened = true;
 				LobbyTimer.lobbyTimer = 46;
 				for (Player all : Bukkit.getOnlinePlayers()) {
-					all.sendMessage(Main.getPlugin().prefix
-							+ "§eWe have all the droppers we need!");
-					all.sendMessage(Main.getPlugin().prefix
-							+ "§6Shortening timer to "
+					all.sendMessage(Main.getPlugin().prefix + "§6We have all the droppers we need!");
+					all.sendMessage(Main.getPlugin().prefix + "§6Shortening timer to "
 							+ (LobbyTimer.lobbyTimer - 1) + " seconds..");
 				}
 			}
@@ -199,8 +192,7 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		event.setQuitMessage(Main.getPlugin().prefix + "§ePlayer §6"
-				+ player.getName() + " §ehas left us!");
+		event.setQuitMessage(Main.getPlugin().prefix + "§6Player §6" + player.getName() + " §6has left us!");
 		Main.getPlugin().removePlayerFromScoreboard(player);
 
 		RankHandler.getInstance().clearRank(player);
@@ -229,20 +221,15 @@ public class Listeners implements Listener {
 		if (loc.getY() <= 55 && block.getType() != Material.AIR) {
 			if (Main.getPlugin().getState() == GameState.INGAME) {
 				if (Main.getPlugin().whosDropping == null) {
-				} else if (Main.getPlugin().whosDropping
-						.equalsIgnoreCase(player.getName())) {
+				} else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
 					if (block.getTypeId() == 9) {
 
-						block.setType(Main.getPlugin().blocks.get(player
-								.getName()));
-						block.setData(Main.getPlugin().blockData.get(player
-								.getName()));
+						block.setType(Main.getPlugin().blocks.get(player.getName()));
+						block.setData(Main.getPlugin().blockData.get(player.getName()));
 
-						DropAPI.getInstance().launchFirework("success",
-								block.getLocation().subtract(0, 2, 0));
+						DropAPI.getInstance().launchFirework("success", block.getLocation().subtract(0, 2, 0));
 						DropAPI.getInstance().finishDrop(player);
-						Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e"
-								+ player.getName() + "§a"
+						Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6" + player.getName() + "§a"
 								+ DropAPI.getInstance().pickSuccessMessage());
 						if (Main.getPlugin().getType() == GameType.Enhanced) {
 							countBlocks(player, loc);
@@ -261,16 +248,14 @@ public class Listeners implements Listener {
 		Material material;
 		if (event.getItem().getType() == null) {
 			return;
-		} else if (event.getItem().getType() != null
-				&& event.getItem().getType() != Material.AIR) {
+		} else if (event.getItem().getType() != null && event.getItem().getType() != Material.AIR) {
 			material = event.getItem().getType();
 		} else {
 			return;
 		}
 		final Player player = event.getPlayer();
 		if (event.getAction() == null) {
-		} else if (event.getAction() == Action.RIGHT_CLICK_AIR
-				|| event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+		} else if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if (player.hasPermission("srv.build")) {
 				event.setCancelled(false);
 			} else {
@@ -279,11 +264,9 @@ public class Listeners implements Listener {
 			switch (material) {
 			case STAINED_CLAY:
 				if (Main.getPlugin().getState() == GameState.INGAME) {
-					player.sendMessage(Main.getPlugin().prefix
-							+ "§cYou can't change your block ingame silly!");
+					player.sendMessage(Main.getPlugin().prefix + "§cYou can't change your block ingame silly!");
 				} else {
-					event.getPlayer().openInventory(
-							BlockChooserGUI.getInventory(event.getPlayer()));
+					event.getPlayer().openInventory(BlockChooserGUI.getInventory(event.getPlayer()));
 				}
 				break;
 			case BEACON:
@@ -294,8 +277,7 @@ public class Listeners implements Listener {
 				ByteArrayDataOutput quartzout = ByteStreams.newDataOutput();
 				quartzout.writeUTF("Connect");
 				quartzout.writeUTF("hub");
-				player.sendPluginMessage(Main.getPlugin(), "BungeeCord",
-						quartzout.toByteArray());
+				player.sendPluginMessage(Main.getPlugin(), "BungeeCord", quartzout.toByteArray());
 				break;
 			default:
 				break;
@@ -333,8 +315,7 @@ public class Listeners implements Listener {
 			Player player = (Player) event.getWhoClicked();
 			ItemStack clicked = event.getCurrentItem();
 			Inventory inventory = event.getInventory();
-			if (inventory.getName().equals(
-					BlockChooserGUI.getInventory(player).getName())) {
+			if (inventory.getName().equals(BlockChooserGUI.getInventory(player).getName())) {
 				if (clicked.getType() != Material.AIR) {
 					event.setCancelled(true);
 					Material material = clicked.getType();
@@ -346,23 +327,16 @@ public class Listeners implements Listener {
 
 					if (inventory.contains(clicked)) {
 						if (player.getItemInHand().getType() == Material.STAINED_CLAY
-								&& !player.getItemInHand().containsEnchantment(
-										Enchantment.DURABILITY)) {
-							player.getItemInHand()
-							.getItemMeta()
-							.addEnchant(Enchantment.DURABILITY, 1, true);
+								&& !player.getItemInHand().containsEnchantment(Enchantment.DURABILITY)) {
+							player.getItemInHand().getItemMeta().addEnchant(Enchantment.DURABILITY, 1, true);
 						}
 						Main.getPlugin().blocks.put(player.getName(), material);
 						Main.getPlugin().blockData.put(player.getName(), data);
-						AchievementAPI.getInstance().grantAchievement(player,
-								Achievement.PICKBLOCK);
-						player.sendMessage(Main.getPlugin().prefix
-								+ "§eBlock chosen.");
+						AchievementAPI.getInstance().grantAchievement(player, Achievement.PICKBLOCK);
+						player.sendMessage(Main.getPlugin().prefix + "§6Block chosen.");
 					}
 				}
-			} else if (inventory.getName().equals(
-					AchievementMenu.getInstance().getInventory(player)
-					.getName())) {
+			} else if (inventory.getName().equals(AchievementMenu.getInstance().getInventory(player).getName())) {
 				event.setCancelled(true);
 				if (clicked == null) {
 					player.closeInventory();
@@ -377,33 +351,28 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onDamage(EntityDamageEvent event) {
 		Player player = null;
-		if(event.getEntity() instanceof Player){
+		if (event.getEntity() instanceof Player) {
 			player = (Player) event.getEntity();
 		}
-		
+
 		if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-			Block block = player.getLocation().getBlock()
-					.getRelative(BlockFace.DOWN);
+			Block block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
 			if (Main.getPlugin().getState() == GameState.INGAME) {
 				if (block.getTypeId() != 8 || block.getTypeId() != 9) {
 					if (Main.getPlugin().whosDropping == null) {
 
-					} else if (Main.getPlugin().whosDropping
-							.equalsIgnoreCase(player.getName())) {
+					} else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
 						event.setCancelled(true);
 
 						for (Player all : Bukkit.getOnlinePlayers()) {
 							onepointeight.sendTitle(all, "§4Fail!", 5, 20, 5);
 						}
 
-						DropAPI.getInstance().launchFirework("fail",
-								block.getLocation().subtract(0, 2, 0));
+						DropAPI.getInstance().launchFirework("fail", block.getLocation().subtract(0, 2, 0));
 						DropAPI.getInstance().finishDrop(player);
-						Bukkit.broadcastMessage(Main.getPlugin().prefix + "§e"
-								+ player.getName() + "§c"
+						Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6" + player.getName() + "§c"
 								+ DropAPI.getInstance().pickFailMessage());
-						AchievementAPI.getInstance().grantAchievement(player,
-								Achievement.FIRST_LAND_FAIL);
+						AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRST_LAND_FAIL);
 						DropAPI.getInstance().setupNextTurn();
 					}
 				}

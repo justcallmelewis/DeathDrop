@@ -1,10 +1,10 @@
-package net.alextwelshie.deathdrop.ranks;
+package net.alextwelshie.minedrop.ranks;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import net.alextwelshie.deathdrop.achievements.Achievement;
+import net.alextwelshie.minedrop.achievements.Achievement;
 
 import org.bukkit.entity.Player;
 
@@ -22,8 +22,7 @@ public class PlayerManager {
 	public String getRank(Player p) {
 		String rank = null;
 		try {
-			PreparedStatement getRank = connection
-					.prepareStatement("SELECT rank FROM `players` WHERE uuid=?;");
+			PreparedStatement getRank = connection.prepareStatement("SELECT rank FROM `players` WHERE uuid=?;");
 			getRank.setString(1, p.getUniqueId().toString().replace("-", ""));
 			ResultSet result = getRank.executeQuery();
 			result.next();
@@ -44,9 +43,8 @@ public class PlayerManager {
 		boolean achievement = false;
 		try {
 			PreparedStatement hasAchievement = connection
-					.prepareStatement("SELECT internalname FROM `deathdrop_achievements` WHERE uuid=?;");
-			hasAchievement.setString(1,
-					p.getUniqueId().toString().replace("-", ""));
+					.prepareStatement("SELECT internalname FROM `MineDrop_achievements` WHERE uuid=?;");
+			hasAchievement.setString(1, p.getUniqueId().toString().replace("-", ""));
 			ResultSet result = hasAchievement.executeQuery();
 			result.next();
 
@@ -69,9 +67,8 @@ public class PlayerManager {
 		int epoch = 0;
 		try {
 			PreparedStatement getAchievementEpoch = connection
-					.prepareStatement("SELECT timeachieved FROM `deathdrop_achievements` WHERE uuid=?;");
-			getAchievementEpoch.setString(1, p.getUniqueId().toString()
-					.replace("-", ""));
+					.prepareStatement("SELECT timeachieved FROM `MineDrop_achievements` WHERE uuid=?;");
+			getAchievementEpoch.setString(1, p.getUniqueId().toString().replace("-", ""));
 			ResultSet result = getAchievementEpoch.executeQuery();
 			result.next();
 
@@ -91,9 +88,8 @@ public class PlayerManager {
 	public void grantAchievement(Player p, Achievement a) {
 		try {
 			PreparedStatement achievement = connection
-					.prepareStatement("INSERT INTO `deathdrop_achievements` values(?,?,?)");
-			achievement.setString(1, p.getUniqueId().toString()
-					.replace("-", ""));
+					.prepareStatement("INSERT INTO `MineDrop_achievements` values(?,?,?)");
+			achievement.setString(1, p.getUniqueId().toString().replace("-", ""));
 			achievement.setString(2, a.name());
 			achievement.setInt(3, ((int) System.currentTimeMillis() / 1000));
 			achievement.execute();

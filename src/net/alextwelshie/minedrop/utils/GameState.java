@@ -1,4 +1,4 @@
-package net.alextwelshie.deathdrop.utils;
+package net.alextwelshie.minedrop.utils;
 
 public enum GameState {
 

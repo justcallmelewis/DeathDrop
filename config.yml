@@ -1,4 +1,4 @@
-# DeathDrop Default Config - for SurvivalMC.eu by AlexTWelshie <3
+# MineDrop Default Config - for SurvivalMC.eu by AlexTWelshie <3
 
 # Basic Game Structure
 neededToStart: 2
@@ -8,4 +8,3 @@ lobbytimer: 180
 
 # Current gametypes available: Enhanced, Normal and Auto
 gametype: Enhanced
-

@@ -1,4 +1,4 @@
-package net.alextwelshie.deathdrop.achievements;
+package net.alextwelshie.minedrop.achievements;
 
 public enum Achievement {
 

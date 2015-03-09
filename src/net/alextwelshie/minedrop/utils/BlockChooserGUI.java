@@ -1,11 +1,11 @@
-package net.alextwelshie.deathdrop.utils;
+package net.alextwelshie.minedrop.utils;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import net.alextwelshie.deathdrop.Main;
-import net.alextwelshie.deathdrop.ranks.PlayerManager;
-import net.alextwelshie.deathdrop.ranks.RankHandler;
+import net.alextwelshie.minedrop.Main;
+import net.alextwelshie.minedrop.ranks.PlayerManager;
+import net.alextwelshie.minedrop.ranks.RankHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -24,33 +24,25 @@ public class BlockChooserGUI {
 		if (player.isOp()) {
 			player.getInventory().getItemInHand().setType(block.getType());
 			Main.getPlugin().blocks.put(player.getName(), block.getType());
-			Main.getPlugin().blockData.put(player.getName(), block.getData()
-					.getData());
-		} else if (!player.isOp()
-				&& RankHandler.getInstance().isPremium(player)
+			Main.getPlugin().blockData.put(player.getName(), block.getData().getData());
+		} else if (!player.isOp() && RankHandler.getInstance().isPremium(player)
 				&& !RankHandler.getInstance().isStaff(player)) {
 			//premium
 			if (!staff.containsKey(block.getType())) {
 				player.getInventory().getItemInHand().setType(block.getType());
 				Main.getPlugin().blocks.put(player.getName(), block.getType());
-				Main.getPlugin().blockData.put(player.getName(), block
-						.getData().getData());
+				Main.getPlugin().blockData.put(player.getName(), block.getData().getData());
 			} else {
 				player.closeInventory();
-				player.sendMessage(Main.getPlugin().prefix
-						+ "§cThese blocks are reserved for staff only. Sorry.");
+				player.sendMessage(Main.getPlugin().prefix + "§cThese blocks are reserved for staff only. Sorry.");
 			}
-		} else if (!player.isOp()
-				&& !RankHandler.getInstance().isPremium(player)
+		} else if (!player.isOp() && !RankHandler.getInstance().isPremium(player)
 				&& !RankHandler.getInstance().isStaff(player)) {
 			if (!staff.containsKey(block.getType())) {
 				if (!premium.containsKey(block.getType())) {
-					player.getInventory().getItemInHand()
-					.setType(block.getType());
-					Main.getPlugin().blocks.put(player.getName(),
-							block.getType());
-					Main.getPlugin().blockData.put(player.getName(), block
-							.getData().getData());
+					player.getInventory().getItemInHand().setType(block.getType());
+					Main.getPlugin().blocks.put(player.getName(), block.getType());
+					Main.getPlugin().blockData.put(player.getName(), block.getData().getData());
 				} else {
 					player.closeInventory();
 					player.sendMessage(Main.getPlugin().prefix
@@ -58,18 +50,15 @@ public class BlockChooserGUI {
 				}
 			} else {
 				player.closeInventory();
-				player.sendMessage(Main.getPlugin().prefix
-						+ "§cThese blocks are reserved for staff only. Sorry.");
+				player.sendMessage(Main.getPlugin().prefix + "§cThese blocks are reserved for staff only. Sorry.");
 			}
 		}
 	}
 
 	public static Inventory getInventory(Player player) {
 		Inventory inv = Bukkit.createInventory(null, 27, "§8Pick your block!");
-		if (PlayerManager.getInstance().getRank(player)
-				.equalsIgnoreCase("Hive")
-				|| PlayerManager.getInstance().getRank(player)
-				.equalsIgnoreCase("Special")) {
+		if (PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Hive")
+				|| PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Special")) {
 			for (Entry<Byte, Material> entry : normal.entrySet()) {
 				byte data = entry.getKey();
 				Material material = entry.getValue();
@@ -83,12 +72,9 @@ public class BlockChooserGUI {
 
 				inv.addItem(new ItemStack(material, 1, data));
 			}
-		} else if (PlayerManager.getInstance().getRank(player)
-				.equalsIgnoreCase("Mod")
-				| PlayerManager.getInstance().getRank(player)
-				.equalsIgnoreCase("Admin")
-				|| PlayerManager.getInstance().getRank(player)
-				.equalsIgnoreCase("Owner")) {
+		} else if (PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Mod")
+				| PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Admin")
+				|| PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Owner")) {
 			for (Entry<Byte, Material> entry : normal.entrySet()) {
 				byte data = entry.getKey();
 				Material material = entry.getValue();

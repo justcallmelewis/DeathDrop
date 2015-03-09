@@ -1,4 +1,4 @@
-package net.alextwelshie.deathdrop.runnables;
+package net.alextwelshie.minedrop.runnables;
 
 import java.util.concurrent.Callable;
 
@@ -13,8 +13,7 @@ public class EffectAddInRunnable implements Callable {
 	private final PotionEffectType	type;
 	private final int				duration, strength;
 
-	public EffectAddInRunnable(Player player, PotionEffectType type,
-			int duration, int strength) {
+	public EffectAddInRunnable(Player player, PotionEffectType type, int duration, int strength) {
 		this.player = player;
 		this.type = type;
 		this.duration = duration;

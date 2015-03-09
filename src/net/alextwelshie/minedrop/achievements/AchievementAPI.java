@@ -1,4 +1,4 @@
-package net.alextwelshie.deathdrop.achievements;
+package net.alextwelshie.minedrop.achievements;
 
 import org.bukkit.entity.Player;
 
@@ -39,7 +39,7 @@ public class AchievementAPI {
 		String name = null;
 		switch (internalname) {
 		case FIRSTJOIN:
-			name = "Join your first game of DeathDrop.";
+			name = "Join your first game of MineDrop.";
 			break;
 		case FIRST_LAND_FAIL:
 			name = "Fail a landing for the first time.";
@@ -54,7 +54,7 @@ public class AchievementAPI {
 			name = "Pick a block from the Block Chooser.";
 			break;
 		case COMPLETED:
-			name = "Successfully complete all DeathDrop achievements.";
+			name = "Successfully complete all MineDrop achievements.";
 			break;
 		}
 		return name;
@@ -66,8 +66,8 @@ public class AchievementAPI {
 		} else {
 		player.sendMessage("§8=========================================");
 		player.sendMessage("                §3§lACHIEVEMENT GET!            ");
-		player.sendMessage("§eName: \n§b" + getDisplayName(achievement));
-		player.sendMessage("§eDescription: \n§b" + getDescription(achievement));
+		player.sendMessage("§6Name: \n§b" + getDisplayName(achievement));
+		player.sendMessage("§6Description: \n§b" + getDescription(achievement));
 		player.sendMessage("§8=========================================");
 
 		PlayerManager.getInstance().grantAchievement(player, achievement);
@@ -83,8 +83,8 @@ public class AchievementAPI {
 		achievement = Achievement.COMPLETED;
 		player.sendMessage("§8=========================================");
 		player.sendMessage("                §3§lACHIEVEMENT GET!            ");
-		player.sendMessage("§eName: \n§b" + getDisplayName(achievement));
-		player.sendMessage("§eDescription: \n§b" + getDescription(achievement));
+		player.sendMessage("§6Name: \n§b" + getDisplayName(achievement));
+		player.sendMessage("§6Description: \n§b" + getDescription(achievement));
 		player.sendMessage("§8=========================================");
 
 		PlayerManager.getInstance().grantAchievement(player, achievement);
