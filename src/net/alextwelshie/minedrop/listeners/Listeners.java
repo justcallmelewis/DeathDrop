@@ -328,7 +328,11 @@ public class Listeners implements Listener {
 					if (inventory.contains(clicked)) {
 						if (player.getItemInHand().getType() == Material.STAINED_CLAY
 								&& !player.getItemInHand().containsEnchantment(Enchantment.DURABILITY)) {
-							player.getItemInHand().getItemMeta().addEnchant(Enchantment.DURABILITY, 1, true);
+							ItemStack stack = new ItemStack(player.getItemInHand().getType());
+							
+							ItemMeta meta = player.getItemInHand().getItemMeta();
+							meta.addEnchant(Enchantment.DURABILITY, 2, true);
+							player.getItemInHand().setItem(stack);
 						}
 						Main.getPlugin().blocks.put(player.getName(), material);
 						Main.getPlugin().blockData.put(player.getName(), data);
