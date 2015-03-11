@@ -28,9 +28,6 @@ public class LobbyTimer implements Runnable {
 		}
 
 		switch (lobbyTimer) {
-		case 181:
-			Main.getPlugin().setState(GameState.LOBBY);
-			break;
 		case 20:
 			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
 				for (Player all : Bukkit.getOnlinePlayers()) {
@@ -39,7 +36,7 @@ public class LobbyTimer implements Runnable {
 				}
 			}
 			break;
-		case 11:
+		case 10:
 			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
 				Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new LoadWorldInRunnable());
 				DropAPI.getInstance().broadcastMapData();

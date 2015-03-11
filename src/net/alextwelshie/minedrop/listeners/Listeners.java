@@ -66,18 +66,18 @@ public class Listeners implements Listener {
 		BlockFace[] faces = new BlockFace[] { BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH };
 		for (BlockFace bf : faces) {
 			Location block1 = loc.getBlock().getRelative(bf).getLocation();
-			if(Main.getPlugin().mapName == "Brickwork"){
+			if (Main.getPlugin().mapName == "Brickwork") {
 				if (block1.getBlock().getType() != Material.WATER
 						&& block1.getBlock().getType() != Material.COAL_BLOCK) {
 					count++;
-				} 
+				}
 			} else {
 				if (block1.getBlock().getType() != Material.WATER
 						&& block1.getBlock().getType() != Material.OBSIDIAN) {
 					count++;
-				} 
+				}
 			}
-			
+
 		}
 
 		switch (count) {
@@ -170,7 +170,7 @@ public class Listeners implements Listener {
 		onepointeight.sendTitleAndSubtitle(player, "§6Welcome to §6MineDrop!", "§3(Early beta, expect bugs!)", 40,
 				80, 40);
 		onepointeight
-				.sendHeaderAndFooter(player, "§6SurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6MD1");
+		.sendHeaderAndFooter(player, "§6SurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6MD1");
 
 		player.teleport(new Location(Bukkit.getWorld("world"), -1386.5, 10, 941.5, 0, 0));
 
@@ -228,9 +228,9 @@ public class Listeners implements Listener {
 
 						block.setType(Main.getPlugin().blocks.get(player.getName()));
 						block.setData(Main.getPlugin().blockData.get(player.getName()));
-						
+
 						onepointeight.sendActionBarText(player, "§aYou successfully landed in the water!");
-						
+
 						DropAPI.getInstance().launchFirework("success", block.getLocation().subtract(0, 2, 0));
 						DropAPI.getInstance().finishDrop(player);
 						Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
@@ -332,11 +332,7 @@ public class Listeners implements Listener {
 					if (inventory.contains(clicked)) {
 						if (player.getItemInHand().getType() == Material.STAINED_CLAY
 								&& !player.getItemInHand().containsEnchantment(Enchantment.DURABILITY)) {
-							ItemStack stack = new ItemStack(player.getItemInHand().getType());
-							
-							ItemMeta meta = player.getItemInHand().getItemMeta();
-							meta.addEnchant(Enchantment.DURABILITY, 2, true);
-							player.getItemInHand().setItem(stack);
+							player.getItemInHand().getItemMeta().addEnchant(Enchantment.DURABILITY, 1, true);
 						}
 						Main.getPlugin().blocks.put(player.getName(), material);
 						Main.getPlugin().blockData.put(player.getName(), data);
@@ -385,11 +381,11 @@ public class Listeners implements Listener {
 						DropAPI.getInstance().setupNextTurn();
 					}
 				}
-				
-				if(event.getCause() == DamageCause.FALL){
+
+				if (event.getCause() == DamageCause.FALL) {
 					event.setCancelled(true);
 				}
-			} 
+			}
 		}
 	}
 

@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Random;
 
 import net.alextwelshie.minedrop.commands.EndGame;
+import net.alextwelshie.minedrop.commands.ForceStart;
 import net.alextwelshie.minedrop.commands.Map;
 import net.alextwelshie.minedrop.commands.SetConfig;
-import net.alextwelshie.minedrop.commands.ForceStart;
 import net.alextwelshie.minedrop.commands.ShortStart;
 import net.alextwelshie.minedrop.listeners.Listeners;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
@@ -28,13 +28,13 @@ import org.bukkit.scoreboard.ScoreboardManager;
 
 @SuppressWarnings("deprecation")
 public class Main extends JavaPlugin {
-	
-	Random random = new Random();
+
+	Random					random			= new Random();
 
 	public String			prefix			= "§3MineDrop §7| ";
 	public Scoreboard		board;
 	public int				lobbyTimer		= 23;
-	public String			mapName;		
+	public String			mapName;
 	public int				randomMap		= random.nextInt(1);
 	public World			mapWorld		= null;
 	public Integer			neededToStart	= null;
@@ -77,16 +77,16 @@ public class Main extends JavaPlugin {
 		Objective objective = board.registerNewObjective("scoreboard", "dummy");
 		objective.setDisplayName("§6#1 §7" + mapName);
 	}
-	
-	private void randomMap(){
-		if(randomMap == 0){
+
+	private void randomMap() {
+		if (randomMap == 0) {
 			mapName = "Brickwork";
 		} else {
 			mapName = "Chamber";
 		}
 	}
-	
-	public void forceMap(String map){
+
+	public void forceMap(String map) {
 		mapName = map;
 	}
 
@@ -129,12 +129,12 @@ public class Main extends JavaPlugin {
 	}
 
 	public Integer getScore(Player player) {
-		Score score = board.getObjective("scoreboard").getScore(player.getDisplayName()); //Get a fake offline player
+		Score score = board.getObjective("scoreboard").getScore(player.getDisplayName());
 		return score.getScore();
 	}
 
 	public void updateScore(Player player, int amount) {
-		Score score = board.getObjective("scoreboard").getScore(player.getDisplayName()); //Get a fake offline player
+		Score score = board.getObjective("scoreboard").getScore(player.getDisplayName());
 		score.setScore(getScore(player) + amount);
 
 		for (Player all : Bukkit.getOnlinePlayers()) {
@@ -143,7 +143,7 @@ public class Main extends JavaPlugin {
 	}
 
 	public void increaseScore(Player player) {
-		Score score = board.getObjective("scoreboard").getScore(player.getDisplayName()); //Get a fake offline player
+		Score score = board.getObjective("scoreboard").getScore(player.getDisplayName());
 		score.setScore(getScore(player) + 1);
 
 		for (Player all : Bukkit.getOnlinePlayers()) {
@@ -205,7 +205,7 @@ public class Main extends JavaPlugin {
 		case "Auto":
 			Random random = new Random();
 			int Chance = random.nextInt(1);
-			if(Chance == 0){
+			if (Chance == 0) {
 				setType(GameType.Enhanced);
 			} else {
 				setType(GameType.Normal);

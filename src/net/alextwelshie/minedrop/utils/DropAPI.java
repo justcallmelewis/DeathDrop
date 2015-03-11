@@ -58,9 +58,9 @@ public class DropAPI {
 	}
 
 	public void broadcastMapData() {
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §b" + Main.getPlugin().mapName);
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Author: §bN/A");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Gametype: §b" + Main.getPlugin().getType().name());
+		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §b" + Main.getPlugin().mapName);
+		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Author: §bN/A");
+		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Gametype: §b" + Main.getPlugin().getType().name());
 	}
 
 	public void finishDrop(Player player) {
@@ -69,29 +69,29 @@ public class DropAPI {
 	}
 
 	public void teleportToMapSpawn(Player player) {
-		switch(Main.getPlugin().mapName){
-			case "Brickwork":
-				player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 47.5, 643.5, 180, 0));
-				break;
-			
-			case "Chamber":
-				player.teleport(new Location(Main.getPlugin().mapWorld, -167.5, 77.5, 207.5, 90, 0));
-				break;
+		switch (Main.getPlugin().mapName) {
+		case "Brickwork":
+			player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 47.5, 643.5, 180, 0));
+			break;
+
+		case "Chamber":
+			player.teleport(new Location(Main.getPlugin().mapWorld, -167.5, 77.5, 207.5, 90, 0));
+			break;
 		}
-		
+
 	}
 
 	public void teleportToDropZone(Player player) {
-		switch(Main.getPlugin().mapName){
+		switch (Main.getPlugin().mapName) {
 		case "Brickwork":
 			player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 92.5, 631.5, 0, 0));
 			break;
-		
+
 		case "Chamber":
 			player.teleport(new Location(Main.getPlugin().mapWorld, -172.5, 95.5, 206.5, 90, 0));
 			break;
-	}
-		
+		}
+
 	}
 
 	public String pickSuccessMessage() {

@@ -6,6 +6,7 @@ import net.alextwelshie.minedrop.Main;
 import net.alextwelshie.minedrop.ranks.RankHandler;
 import net.alextwelshie.minedrop.runnables.KickInRunnable;
 import net.alextwelshie.minedrop.utils.DropAPI;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
