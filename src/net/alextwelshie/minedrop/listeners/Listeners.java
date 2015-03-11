@@ -123,7 +123,7 @@ public class Listeners implements Listener {
 		quartz.setItemMeta(quartzmeta);
 		player.getInventory().setItem(8, quartz);
 	}
-
+	
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
