@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import net.alextwelshie.minedrop.Main;
+import net.alextwelshie.minedrop.SettingsManager;
 import net.alextwelshie.minedrop.runnables.EffectAddInRunnable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
+import org.bukkit.World;
 import org.bukkit.FireworkEffect.Type;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -40,6 +42,7 @@ public class DropAPI {
 	Scoreboard		board			= Bukkit.getScoreboardManager().getMainScoreboard();
 
 	OnePointEight	onepointeight	= OnePointEight.getInstance();
+	SettingsManager settings		= SettingsManager.getInstance();
 
 	public void setupPlayer(Player player) {
 		notHadTurn.remove(player.getName());
@@ -67,28 +70,29 @@ public class DropAPI {
 	}
 
 	public void teleportToMapSpawn(Player player) {
-		switch (Main.getPlugin().mapName) {
-		case "Brickwork":
-			player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 47.5, 643.5, 180, 0));
-			break;
-
-		case "Chamber":
-			player.teleport(new Location(Main.getPlugin().mapWorld, -167.5, 77.5, 207.5, 90, 0));
-			break;
-		}
-
+		World w = Bukkit.getServer().getWorld(
+				settings.getData().getString(Main.getPlugin().mapName + ".world"));
+		double x = settings.getData().getDouble(Main.getPlugin().mapName + ".spec.x");
+		double y = settings.getData().getDouble(Main.getPlugin().mapName + ".spec.y");
+		double z = settings.getData().getDouble(Main.getPlugin().mapName + ".spec.z");
+		double yaw = settings.getData().getDouble(Main.getPlugin().mapName + ".spec.yaw");
+		double pitch = settings.getData().getDouble(Main.getPlugin().mapName + ".spec.pitch");
+		Location spec = new Location(w, x, y, z, (float) yaw,
+				(float) pitch);
+		player.teleport(spec);
 	}
 
 	public void teleportToDropZone(Player player) {
-		switch (Main.getPlugin().mapName) {
-		case "Brickwork":
-			player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 92.5, 631.5, 0, 0));
-			break;
-
-		case "Chamber":
-			player.teleport(new Location(Main.getPlugin().mapWorld, -172.5, 95.5, 206.5, 90, 0));
-			break;
-		}
+		World w = Bukkit.getServer().getWorld(
+				settings.getData().getString(Main.getPlugin().mapName + ".world"));
+		double x = settings.getData().getDouble(Main.getPlugin().mapName + ".jump.x");
+		double y = settings.getData().getDouble(Main.getPlugin().mapName + ".jump.y");
+		double z = settings.getData().getDouble(Main.getPlugin().mapName + ".jump.z");
+		double yaw = settings.getData().getDouble(Main.getPlugin().mapName + ".jump.yaw");
+		double pitch = settings.getData().getDouble(Main.getPlugin().mapName + ".jump.pitch");
+		Location jump = new Location(w, x, y, z, (float) yaw,
+				(float) pitch);
+		player.teleport(jump);
 
 	}
 

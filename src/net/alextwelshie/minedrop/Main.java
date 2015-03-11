@@ -3,10 +3,12 @@ package net.alextwelshie.minedrop;
 import java.util.HashMap;
 import java.util.Random;
 
+import net.alextwelshie.minedrop.SettingsManager;
 import net.alextwelshie.minedrop.commands.EndGame;
 import net.alextwelshie.minedrop.commands.ForceStart;
 import net.alextwelshie.minedrop.commands.Map;
 import net.alextwelshie.minedrop.commands.SetConfig;
+import net.alextwelshie.minedrop.commands.SetSpawn;
 import net.alextwelshie.minedrop.commands.ShortStart;
 import net.alextwelshie.minedrop.listeners.Listeners;
 import net.alextwelshie.minedrop.ranks.PlayerManager;
@@ -210,8 +212,10 @@ public class Main extends JavaPlugin {
 		getCommand("setconfig").setExecutor(new SetConfig());
 		getCommand("map").setExecutor(new Map());
 		getCommand("shortstart").setExecutor(new ShortStart());
+		getCommand("setspawn").setExecutor(new SetSpawn());
 		Bukkit.getPluginManager().registerEvents(new Listeners(), this);
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+		SettingsManager.getInstance().setup(this);
 	}
 
 	private void setupMechanics() {
