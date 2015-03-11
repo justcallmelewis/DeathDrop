@@ -31,7 +31,6 @@ public class EndGame implements CommandExecutor {
 								DropAPI.getInstance().teleportToMapSpawn(player);
 							}
 
-							if (Main.getPlugin().round == (Main.getPlugin().maxRounds + 1)) {
 								Main.getPlugin().round = 0;
 
 								int highest = 0;
@@ -93,8 +92,6 @@ public class EndGame implements CommandExecutor {
 				} else {
 					player.sendMessage("§4Illegal command.");
 				}
-			}
-
 		}
 		return true;
 	}
