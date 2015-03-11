@@ -3,7 +3,7 @@ package net.alextwelshie.minedrop.commands;
 import java.util.ArrayList;
 
 import net.alextwelshie.minedrop.Main;
-import net.alextwelshie.minedrop.runnables.KickInRunnable;
+import net.alextwelshie.minedrop.ranks.RankHandler;
 import net.alextwelshie.minedrop.utils.DropAPI;
 
 import org.bukkit.Bukkit;
@@ -13,6 +13,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Score;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+
 public class EndGame implements CommandExecutor {
 
 	@SuppressWarnings({ "deprecation", "unused" })
@@ -20,7 +23,7 @@ public class EndGame implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			if (Main.getPlugin().isStaff(player)) {
+			if (RankHandler.getInstance().isStaff(player)) {
 				if (args.length == 0) {
 					if (!Bukkit.getScheduler().isCurrentlyRunning(Main.getPlugin().lobbyTimer)) {
 						if (!Main.getPlugin().ended) {
@@ -30,8 +33,13 @@ public class EndGame implements CommandExecutor {
 							for (Player all : Bukkit.getOnlinePlayers()) {
 								DropAPI.getInstance().teleportToMapSpawn(player);
 							}
+							
+							Main.getPlugin().round = Main.getPlugin().maxRounds + 1;
 
+							if (Main.getPlugin().round == (Main.getPlugin().maxRounds + 1)) {
 								Main.getPlugin().round = 0;
+								
+								Bukkit.getScheduler().cancelAllTasks();
 
 								int highest = 0;
 								ArrayList<String> winners = new ArrayList<>();
@@ -69,15 +77,25 @@ public class EndGame implements CommandExecutor {
 										+ "§cRestarting in §4§l10 seconds.");
 								Main.getPlugin().board.getObjective("scoreboard").setDisplaySlot(null);
 								Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.getPlugin(), new Runnable() {
-
-									@SuppressWarnings("unchecked")
 									@Override
 									public void run() {
-										Bukkit.getScheduler().callSyncMethod(Main.getPlugin(),
-												new KickInRunnable());
-										Bukkit.shutdown();
+										for (Player all : Bukkit.getOnlinePlayers()) {
+											ByteArrayDataOutput out = ByteStreams.newDataOutput();
+											out.writeUTF("Connect");
+											out.writeUTF("hub");
+											all.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+										}
 									}
 								}, 220L);
+
+								Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(), new Runnable() {
+									@Override
+									public void run() {
+										if (Bukkit.getOnlinePlayers().size() <= 0) {
+											Bukkit.shutdown();
+										}
+									}
+								}, 0L, 40L);
 
 								player.sendMessage("§6Game ended.");
 							} else {
@@ -92,6 +110,8 @@ public class EndGame implements CommandExecutor {
 				} else {
 					player.sendMessage("§4Illegal command.");
 				}
+			}
+
 		}
 		return true;
 	}
