@@ -1,7 +1,6 @@
 package net.alextwelshie.minedrop.commands;
 
 import net.alextwelshie.minedrop.Main;
-import net.alextwelshie.minedrop.ranks.RankHandler;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
 
 import org.bukkit.Bukkit;
@@ -16,7 +15,7 @@ public class ShortStart implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			if (RankHandler.getInstance().isStaff(player)) {
+			if (Main.getPlugin().isStaff(player)) {
 				if (args.length == 0) {
 					if (Bukkit.getScheduler().isCurrentlyRunning(Main.getPlugin().lobbyTimer)) {
 						Main.getPlugin().neededToStart = 0;

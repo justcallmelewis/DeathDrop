@@ -6,7 +6,6 @@ import net.alextwelshie.minedrop.Main;
 import net.alextwelshie.minedrop.achievements.Achievement;
 import net.alextwelshie.minedrop.achievements.AchievementAPI;
 import net.alextwelshie.minedrop.achievements.AchievementMenu;
-import net.alextwelshie.minedrop.ranks.RankHandler;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
 import net.alextwelshie.minedrop.utils.BlockChooserGUI;
 import net.alextwelshie.minedrop.utils.DropAPI;
@@ -163,10 +162,11 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
+		Main.getPlugin().registerPlayerOnScoreboard(player);
 		event.setJoinMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix() + player.getName()
 				+ " §6has joined the game");
-		Main.getPlugin().registerPlayerOnScoreboard(player);
-		//AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRSTJOIN);
+		
+
 		onepointeight.sendTitleAndSubtitle(player, "§6Welcome to §6MineDrop!", "§3(Early beta, expect bugs!)", 40,
 				80, 40);
 		onepointeight
@@ -188,7 +188,6 @@ public class Listeners implements Listener {
 			}
 		}
 
-		RankHandler.getInstance().setRankTeam(player);
 	}
 
 	@EventHandler

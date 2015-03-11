@@ -14,10 +14,13 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Scoreboard;
 
 public class LobbyTimer implements Runnable {
 
 	public static int	lobbyTimer	= 181;
+	
+	Scoreboard		board			= Bukkit.getScoreboardManager().getMainScoreboard();
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
@@ -48,6 +51,8 @@ public class LobbyTimer implements Runnable {
 				lobbyTimer = 999;
 				Main.getPlugin().board.getObjective("scoreboard").setDisplaySlot(DisplaySlot.SIDEBAR);
 				Main.getPlugin().began = true;
+				
+				board.getObjective("scoreboard").setDisplayName("§6#1 §7" + Main.getPlugin().mapName);
 
 				OnePointEight onepointeight = OnePointEight.getInstance();
 				for (Player all : Bukkit.getOnlinePlayers()) {

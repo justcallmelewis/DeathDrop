@@ -3,7 +3,6 @@ package net.alextwelshie.minedrop.commands;
 import java.util.ArrayList;
 
 import net.alextwelshie.minedrop.Main;
-import net.alextwelshie.minedrop.ranks.RankHandler;
 import net.alextwelshie.minedrop.runnables.KickInRunnable;
 import net.alextwelshie.minedrop.utils.DropAPI;
 
@@ -21,7 +20,7 @@ public class EndGame implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			if (RankHandler.getInstance().isStaff(player)) {
+			if (Main.getPlugin().isStaff(player)) {
 				if (args.length == 0) {
 					if (!Bukkit.getScheduler().isCurrentlyRunning(Main.getPlugin().lobbyTimer)) {
 						if (!Main.getPlugin().ended) {

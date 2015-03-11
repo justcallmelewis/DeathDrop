@@ -3,13 +3,17 @@ main: net.alextwelshie.minedrop.Main
 version: 1.5
 authors: [HowlingAbyss, AlexTWelshie, MylesLovesMemes]
 commands:
-   fs:
-      usage: /fs
-   eg:
-      usage: /eg
-   setconfig:
-      usage: /setconfig
-   map:
-      usage: /map <mapname>
-   ss:
-      usage: /ss
+  forcestart:
+    description: Force start a game
+    aliases: fs
+  endgame:
+    description: End the game instantly
+    aliases: eg
+  shortstart:
+    description:
+    aliases: ss
+  map:
+    description: Choose the map manually
+  setconfig:
+    description: Set configuration values.
+    aliases: sc

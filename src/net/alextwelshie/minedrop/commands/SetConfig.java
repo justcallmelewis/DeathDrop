@@ -1,7 +1,6 @@
 package net.alextwelshie.minedrop.commands;
 
 import net.alextwelshie.minedrop.Main;
-import net.alextwelshie.minedrop.ranks.RankHandler;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
 import net.alextwelshie.minedrop.utils.DropAPI;
 import net.alextwelshie.minedrop.utils.GameState;
@@ -19,7 +18,7 @@ public class SetConfig implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			if (RankHandler.getInstance().isStaff(player)) {
+			if (Main.getPlugin().isStaff(player)) {
 				switch (args.length) {
 				case 0:
 				case 1:

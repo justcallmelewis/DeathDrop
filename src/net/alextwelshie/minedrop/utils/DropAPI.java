@@ -53,8 +53,6 @@ public class DropAPI {
 		} else {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 255));
 		}
-		onepointeight.sendTitleAndSubtitle(player, "§aNext player is..", board.getPlayerTeam(player).getPrefix()
-				+ player.getName(), 5, 40, 5);
 	}
 
 	public void broadcastMapData() {

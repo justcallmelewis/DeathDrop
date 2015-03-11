@@ -9,6 +9,7 @@ import net.alextwelshie.minedrop.commands.Map;
 import net.alextwelshie.minedrop.commands.SetConfig;
 import net.alextwelshie.minedrop.commands.ShortStart;
 import net.alextwelshie.minedrop.listeners.Listeners;
+import net.alextwelshie.minedrop.ranks.PlayerManager;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
 import net.alextwelshie.minedrop.utils.BlockChooserGUI;
 import net.alextwelshie.minedrop.utils.DropAPI;
@@ -21,7 +22,6 @@ import org.bukkit.World;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -51,6 +51,8 @@ public class Main extends JavaPlugin {
 
 	public GameState		state;
 	public GameType			type;
+	
+	PlayerManager	pl	= PlayerManager.getInstance();
 
 	public static Main getPlugin() {
 		return JavaPlugin.getPlugin(Main.class);
@@ -70,12 +72,11 @@ public class Main extends JavaPlugin {
 		registration();
 		randomMap();
 	}
-
+	
 	private void setupScoreboards() {
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
-		board = manager.getNewScoreboard();
-		Objective objective = board.registerNewObjective("scoreboard", "dummy");
-		objective.setDisplayName("§6#1 §7" + mapName);
+		board = manager.getMainScoreboard();
+		board.registerNewObjective("scoreboard", "dummy");
 	}
 
 	private void randomMap() {
@@ -94,10 +95,42 @@ public class Main extends JavaPlugin {
 		config = getConfig();
 		saveDefaultConfig();
 	}
+	
+	public boolean isPremium(Player player) {
+		return PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Hive")
+				|| PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Special");
+	}
+
+	public boolean isStaff(Player player) {
+		return PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Mod")
+				| PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Admin")
+				|| PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Owner");
+	}
+	
+	private String getRankTeam(Player p) {
+		switch (pl.getRank(p)) {
+		case "Regular":
+			return "E-Regular";
+		case "Special":
+			return "E-Regular";
+		case "Hive":
+			return "D-Vip";
+		case "Mod":
+			return "C-Mod";
+		case "Admin":
+			return "B-Admin";
+		case "Owner":
+			return "A-Owner";
+		default:
+			return null;
+		}
+	}
 
 	public void registerPlayerOnScoreboard(Player player) {
-		Score score = board.getObjective("scoreboard").getScore(player.getDisplayName()); //Get a fake offline player
+		Score score = board.getObjective("scoreboard").getScore(player.getDisplayName());
 		score.setScore(0);
+		
+		board.getTeam(getRankTeam(player)).addPlayer(player);
 
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			all.setScoreboard(board);
@@ -122,6 +155,8 @@ public class Main extends JavaPlugin {
 
 	public void removePlayerFromScoreboard(Player player) {
 		board.resetScores(player.getDisplayName());
+		
+		board.getTeam(getRankTeam(player)).removePlayer(player);
 
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			all.setScoreboard(board);
@@ -170,11 +205,11 @@ public class Main extends JavaPlugin {
 	}
 
 	private void registration() {
-		getCommand("fs").setExecutor(new ForceStart());
-		getCommand("eg").setExecutor(new EndGame());
+		getCommand("forcestart").setExecutor(new ForceStart());
+		getCommand("endgame").setExecutor(new EndGame());
 		getCommand("setconfig").setExecutor(new SetConfig());
 		getCommand("map").setExecutor(new Map());
-		getCommand("ss").setExecutor(new ShortStart());
+		getCommand("shortstart").setExecutor(new ShortStart());
 		Bukkit.getPluginManager().registerEvents(new Listeners(), this);
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 	}
