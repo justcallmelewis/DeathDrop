@@ -81,21 +81,18 @@ public class DropAPI {
 		double z = settings.getData().getDouble(Main.getPlugin().mapName + ".spec.z");
 		double yaw = settings.getData().getDouble(Main.getPlugin().mapName + ".spec.yaw");
 		double pitch = settings.getData().getDouble(Main.getPlugin().mapName + ".spec.pitch");
-		Location spec = new Location(w, x, y, z, (float) yaw,
-				(float) pitch);
+		Location spec = new Location(w, x, y, z, (float) yaw, (float) pitch);
 		player.teleport(spec);
 	}
 
 	public void teleportToDropZone(Player player) {
-		World w = Bukkit.getServer().getWorld(
-								settings.getData().getString(Main.getPlugin().mapName + ".world"));
+		World w = Bukkit.getServer().getWorld(settings.getData().getString(Main.getPlugin().mapName + ".world"));
 		double x = settings.getData().getDouble(Main.getPlugin().mapName + ".jump.x");
 		double y = settings.getData().getDouble(Main.getPlugin().mapName + ".jump.y");
 		double z = settings.getData().getDouble(Main.getPlugin().mapName + ".jump.z");
 		double yaw = settings.getData().getDouble(Main.getPlugin().mapName + ".jump.yaw");
 		double pitch = settings.getData().getDouble(Main.getPlugin().mapName + ".jump.pitch");
-		Location jump = new Location(w, x, y, z, (float) yaw,
-								(float) pitch);
+		Location jump = new Location(w, x, y, z, (float) yaw, (float) pitch);
 		player.teleport(jump);
 	}
 

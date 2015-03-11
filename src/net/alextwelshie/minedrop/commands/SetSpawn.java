@@ -19,6 +19,7 @@ public class SetSpawn implements CommandExecutor {
 			if(Main.getPlugin().isStaff(player)){
 				if(args.length <= 1){
 					player.sendMessage(Main.getPlugin().prefix + "§cIncorrect Usage - /setspawn jump/spec <mapname>");
+					player.sendMessage("§cIncorrect Usage - /setspawn jump/spec <mapname>");
 					return false;
 				}
 				if(args[0].equalsIgnoreCase("spec")){
@@ -36,6 +37,7 @@ public class SetSpawn implements CommandExecutor {
 							Double.valueOf(player.getEyeLocation().getPitch()));
 					settings.saveData();
 					player.sendMessage(Main.getPlugin().prefix + "§6Set spec spawn for map §b" + player.getLocation().getWorld().getName());
+					player.sendMessage("§6Set spec spawn for map §b" + player.getLocation().getWorld().getName());
 					return true;
 					
 				} else if(args[0].equalsIgnoreCase("jump")){
@@ -53,6 +55,7 @@ public class SetSpawn implements CommandExecutor {
 							Double.valueOf(player.getEyeLocation().getPitch()));
 					settings.saveData();
 					player.sendMessage(Main.getPlugin().prefix + "§6Set jump spawn for map §b" + player.getLocation().getWorld().getName());
+					player.sendMessage("§6Set jump spawn for map §b" + player.getLocation().getWorld().getName());
 					return true;
 				}
 				
@@ -62,10 +65,6 @@ public class SetSpawn implements CommandExecutor {
 			}
 			
 		}
-			
-		
 		return false;
-		
 	}
-
 }

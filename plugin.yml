@@ -19,6 +19,9 @@ commands:
     aliases: sc
   setspawn:
     description: set spawn points for map
+<<<<<<< HEAD
   vote:
     description: Voting command
     aliases: v
+=======
+>>>>>>> origin/master

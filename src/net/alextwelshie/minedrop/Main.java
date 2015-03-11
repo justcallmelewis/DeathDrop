@@ -8,6 +8,7 @@ import net.alextwelshie.minedrop.commands.EndGame;
 import net.alextwelshie.minedrop.commands.ForceStart;
 import net.alextwelshie.minedrop.commands.Map;
 import net.alextwelshie.minedrop.commands.SetConfig;
+import net.alextwelshie.minedrop.commands.SetSpawn;
 import net.alextwelshie.minedrop.commands.ShortStart;
 import net.alextwelshie.minedrop.commands.SetSpawn;
 import net.alextwelshie.minedrop.commands.Vote;
