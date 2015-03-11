@@ -14,10 +14,10 @@ public class Map implements CommandExecutor {
 			Player player = (Player) sender;
 			if (Main.getPlugin().isStaff(player)) {
 				if (args.length == 0) {
-					player.sendMessage("§cIncorrect usage - /map <map>");
+					player.sendMessage(Main.getPlugin().prefix + "§cIncorrect usage - /map <map>");
 				} else {
 					Main.getPlugin().forceMap(args[0]);
-					player.sendMessage("§6Map §b" + args[0] + " §6will be played this round!");
+					player.sendMessage(Main.getPlugin().prefix + "§6Map §b" + args[0] + " §6will be played this round!");
 				}
 			} else {
 				player.sendMessage("§4Illegal command.");

@@ -1,15 +1,18 @@
 package net.alextwelshie.minedrop.commands;
 
 import net.alextwelshie.minedrop.Main;
+import net.alextwelshie.minedrop.runnables.LoadWorldInRunnable;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
+import net.alextwelshie.minedrop.utils.DropAPI;
+import net.alextwelshie.minedrop.voting.VoteHandler;
 
 import org.bukkit.Bukkit;
-import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+@SuppressWarnings("unchecked")
 public class ForceStart implements CommandExecutor {
 
 	@Override
@@ -23,8 +26,14 @@ public class ForceStart implements CommandExecutor {
 							Main.getPlugin().began = true;
 							Main.getPlugin().neededToStart = 0;
 
-							Bukkit.createWorld(WorldCreator.name(Main.getPlugin().mapName)).setAutoSave(false);
-							Main.getPlugin().mapWorld = Bukkit.getWorld(Main.getPlugin().mapName);
+							Main.getPlugin().voting = false;
+							Main.getPlugin().mapName = VoteHandler.getInstance().getMapVotedFor();
+							Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b" + Main.getPlugin().mapName + " §ahas won!");
+							
+							if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
+								Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new LoadWorldInRunnable());
+								DropAPI.getInstance().broadcastMapData();
+							}
 
 							LobbyTimer.lobbyTimer = 1;
 						} else {

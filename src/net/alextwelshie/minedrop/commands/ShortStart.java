@@ -20,7 +20,7 @@ public class ShortStart implements CommandExecutor {
 					if (Bukkit.getScheduler().isCurrentlyRunning(Main.getPlugin().lobbyTimer)) {
 						Main.getPlugin().neededToStart = 0;
 
-						Bukkit.broadcastMessage("§6Short game start has been executed!");
+						Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Short game start has been executed!");
 
 						LobbyTimer.lobbyTimer = 16;
 					} else {

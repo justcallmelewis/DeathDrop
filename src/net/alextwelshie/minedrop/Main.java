@@ -3,11 +3,14 @@ package net.alextwelshie.minedrop;
 import java.util.HashMap;
 import java.util.Random;
 
+import net.alextwelshie.minedrop.SettingsManager;
 import net.alextwelshie.minedrop.commands.EndGame;
 import net.alextwelshie.minedrop.commands.ForceStart;
 import net.alextwelshie.minedrop.commands.Map;
 import net.alextwelshie.minedrop.commands.SetConfig;
 import net.alextwelshie.minedrop.commands.ShortStart;
+import net.alextwelshie.minedrop.commands.SetSpawn;
+import net.alextwelshie.minedrop.commands.Vote;
 import net.alextwelshie.minedrop.listeners.Listeners;
 import net.alextwelshie.minedrop.ranks.PlayerManager;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
@@ -15,6 +18,7 @@ import net.alextwelshie.minedrop.utils.BlockChooserGUI;
 import net.alextwelshie.minedrop.utils.DropAPI;
 import net.alextwelshie.minedrop.utils.GameState;
 import net.alextwelshie.minedrop.utils.GameType;
+import net.alextwelshie.minedrop.voting.VoteHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -39,6 +43,7 @@ public class Main extends JavaPlugin {
 	public World			mapWorld		= null;
 	public Integer			neededToStart	= null;
 	public Integer			maxPlayers		= null;
+	public Integer			maxVotes		= null;
 	public String			whosDropping	= null;
 	public int				turns			= 0;
 	public int				round			= 1;
@@ -46,6 +51,7 @@ public class Main extends JavaPlugin {
 	public boolean			began			= false;
 	public boolean			ended			= false;
 	public boolean			shortened		= false;
+	public boolean			voting			= true;
 
 	public Configuration	config;
 
@@ -69,6 +75,8 @@ public class Main extends JavaPlugin {
 		fillErrorMessages();
 		fillSuccessMessages();
 		fillBlockChooser();
+		fillMaps();
+		fillVotes();
 		registration();
 		randomMap();
 	}
@@ -89,6 +97,20 @@ public class Main extends JavaPlugin {
 
 	public void forceMap(String map) {
 		mapName = map;
+	}
+	
+	private void fillMaps() {		
+		String[] maps = new String[] {"Brickwork", "Chamber", "Rainbow", "Cake", "Valley", "Icy"};
+		for(int i = 1; i <= maxVotes; i++) {
+			int random = new Random().nextInt((maps.length - 1));
+			VoteHandler.getInstance().maps.add(maps[random]);
+		}
+	}
+	
+	private void fillVotes() {
+		for(String map : VoteHandler.getInstance().maps) {
+			VoteHandler.getInstance().votes.put(map, 0);
+		}
 	}
 
 	private void setupConfig() {
@@ -210,8 +232,11 @@ public class Main extends JavaPlugin {
 		getCommand("setconfig").setExecutor(new SetConfig());
 		getCommand("map").setExecutor(new Map());
 		getCommand("shortstart").setExecutor(new ShortStart());
+		getCommand("setspawn").setExecutor(new SetSpawn());
+		getCommand("vote").setExecutor(new Vote());
 		Bukkit.getPluginManager().registerEvents(new Listeners(), this);
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+		SettingsManager.getInstance().setup(this);
 	}
 
 	private void setupMechanics() {
@@ -224,10 +249,12 @@ public class Main extends JavaPlugin {
 		int maxrounds = config.getInt("maxRounds");
 		int lobbytimer = config.getInt("lobbytimer");
 		String gametype = config.getString("gametype");
+		int maxvotes = config.getInt("maxVotes");
 
 		this.neededToStart = needed;
 		this.maxPlayers = max;
 		this.maxRounds = maxrounds;
+		this.maxVotes = maxvotes;
 		LobbyTimer.lobbyTimer = lobbytimer + 1;
 
 		switch (gametype) {
@@ -258,6 +285,10 @@ public class Main extends JavaPlugin {
 
 		if (this.maxRounds == null) {
 			maxRounds = 7;
+		}
+		
+		if (this.maxVotes == null) {
+			maxVotes = 3;
 		}
 
 		if (getType() == null) {

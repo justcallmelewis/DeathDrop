@@ -17,3 +17,8 @@ commands:
   setconfig:
     description: Set configuration values.
     aliases: sc
+  setspawn:
+    description: set spawn points for map
+  vote:
+    description: Voting command
+    aliases: v

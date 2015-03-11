@@ -6,5 +6,8 @@ maxPlayers: 16
 maxRounds: 7
 lobbytimer: 180
 
+# Map Voting Options
+maxVotes: 3
+
 # Current gametypes available: Enhanced, Normal and Auto
 gametype: Enhanced
