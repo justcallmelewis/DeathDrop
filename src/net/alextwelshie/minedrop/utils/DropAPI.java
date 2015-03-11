@@ -57,16 +57,10 @@ public class DropAPI {
 				+ player.getName(), 5, 40, 5);
 	}
 
-	public void broadcastMapData(String mapname) {
-		if (mapname.equalsIgnoreCase("Brickwork")) {
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §bBrickwork");
+	public void broadcastMapData() {
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §b" + Main.getPlugin().mapName);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Author: §bN/A");
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Gametype: §b" + Main.getPlugin().getType().name());
-		} else {
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §bUnknownMap");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Author: §bUnknownAuthor");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Gametype: §b" + Main.getPlugin().getType().name());
-		}
 	}
 
 	public void finishDrop(Player player) {
@@ -75,11 +69,29 @@ public class DropAPI {
 	}
 
 	public void teleportToMapSpawn(Player player) {
-		player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 47.5, 643.5, 180, 0));
+		switch(Main.getPlugin().mapName){
+			case "Brickwork":
+				player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 47.5, 643.5, 180, 0));
+				break;
+			
+			case "Chamber":
+				player.teleport(new Location(Main.getPlugin().mapWorld, -167.5, 77.5, 207.5, 90, 0));
+				break;
+		}
+		
 	}
 
 	public void teleportToDropZone(Player player) {
-		player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 92.5, 631.5));
+		switch(Main.getPlugin().mapName){
+		case "Brickwork":
+			player.teleport(new Location(Main.getPlugin().mapWorld, 728.5, 92.5, 631.5, 0, 0));
+			break;
+		
+		case "Chamber":
+			player.teleport(new Location(Main.getPlugin().mapWorld, -172.5, 95.5, 206.5, 90, 0));
+			break;
+	}
+		
 	}
 
 	public String pickSuccessMessage() {
@@ -173,8 +185,6 @@ public class DropAPI {
 			}
 		}, 0L, 40L);
 
-		Main.getPlugin().setState(GameState.RESTARTING);
-
 	}
 
 	private void newRound() {
@@ -228,7 +238,7 @@ public class DropAPI {
 					setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
 				}
 
-			}, 40l);
+			}, 50L);
 		}
 	}
 }

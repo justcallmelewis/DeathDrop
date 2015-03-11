@@ -66,10 +66,18 @@ public class Listeners implements Listener {
 		BlockFace[] faces = new BlockFace[] { BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH };
 		for (BlockFace bf : faces) {
 			Location block1 = loc.getBlock().getRelative(bf).getLocation();
-			if (block1.getBlock().getType() != Material.WATER
-					&& block1.getBlock().getType() != Material.COAL_BLOCK) {
-				count++;
+			if(Main.getPlugin().mapName == "Brickwork"){
+				if (block1.getBlock().getType() != Material.WATER
+						&& block1.getBlock().getType() != Material.COAL_BLOCK) {
+					count++;
+				} 
+			} else {
+				if (block1.getBlock().getType() != Material.WATER
+						&& block1.getBlock().getType() != Material.OBSIDIAN) {
+					count++;
+				} 
 			}
+			
 		}
 
 		switch (count) {
@@ -122,12 +130,6 @@ public class Listeners implements Listener {
 		Player player = event.getPlayer();
 		event.setFormat(board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY + " » "
 				+ ChatColor.WHITE + "%s");
-
-		if (Main.getPlugin().getState() == GameState.RESTARTING) {
-			if (event.getMessage().toLowerCase().contains("gg")) {
-				AchievementAPI.getInstance().grantAchievement(player, Achievement.GOODGAME);
-			}
-		}
 	}
 
 	@EventHandler
@@ -168,7 +170,7 @@ public class Listeners implements Listener {
 		onepointeight.sendTitleAndSubtitle(player, "§6Welcome to §6MineDrop!", "§3(Early beta, expect bugs!)", 40,
 				80, 40);
 		onepointeight
-		.sendHeaderAndFooter(player, "§6SurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6DD1");
+				.sendHeaderAndFooter(player, "§6SurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6MD1");
 
 		player.teleport(new Location(Bukkit.getWorld("world"), -1386.5, 10, 941.5, 0, 0));
 
@@ -195,10 +197,10 @@ public class Listeners implements Listener {
 		event.setQuitMessage(Main.getPlugin().prefix + "§6Player §6" + player.getName() + " §6has left us!");
 		Main.getPlugin().removePlayerFromScoreboard(player);
 
-		RankHandler.getInstance().clearRank(player);
-		if (Bukkit.getOnlinePlayers().size() <= 0) {
+		if (Main.getPlugin().getState() == GameState.INGAME && Bukkit.getOnlinePlayers().size() == 0) {
 			Bukkit.shutdown();
 		}
+
 	}
 
 	@EventHandler
@@ -218,19 +220,21 @@ public class Listeners implements Listener {
 		Player player = event.getPlayer();
 		Location loc = player.getLocation();
 		Block block = loc.getWorld().getBlockAt(loc);
-		if (loc.getY() <= 55 && block.getType() != Material.AIR) {
+		if (block.getType() != Material.AIR) {
 			if (Main.getPlugin().getState() == GameState.INGAME) {
 				if (Main.getPlugin().whosDropping == null) {
 				} else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
-					if (block.getTypeId() == 9) {
+					if (block.getType() == Material.STATIONARY_WATER) {
 
 						block.setType(Main.getPlugin().blocks.get(player.getName()));
 						block.setData(Main.getPlugin().blockData.get(player.getName()));
-
+						
+						onepointeight.sendActionBarText(player, "§aYou successfully landed in the water!");
+						
 						DropAPI.getInstance().launchFirework("success", block.getLocation().subtract(0, 2, 0));
 						DropAPI.getInstance().finishDrop(player);
-						Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6" + player.getName() + "§a"
-								+ DropAPI.getInstance().pickSuccessMessage());
+						Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
+								+ player.getName() + "§a" + DropAPI.getInstance().pickSuccessMessage());
 						if (Main.getPlugin().getType() == GameType.Enhanced) {
 							countBlocks(player, loc);
 						} else {
@@ -245,6 +249,7 @@ public class Listeners implements Listener {
 
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event) {
+		Player player = event.getPlayer();
 		Material material;
 		if (event.getItem().getType() == null) {
 			return;
@@ -253,7 +258,6 @@ public class Listeners implements Listener {
 		} else {
 			return;
 		}
-		final Player player = event.getPlayer();
 		if (event.getAction() == null) {
 		} else if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if (player.hasPermission("srv.build")) {
@@ -266,7 +270,7 @@ public class Listeners implements Listener {
 				if (Main.getPlugin().getState() == GameState.INGAME) {
 					player.sendMessage(Main.getPlugin().prefix + "§cYou can't change your block ingame silly!");
 				} else {
-					event.getPlayer().openInventory(BlockChooserGUI.getInventory(event.getPlayer()));
+					player.openInventory(BlockChooserGUI.getInventory(player));
 				}
 				break;
 			case BEACON:
@@ -362,7 +366,7 @@ public class Listeners implements Listener {
 		if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
 			Block block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
 			if (Main.getPlugin().getState() == GameState.INGAME) {
-				if (block.getTypeId() != 8 || block.getTypeId() != 9) {
+				if (block.getType() != Material.STATIONARY_WATER || block.getType() != Material.WATER) {
 					if (Main.getPlugin().whosDropping == null) {
 
 					} else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
@@ -372,18 +376,20 @@ public class Listeners implements Listener {
 							onepointeight.sendTitle(all, "§4Fail!", 5, 20, 5);
 						}
 
+						onepointeight.sendActionBarText(player, "§cYou failed to land in the water.");
 						DropAPI.getInstance().launchFirework("fail", block.getLocation().subtract(0, 2, 0));
 						DropAPI.getInstance().finishDrop(player);
-						Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6" + player.getName() + "§c"
-								+ DropAPI.getInstance().pickFailMessage());
+						Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
+								+ player.getName() + "§c" + DropAPI.getInstance().pickFailMessage());
 						AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRST_LAND_FAIL);
 						DropAPI.getInstance().setupNextTurn();
 					}
 				}
-			} else if (Main.getPlugin().getState() == GameState.LOBBY
-					|| event.getCause() == DamageCause.SUFFOCATION) {
-				event.setCancelled(true);
-			}
+				
+				if(event.getCause() == DamageCause.FALL){
+					event.setCancelled(true);
+				}
+			} 
 		}
 	}
 

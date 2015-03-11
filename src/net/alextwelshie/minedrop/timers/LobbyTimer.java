@@ -42,7 +42,7 @@ public class LobbyTimer implements Runnable {
 		case 11:
 			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
 				Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new LoadWorldInRunnable());
-				DropAPI.getInstance().broadcastMapData("Brickwork");
+				DropAPI.getInstance().broadcastMapData();
 			}
 			break;
 		case 0:

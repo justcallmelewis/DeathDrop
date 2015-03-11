@@ -1,10 +1,13 @@
 package net.alextwelshie.minedrop;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import net.alextwelshie.minedrop.commands.EndGame;
+import net.alextwelshie.minedrop.commands.Map;
 import net.alextwelshie.minedrop.commands.SetConfig;
-import net.alextwelshie.minedrop.commands.StartGame;
+import net.alextwelshie.minedrop.commands.ForceStart;
+import net.alextwelshie.minedrop.commands.ShortStart;
 import net.alextwelshie.minedrop.listeners.Listeners;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
 import net.alextwelshie.minedrop.utils.BlockChooserGUI;
@@ -25,11 +28,14 @@ import org.bukkit.scoreboard.ScoreboardManager;
 
 @SuppressWarnings("deprecation")
 public class Main extends JavaPlugin {
+	
+	Random random = new Random();
 
-	public String			prefix			= "§cMineDrop §8| ";
+	public String			prefix			= "§3MineDrop §7| ";
 	public Scoreboard		board;
 	public int				lobbyTimer		= 23;
-	public String			mapName			= "Brickwork";
+	public String			mapName;		
+	public int				randomMap		= random.nextInt(1);
 	public World			mapWorld		= null;
 	public Integer			neededToStart	= null;
 	public Integer			maxPlayers		= null;
@@ -62,6 +68,7 @@ public class Main extends JavaPlugin {
 		fillSuccessMessages();
 		fillBlockChooser();
 		registration();
+		randomMap();
 	}
 
 	private void setupScoreboards() {
@@ -69,6 +76,18 @@ public class Main extends JavaPlugin {
 		board = manager.getNewScoreboard();
 		Objective objective = board.registerNewObjective("scoreboard", "dummy");
 		objective.setDisplayName("§6#1 §7" + mapName);
+	}
+	
+	private void randomMap(){
+		if(randomMap == 0){
+			mapName = "Brickwork";
+		} else {
+			mapName = "Chamber";
+		}
+	}
+	
+	public void forceMap(String map){
+		mapName = map;
 	}
 
 	private void setupConfig() {
@@ -151,9 +170,11 @@ public class Main extends JavaPlugin {
 	}
 
 	private void registration() {
-		getCommand("bg").setExecutor(new StartGame());
+		getCommand("fs").setExecutor(new ForceStart());
 		getCommand("eg").setExecutor(new EndGame());
 		getCommand("setconfig").setExecutor(new SetConfig());
+		getCommand("map").setExecutor(new Map());
+		getCommand("ss").setExecutor(new ShortStart());
 		Bukkit.getPluginManager().registerEvents(new Listeners(), this);
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 	}
@@ -180,6 +201,15 @@ public class Main extends JavaPlugin {
 			break;
 		case "Normal":
 			setType(GameType.Normal);
+			break;
+		case "Auto":
+			Random random = new Random();
+			int Chance = random.nextInt(1);
+			if(Chance == 0){
+				setType(GameType.Enhanced);
+			} else {
+				setType(GameType.Normal);
+			}
 			break;
 		}
 

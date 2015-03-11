@@ -1,11 +1,15 @@
 name: MineDrop
 main: net.alextwelshie.minedrop.Main
-version: 1.3
+version: 1.5
 authors: [HowlingAbyss, AlexTWelshie, MylesLovesMemes]
 commands:
-   bg:
-      usage: /bg
+   fs:
+      usage: /fs
    eg:
       usage: /eg
    setconfig:
       usage: /setconfig
+   map:
+      usage: /map <mapname>
+   ss:
+      usage: /ss

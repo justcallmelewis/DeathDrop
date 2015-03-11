@@ -6,8 +6,6 @@ import net.alextwelshie.minedrop.Main;
 import net.alextwelshie.minedrop.ranks.RankHandler;
 import net.alextwelshie.minedrop.runnables.KickInRunnable;
 import net.alextwelshie.minedrop.utils.DropAPI;
-import net.alextwelshie.minedrop.utils.GameState;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -82,7 +80,6 @@ public class EndGame implements CommandExecutor {
 									}
 								}, 220L);
 
-								Main.getPlugin().setState(GameState.RESTARTING);
 								player.sendMessage("§6Game ended.");
 							} else {
 								player.sendMessage("§cGame already ended.");
