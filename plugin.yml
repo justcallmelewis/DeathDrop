@@ -12,8 +12,6 @@ commands:
   shortstart:
     description:
     aliases: ss
-  map:
-    description: Choose the map manually
   setconfig:
     description: Set configuration values.
     aliases: sc

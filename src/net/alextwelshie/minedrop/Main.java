@@ -6,7 +6,6 @@ import java.util.Random;
 
 import net.alextwelshie.minedrop.commands.EndGame;
 import net.alextwelshie.minedrop.commands.ForceStart;
-import net.alextwelshie.minedrop.commands.Map;
 import net.alextwelshie.minedrop.commands.SetConfig;
 import net.alextwelshie.minedrop.commands.SetSpawn;
 import net.alextwelshie.minedrop.commands.ShortStart;
@@ -78,25 +77,12 @@ public class Main extends JavaPlugin {
 		fillMaps();
 		fillVotes();
 		registration();
-		randomMap();
 	}
 	
 	private void setupScoreboards() {
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
 		board = manager.getMainScoreboard();
 		board.registerNewObjective("scoreboard", "dummy");
-	}
-
-	private void randomMap() {
-		if (randomMap == 0) {
-			mapName = "Brickwork";
-		} else {
-			mapName = "Chamber";
-		}
-	}
-
-	public void forceMap(String map) {
-		mapName = map;
 	}
 	
 	private void fillMaps() {		
@@ -241,7 +227,6 @@ public class Main extends JavaPlugin {
 		getCommand("forcestart").setExecutor(new ForceStart());
 		getCommand("endgame").setExecutor(new EndGame());
 		getCommand("setconfig").setExecutor(new SetConfig());
-		getCommand("map").setExecutor(new Map());
 		getCommand("shortstart").setExecutor(new ShortStart());
 		getCommand("setspawn").setExecutor(new SetSpawn());
 		getCommand("vote").setExecutor(new Vote());
