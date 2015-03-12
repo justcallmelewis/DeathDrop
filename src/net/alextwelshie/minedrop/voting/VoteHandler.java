@@ -97,4 +97,9 @@ public class VoteHandler {
 		newVotes += number;
 		votes.put(mapName, newVotes);
 	}
+	
+	public void setVote(int map, int number) {
+		String mapName = maps.get(map);
+		votes.put(mapName, number);
+	}
 }

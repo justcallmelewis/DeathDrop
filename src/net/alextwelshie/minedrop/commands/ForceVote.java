@@ -23,19 +23,19 @@ public class ForceVote implements CommandExecutor{
 							if(!VoteHandler.getInstance().voted.contains(player.getName())) {
 								VoteHandler.getInstance().voted.add(player.getName());
 								if(args[0].equalsIgnoreCase("1")) {
-									VoteHandler.getInstance().addVote(0, 5);
+									VoteHandler.getInstance().addVote(0, 9001);
 									player.sendMessage(Main.getPlugin().prefix + "§6Force voted map. Beginning game..");
 									player.chat("/fs");
 								} else if(args[0].equalsIgnoreCase("2")) {
-									VoteHandler.getInstance().addVote(1, 5);
+									VoteHandler.getInstance().addVote(1, 9001);
 									player.sendMessage(Main.getPlugin().prefix + "§6Force voted map. Beginning game..");
 									player.chat("/fs");
 								} else if(args[0].equalsIgnoreCase("3")) {
-									VoteHandler.getInstance().addVote(2, 5);
+									VoteHandler.getInstance().addVote(2, 9001);
 									player.sendMessage(Main.getPlugin().prefix + "§6Force voted map. Beginning game..");
 									player.chat("/fs");
 								} else if(args[0].equalsIgnoreCase("4")) {
-									VoteHandler.getInstance().addVote(3, 5);
+									VoteHandler.getInstance().addVote(3, 9001);
 									player.sendMessage(Main.getPlugin().prefix + "§6Force voted map. Beginning game..");
 									player.chat("/fs");
 								} else {

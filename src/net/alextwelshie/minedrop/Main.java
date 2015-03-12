@@ -159,6 +159,15 @@ public class Main extends JavaPlugin {
 			all.setScoreboard(board);
 		}
 	}
+	
+	public void registerFakePlayer(String player, int initialScore) {
+		Score score = board.getObjective("scoreboard").getScore(player);
+		score.setScore(initialScore);
+
+		for (Player all : Bukkit.getOnlinePlayers()) {
+			all.setScoreboard(board);
+		}
+	}
 
 	public GameState getState() {
 		return state;

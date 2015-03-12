@@ -47,6 +47,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.google.common.io.ByteArrayDataOutput;
@@ -62,24 +63,20 @@ public class Listeners implements Listener {
 	OnePointEight	onepointeight	= OnePointEight.getInstance();
 
 	private void countBlocks(Player player, Location loc) {
-		int count = 0;
-		BlockFace[] faces = new BlockFace[] { BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH };
-		for (BlockFace bf : faces) {
-			Location block1 = loc.getBlock().getRelative(bf).getLocation();
-			if (Main.getPlugin().mapName == "Brickwork") {
-				if (block1.getBlock().getType() != Material.WATER
-						&& block1.getBlock().getType() != Material.COAL_BLOCK) {
-					count++;
-				}
-			} else {
-				if (block1.getBlock().getType() != Material.WATER
-						&& block1.getBlock().getType() != Material.OBSIDIAN) {
-					count++;
-				}
-			}
+		  int count = 0;
+		  BlockFace[] faces = new BlockFace[] { BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH };
+		  for (BlockFace bf : faces) {
+		   Location block1 = loc.getBlock().getRelative(bf).getLocation();
+		   Material[] ignore = new Material[] { Material.COAL_BLOCK, Material.OBSIDIAN };
+		   
+		   for(Material mat : ignore){
+		    if(block1.getBlock().getType() != Material.WATER && block1.getBlock().getType() != mat){
+		    	count++;
+		    }
+		   }
 
-		}
-
+		  }
+	
 		switch (count) {
 		case 2:
 			Main.getPlugin().updateScore(player, 2);
@@ -406,6 +403,15 @@ public class Listeners implements Listener {
 								+ player.getName() + "§c" + DropAPI.getInstance().pickFailMessage());
 						AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRST_LAND_FAIL);
 						DropAPI.getInstance().setupNextTurn();
+						
+						if(Main.getPlugin().getType() == GameType.Elimination) {
+							DropAPI.getInstance().eliminated.add(player.getName());
+							Main.getPlugin().updateScore(player, -2);
+							
+							if(Main.getPlugin().board.getObjective(DisplaySlot.SIDEBAR).getScore("§cEliminated:") == null) {
+								Main.getPlugin().registerFakePlayer("§cEliminated:", -1);								
+							}
+						}
 					}
 				}
 

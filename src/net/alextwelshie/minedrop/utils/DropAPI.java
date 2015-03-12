@@ -10,9 +10,9 @@ import net.alextwelshie.minedrop.runnables.EffectAddInRunnable;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
-import org.bukkit.World;
 import org.bukkit.FireworkEffect.Type;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -30,7 +30,7 @@ public class DropAPI {
 
 	public ArrayList<String>		successMessages	= new ArrayList<>();
 	public ArrayList<String>		failMessages	= new ArrayList<>();
-
+	public ArrayList<String>		eliminated		= new ArrayList<>();
 	public ArrayList<String>		notHadTurn		= new ArrayList<>();
 
 	private static final DropAPI	instance		= new DropAPI();
@@ -199,21 +199,55 @@ public class DropAPI {
 						"§6#" + Main.getPlugin().round + " §7" + Main.getPlugin().displayName);
 			}
 		}, 80L);
+		
+		if(eliminated.size() >= notHadTurn.size()) {
+			Main.getPlugin().round = 0;
+			Bukkit.getScheduler().cancelAllTasks();
+			
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§4§lEVERYONE'S ELIMINATED!");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §cNobody");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cRestarting in §4§l10 seconds.");
+			Main.getPlugin().board.getObjective("scoreboard").setDisplaySlot(null);
+			Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.getPlugin(), new Runnable() {
+				@Override
+				public void run() {
+					for (Player all : Bukkit.getOnlinePlayers()) {
+						ByteArrayDataOutput out = ByteStreams.newDataOutput();
+						out.writeUTF("Connect");
+						out.writeUTF("hub");
+						all.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+					}
+				}
+			}, 220L);
 
-		notHadTurn.clear();
-		for (Player all : Bukkit.getOnlinePlayers()) {
-			notHadTurn.add(all.getName());
-		}
-
-		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
-			@Override
-			public void run() {
-				Random random = new Random();
-				int playerInt = random.nextInt(notHadTurn.size());
-				setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(), new Runnable() {
+				@Override
+				public void run() {
+					if (Bukkit.getOnlinePlayers().size() <= 0) {
+						Bukkit.shutdown();
+					}
+				}
+			}, 0L, 40L);
+		} else {
+			notHadTurn.clear();
+			for (Player all : Bukkit.getOnlinePlayers()) {
+				if(!eliminated.contains(all.getName())) {
+					notHadTurn.add(all.getName());
+				}
 			}
 
-		}, 60l);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
+				@Override
+				public void run() {
+					Random random = new Random();
+					int playerInt = random.nextInt(notHadTurn.size());
+					setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
+				}
+
+			}, 60l);
+		}
+		
 	}
 
 	public void setupNextTurn() {
