@@ -3,6 +3,7 @@ package net.alextwelshie.minedrop.timers;
 import java.util.Random;
 
 import net.alextwelshie.minedrop.Main;
+import net.alextwelshie.minedrop.SettingsManager;
 import net.alextwelshie.minedrop.runnables.LoadWorldInRunnable;
 import net.alextwelshie.minedrop.runnables.TeleportInRunnable;
 import net.alextwelshie.minedrop.utils.DropAPI;
@@ -35,8 +36,8 @@ public class LobbyTimer implements Runnable {
 		case 20:
 			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
 				for (Player all : Bukkit.getOnlinePlayers()) {
-					OnePointEight.getInstance().sendTitleAndSubtitle(all, "§bChoose your Block",
-							"§620 Seconds remaining..", 15, 80, 15);
+					OnePointEight.getInstance().sendTitleAndSubtitle(all, "§bChoose your block!",
+							"§620 seconds remaining..", 15, 80, 15);
 				}
 			}
 			break;
@@ -47,13 +48,7 @@ public class LobbyTimer implements Runnable {
 				VoteHandler.getInstance().pickMap();
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b" + Main.getPlugin().mapName + " §ahas won!");
 				
-				if(Main.getPlugin().mapName.equalsIgnoreCase("Valley")) {
-					Main.getPlugin().displayName = "The Valley";
-				} else if(Main.getPlugin().mapName.equalsIgnoreCase("AquaticDepths")) {
-					Main.getPlugin().displayName = "Aquatic Depths";
-				} else {
-					Main.getPlugin().displayName = Main.getPlugin().mapName;
-				}
+				Main.getPlugin().displayName = SettingsManager.getInstance().getData().getString(Main.getPlugin().mapName + ".displayName");
 				Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new LoadWorldInRunnable());
 				DropAPI.getInstance().broadcastMapData();
 			}

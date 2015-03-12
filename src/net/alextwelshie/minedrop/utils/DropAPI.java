@@ -59,13 +59,7 @@ public class DropAPI {
 	}
 
 	public void broadcastMapData() {
-		if(Main.getPlugin().mapName.equalsIgnoreCase("Valley")) {
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §bThe Valley");
-		} else if(Main.getPlugin().mapName.equalsIgnoreCase("AquaticDepths")) {
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §bAquatic Depths");
-		} else{
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §b" + Main.getPlugin().mapName);
-		}
+		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §b" + Main.getPlugin().displayName);
 		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Author: §bN/A");
 		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Gametype: §b" + Main.getPlugin().getType().name());
 	}

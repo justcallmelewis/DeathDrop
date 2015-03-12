@@ -95,6 +95,7 @@ public class Main extends JavaPlugin {
 		maps.add(1, "AquaticDepths");
 		maps.add(2, "Rainbow");
 		maps.add(3, "Cake");
+		maps.add(4, "HighDive");
 		maps.add(4, "Valley");
 		maps.add(5, "Icy");
 		for(int i = 1; i <= maxVotes; i++) {
