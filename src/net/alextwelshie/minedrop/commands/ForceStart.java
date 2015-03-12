@@ -23,6 +23,7 @@ public class ForceStart implements CommandExecutor {
 				if (args.length == 0) {
 					if (Bukkit.getScheduler().isCurrentlyRunning(Main.getPlugin().lobbyTimer)) {
 						if (!Main.getPlugin().began) {
+							
 							Main.getPlugin().began = true;
 							Main.getPlugin().neededToStart = 0;
 
@@ -34,8 +35,9 @@ public class ForceStart implements CommandExecutor {
 								Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new LoadWorldInRunnable());
 								DropAPI.getInstance().broadcastMapData();
 							}
-
+	
 							LobbyTimer.lobbyTimer = 1;
+							player.sendMessage("§eGame began.");
 						} else {
 							player.sendMessage("§cGame already started.");
 						}

@@ -61,7 +61,9 @@ public class DropAPI {
 	public void broadcastMapData() {
 		if(Main.getPlugin().mapName.equalsIgnoreCase("Valley")) {
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §bThe Valley");
-		} else {
+		} else if(Main.getPlugin().mapName.equalsIgnoreCase("AquaticDepths")) {
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §bAquatic Depths");
+		} else{
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §b" + Main.getPlugin().mapName);
 		}
 		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Author: §bN/A");
@@ -200,7 +202,7 @@ public class DropAPI {
 			@Override
 			public void run() {
 				Main.getPlugin().board.getObjective("scoreboard").setDisplayName(
-						"§6#" + Main.getPlugin().round + " §7" + Main.getPlugin().mapName);
+						"§6#" + Main.getPlugin().round + " §7" + Main.getPlugin().displayName);
 			}
 		}, 80L);
 

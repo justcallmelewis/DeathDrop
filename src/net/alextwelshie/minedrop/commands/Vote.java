@@ -17,7 +17,7 @@ public class Vote implements CommandExecutor {
 			Player player = (Player) sender;
 			if(Main.getPlugin().voting) {
 			if(args.length == 0 || args.length > 1) {
-				player.sendMessage("§6You can vote like this - /vote #.");
+				player.sendMessage(Main.getPlugin().prefix + "§6You can vote like this - /vote #.");
 				player.sendMessage(Main.getPlugin().prefix + "§6Maps choices up for voting:");
 				player.sendMessage(Main.getPlugin().prefix + "§3§l1. §b" + VoteHandler.getInstance().maps.get(0) +"§8 - §a" + VoteHandler.getInstance().getVotes(0) + " §6votes.");
 				player.sendMessage(Main.getPlugin().prefix + "§3§l2. §b" + VoteHandler.getInstance().maps.get(1) +"§8 - §a" + VoteHandler.getInstance().getVotes(1) + " §6votes.");
@@ -28,62 +28,82 @@ public class Vote implements CommandExecutor {
 						VoteHandler.getInstance().voted.add(player.getName());
 						if(args[0].equalsIgnoreCase("1")) {
 							switch(PlayerManager.getInstance().getRank(player)) {
-							case "Regular":
-							case "Special":
-								break;
-							case "Hive":
-								break;
-							case "Mod":
-								break;
-							case "Admin":
-								break;
-							case "Owner":
-								break;
+								case "Regular":
+								case "Special":
+									VoteHandler.getInstance().addVote(0, 1);
+									break;
+								case "Hive":
+									VoteHandler.getInstance().addVote(0, 2);
+									break;
+								case "Mod":
+									VoteHandler.getInstance().addVote(0, 3);
+									break;
+								case "Admin":
+									VoteHandler.getInstance().addVote(0, 4);
+									break;
+								case "Owner":
+									VoteHandler.getInstance().addVote(0, 5);
+									break;
 							}
 							player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b" + VoteHandler.getInstance().getVotes(1) + " §6votes.");
 						} else if(args[0].equalsIgnoreCase("2")) {
 							switch(PlayerManager.getInstance().getRank(player)) {
-							case "Regular":
-							case "Special":
-								break;
-							case "Hive":
-								break;
-							case "Mod":
-								break;
-							case "Admin":
-								break;
-							case "Owner":
-								break;
+								case "Regular":
+								case "Special":
+									VoteHandler.getInstance().addVote(1, 1);
+									break;
+								case "Hive":
+									VoteHandler.getInstance().addVote(1, 2);
+									break;
+								case "Mod":
+									VoteHandler.getInstance().addVote(1, 3);
+									break;
+								case "Admin":
+									VoteHandler.getInstance().addVote(1, 4);
+									break;
+								case "Owner":
+									VoteHandler.getInstance().addVote(1, 5);
+									break;
 							}
 							player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b" + VoteHandler.getInstance().getVotes(2) + " §6votes.");
 						} else if(args[0].equalsIgnoreCase("3")) {
 							switch(PlayerManager.getInstance().getRank(player)) {
-							case "Regular":
-							case "Special":
-								break;
-							case "Hive":
-								break;
-							case "Mod":
-								break;
-							case "Admin":
-								break;
-							case "Owner":
-								break;
+								case "Regular":
+								case "Special":
+									VoteHandler.getInstance().addVote(2, 1);
+									break;
+								case "Hive":
+									VoteHandler.getInstance().addVote(2, 2);
+									break;
+								case "Mod":
+									VoteHandler.getInstance().addVote(2, 3);
+									break;
+								case "Admin":
+									VoteHandler.getInstance().addVote(2, 4);
+									break;
+								case "Owner":
+									VoteHandler.getInstance().addVote(2, 5);
+									break;
 							}
 							player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b" + VoteHandler.getInstance().getVotes(3) + " §6votes.");
 						} else if(args[0].equalsIgnoreCase("4")) {
 							switch(PlayerManager.getInstance().getRank(player)) {
-							case "Regular":
-							case "Special":
-								break;
-							case "Hive":
-								break;
-							case "Mod":
-								break;
-							case "Admin":
-								break;
-							case "Owner":
-								break;
+								case "Regular":
+								case "Special":
+									VoteHandler.getInstance().addVote(3, 1);
+									break;
+								case "Hive":
+									VoteHandler.getInstance().addVote(3, 2);
+									break;
+								case "Mod":
+									VoteHandler.getInstance().addVote(3, 3);
+									break;
+								case "Admin":
+									VoteHandler.getInstance().addVote(3, 4);
+									break;
+								case "Owner":
+									VoteHandler.getInstance().addVote(3, 5);
+									break;
 							}
 							player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b" + VoteHandler.getInstance().getVotes(4) + " §6votes.");
 						} else {

@@ -41,11 +41,19 @@ public class LobbyTimer implements Runnable {
 			}
 			break;
 		case 10:
-			Main.getPlugin().voting = false;
-			VoteHandler.getInstance().pickMap();
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b" + Main.getPlugin().mapName + " §ahas won!");
 			
 			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
+				Main.getPlugin().voting = false;
+				VoteHandler.getInstance().pickMap();
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b" + Main.getPlugin().mapName + " §ahas won!");
+				
+				if(Main.getPlugin().mapName.equalsIgnoreCase("Valley")) {
+					Main.getPlugin().displayName = "The Valley";
+				} else if(Main.getPlugin().mapName.equalsIgnoreCase("AquaticDepths")) {
+					Main.getPlugin().displayName = "Aquatic Depths";
+				} else {
+					Main.getPlugin().displayName = Main.getPlugin().mapName;
+				}
 				Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new LoadWorldInRunnable());
 				DropAPI.getInstance().broadcastMapData();
 			}
@@ -57,7 +65,7 @@ public class LobbyTimer implements Runnable {
 				Main.getPlugin().board.getObjective("scoreboard").setDisplaySlot(DisplaySlot.SIDEBAR);
 				Main.getPlugin().began = true;
 				
-				board.getObjective("scoreboard").setDisplayName("§6#1 §7" + Main.getPlugin().mapName);
+				board.getObjective("scoreboard").setDisplayName("§6#1 §7" + Main.getPlugin().displayName);
 
 				OnePointEight onepointeight = OnePointEight.getInstance();
 				for (Player all : Bukkit.getOnlinePlayers()) {

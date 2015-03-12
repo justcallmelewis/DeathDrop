@@ -6,6 +6,7 @@ import java.util.Random;
 
 import net.alextwelshie.minedrop.commands.EndGame;
 import net.alextwelshie.minedrop.commands.ForceStart;
+import net.alextwelshie.minedrop.commands.ForceVote;
 import net.alextwelshie.minedrop.commands.SetConfig;
 import net.alextwelshie.minedrop.commands.SetSpawn;
 import net.alextwelshie.minedrop.commands.ShortStart;
@@ -38,6 +39,7 @@ public class Main extends JavaPlugin {
 	public Scoreboard		board;
 	public int				lobbyTimer		= 23;
 	public String			mapName;
+	public String			displayName;
 	public int				randomMap		= random.nextInt(1);
 	public World			mapWorld		= null;
 	public Integer			neededToStart	= null;
@@ -90,6 +92,7 @@ public class Main extends JavaPlugin {
 		
 		maps.add(0, "Brickwork");
 		maps.add(1, "Chamber");
+		maps.add(1, "AquaticDepths");
 		maps.add(2, "Rainbow");
 		maps.add(3, "Cake");
 		maps.add(4, "Valley");
@@ -230,6 +233,7 @@ public class Main extends JavaPlugin {
 		getCommand("shortstart").setExecutor(new ShortStart());
 		getCommand("setspawn").setExecutor(new SetSpawn());
 		getCommand("vote").setExecutor(new Vote());
+		getCommand("forcevote").setExecutor(new ForceVote());
 		Bukkit.getPluginManager().registerEvents(new Listeners(), this);
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		SettingsManager.getInstance().setup(this);

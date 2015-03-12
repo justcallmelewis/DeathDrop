@@ -20,3 +20,6 @@ commands:
   vote:
     description: Voting command
     aliases: v
+  forcevote:
+    description: Boobs and things.
+    aliases: fv
