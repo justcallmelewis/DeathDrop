@@ -210,7 +210,13 @@ public class Listeners implements Listener {
 					all.sendMessage(Main.getPlugin().prefix + "§6Shortening timer to "
 							+ (LobbyTimer.lobbyTimer - 1) + " seconds..");
 				}
+				
+				Main.getPlugin().voting = true;
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§aVoting is now enabled!");
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Use /vote or /v to vote.");
 			}
+			
+			
 		}
 
 	}

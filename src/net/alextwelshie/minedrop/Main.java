@@ -52,7 +52,7 @@ public class Main extends JavaPlugin {
 	public boolean			began			= false;
 	public boolean			ended			= false;
 	public boolean			shortened		= false;
-	public boolean			voting			= true;
+	public boolean			voting			= false;
 
 	public Configuration	config;
 
@@ -79,6 +79,17 @@ public class Main extends JavaPlugin {
 		fillMaps();
 		fillVotes();
 		registration();
+	}
+	
+	public String getFormattedTime(int seconds) {
+	  int remainder = seconds % 3600;
+	  int mins = remainder / 60;
+	  
+	  if(mins == 1) {
+		  return String.valueOf(mins) + " min";
+	  } else {
+		  return String.valueOf(mins) + " mins";
+	  }
 	}
 	
 	private void setupScoreboards() {
