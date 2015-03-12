@@ -42,7 +42,7 @@ public class LobbyTimer implements Runnable {
 			break;
 		case 10:
 			Main.getPlugin().voting = false;
-			Main.getPlugin().mapName = VoteHandler.getInstance().getMapVotedFor();
+			VoteHandler.getInstance().pickMap();
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b" + Main.getPlugin().mapName + " §ahas won!");
 			
 			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {

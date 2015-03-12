@@ -34,6 +34,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -129,6 +130,33 @@ public class Listeners implements Listener {
 		Player player = event.getPlayer();
 		event.setFormat(board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY + " » "
 				+ ChatColor.WHITE + "%s");
+	}
+	
+	@EventHandler
+	public void onCmd(PlayerCommandPreprocessEvent event) {
+		Player player = event.getPlayer();
+		String message = event.getMessage().toLowerCase();
+		switch (message.toLowerCase()) {
+			case "/list":
+				String players = "";
+				for(Player all : Bukkit.getOnlinePlayers()) {
+					String pl = board.getPlayerTeam(player).getPrefix() + all.getName();
+					
+					if(Main.getPlugin().whosDropping.equalsIgnoreCase(all.getName())) {
+						pl = board.getPlayerTeam(player).getPrefix() + all.getName() + "§d(Currently Dropping)";
+					}
+					if(players.isEmpty()) {
+						players = pl;
+					} else {
+						pl += ", ";
+						players += pl;
+					}
+				}
+				event.setCancelled(true);
+				player.sendMessage(Main.getPlugin().prefix + "§3Currently online:");
+				player.sendMessage(Main.getPlugin().prefix + players);
+				break;
+		}
 	}
 
 	@EventHandler

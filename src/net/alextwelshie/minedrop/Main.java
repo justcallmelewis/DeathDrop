@@ -1,16 +1,15 @@
 package net.alextwelshie.minedrop;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import net.alextwelshie.minedrop.SettingsManager;
 import net.alextwelshie.minedrop.commands.EndGame;
 import net.alextwelshie.minedrop.commands.ForceStart;
 import net.alextwelshie.minedrop.commands.Map;
 import net.alextwelshie.minedrop.commands.SetConfig;
 import net.alextwelshie.minedrop.commands.SetSpawn;
 import net.alextwelshie.minedrop.commands.ShortStart;
-import net.alextwelshie.minedrop.commands.SetSpawn;
 import net.alextwelshie.minedrop.commands.Vote;
 import net.alextwelshie.minedrop.listeners.Listeners;
 import net.alextwelshie.minedrop.ranks.PlayerManager;
@@ -44,7 +43,7 @@ public class Main extends JavaPlugin {
 	public World			mapWorld		= null;
 	public Integer			neededToStart	= null;
 	public Integer			maxPlayers		= null;
-	public Integer			maxVotes		= null;
+	public Integer			maxVotes		= 4;
 	public String			whosDropping	= null;
 	public int				turns			= 0;
 	public int				round			= 1;
@@ -101,10 +100,21 @@ public class Main extends JavaPlugin {
 	}
 	
 	private void fillMaps() {		
-		String[] maps = new String[] {"Brickwork", "Chamber", "Rainbow", "Cake", "Valley", "Icy"};
+		ArrayList<String> maps = new ArrayList<>();
+		
+		maps.add(0, "Brickwork");
+		maps.add(1, "Chamber");
+		maps.add(2, "Rainbow");
+		maps.add(3, "Cake");
+		maps.add(4, "Valley");
+		maps.add(5, "Icy");
 		for(int i = 1; i <= maxVotes; i++) {
-			int random = new Random().nextInt((maps.length - 1));
-			VoteHandler.getInstance().maps.add(maps[random]);
+			if(i == 1) {
+				VoteHandler.getInstance().maps.clear();
+			}
+			int random = new Random().nextInt((maps.size() - 1));
+			VoteHandler.getInstance().maps.add(maps.get(random));
+			maps.remove(random);
 		}
 	}
 	
@@ -250,12 +260,10 @@ public class Main extends JavaPlugin {
 		int maxrounds = config.getInt("maxRounds");
 		int lobbytimer = config.getInt("lobbytimer");
 		String gametype = config.getString("gametype");
-		int maxvotes = config.getInt("maxVotes");
 
 		this.neededToStart = needed;
 		this.maxPlayers = max;
 		this.maxRounds = maxrounds;
-		this.maxVotes = maxvotes;
 		LobbyTimer.lobbyTimer = lobbytimer + 1;
 
 		switch (gametype) {
@@ -286,10 +294,6 @@ public class Main extends JavaPlugin {
 
 		if (this.maxRounds == null) {
 			maxRounds = 7;
-		}
-		
-		if (this.maxVotes == null) {
-			maxVotes = 3;
 		}
 
 		if (getType() == null) {
