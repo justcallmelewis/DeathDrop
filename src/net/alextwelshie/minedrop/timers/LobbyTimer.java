@@ -37,8 +37,10 @@ public class LobbyTimer implements Runnable {
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Players waiting: §b" + Bukkit.getOnlinePlayers().size());
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Players needed to start: §b0");
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Time till start: §b" + Main.getPlugin().getFormattedTime(lobbyTimer));
-				Bukkit.broadcastMessage("");
-				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cVoting will activate once we reach " + Main.getPlugin().neededToStart + " players.");
+				if(!Main.getPlugin().voting && !Main.getPlugin().forcevoted) {
+					Bukkit.broadcastMessage("");
+					Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cVoting will be enabled when we get enough players.");
+				}
 			}
 		} else {
 			if(lobbyTimer % 20 == 0) {

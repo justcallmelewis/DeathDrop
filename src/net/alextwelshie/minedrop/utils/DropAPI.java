@@ -186,7 +186,6 @@ public class DropAPI {
 	}
 
 	private void newRound() {
-
 		Main.getPlugin().board.getObjective("scoreboard").setDisplayName("§b§lNEW ROUND!!");
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			onepointeight.sendTitleAndSubtitle(all, "§b§lNEW ROUND!!", "§aRound §6" + Main.getPlugin().round, 10,
@@ -196,58 +195,24 @@ public class DropAPI {
 			@Override
 			public void run() {
 				Main.getPlugin().board.getObjective("scoreboard").setDisplayName(
-						"§6#" + Main.getPlugin().round + " §7" + Main.getPlugin().displayName);
+					"§6#" + Main.getPlugin().round + " §7" + Main.getPlugin().displayName);
 			}
 		}, 80L);
-		
-		if(eliminated.size() >= notHadTurn.size()) {
-			Main.getPlugin().round = 0;
-			Bukkit.getScheduler().cancelAllTasks();
-			
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§4§lEVERYONE'S ELIMINATED!");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §cNobody");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cRestarting in §4§l10 seconds.");
-			Main.getPlugin().board.getObjective("scoreboard").setDisplaySlot(null);
-			Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.getPlugin(), new Runnable() {
-				@Override
-				public void run() {
-					for (Player all : Bukkit.getOnlinePlayers()) {
-						ByteArrayDataOutput out = ByteStreams.newDataOutput();
-						out.writeUTF("Connect");
-						out.writeUTF("hub");
-						all.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
-					}
-				}
-			}, 220L);
 
-			Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(), new Runnable() {
-				@Override
-				public void run() {
-					if (Bukkit.getOnlinePlayers().size() <= 0) {
-						Bukkit.shutdown();
-					}
-				}
-			}, 0L, 40L);
-		} else {
-			notHadTurn.clear();
-			for (Player all : Bukkit.getOnlinePlayers()) {
-				if(!eliminated.contains(all.getName())) {
-					notHadTurn.add(all.getName());
-				}
+		notHadTurn.clear();
+		for (Player all : Bukkit.getOnlinePlayers()) {
+			notHadTurn.add(all.getName());
+		}
+
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
+			@Override
+			public void run() {
+				Random random = new Random();
+				int playerInt = random.nextInt(notHadTurn.size());
+				setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
 			}
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
-				@Override
-				public void run() {
-					Random random = new Random();
-					int playerInt = random.nextInt(notHadTurn.size());
-					setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
-				}
-
-			}, 60l);
-		}
-		
+		}, 60l);
 	}
 
 	public void setupNextTurn() {
@@ -257,7 +222,11 @@ public class DropAPI {
 			Main.getPlugin().turns = 0;
 			Main.getPlugin().round++;
 			if (Main.getPlugin().round == (Main.getPlugin().maxRounds + 1)) {
-				gameOver();
+				if(Main.getPlugin().getType() == GameType.Elimination) {
+					gameOverOnElimination();
+				} else {
+					gameOver();
+				}
 			} else {
 				newRound();
 			}
@@ -272,5 +241,9 @@ public class DropAPI {
 
 			}, 50L);
 		}
+	}
+
+	private void gameOverOnElimination() {
+		//lewis
 	}
 }

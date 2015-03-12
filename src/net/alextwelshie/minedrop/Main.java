@@ -53,6 +53,7 @@ public class Main extends JavaPlugin {
 	public boolean			ended			= false;
 	public boolean			shortened		= false;
 	public boolean			voting			= false;
+	public boolean			forcevoted		= false;
 
 	public Configuration	config;
 

@@ -1,6 +1,7 @@
 package net.alextwelshie.minedrop.commands;
 
 import net.alextwelshie.minedrop.Main;
+import net.alextwelshie.minedrop.SettingsManager;
 import net.alextwelshie.minedrop.ranks.PlayerManager;
 import net.alextwelshie.minedrop.voting.VoteHandler;
 
@@ -24,20 +25,32 @@ public class ForceVote implements CommandExecutor{
 								VoteHandler.getInstance().voted.add(player.getName());
 								if(args[0].equalsIgnoreCase("1")) {
 									VoteHandler.getInstance().addVote(0, 9001);
-									player.sendMessage(Main.getPlugin().prefix + "§6Force voted map. Beginning game..");
-									player.chat("/fs");
+									VoteHandler.getInstance().pickMap();
+									Main.getPlugin().displayName = SettingsManager.getInstance().getData().getString(Main.getPlugin().mapName + ".displayName");
+									player.sendMessage(Main.getPlugin().prefix + "§6Force voted map. Voting disabled.");
+									Main.getPlugin().voting = false;
+									Main.getPlugin().forcevoted = true;
 								} else if(args[0].equalsIgnoreCase("2")) {
 									VoteHandler.getInstance().addVote(1, 9001);
-									player.sendMessage(Main.getPlugin().prefix + "§6Force voted map. Beginning game..");
-									player.chat("/fs");
+									VoteHandler.getInstance().pickMap();
+									Main.getPlugin().displayName = SettingsManager.getInstance().getData().getString(Main.getPlugin().mapName + ".displayName");
+									player.sendMessage(Main.getPlugin().prefix + "§6Force voted map. Voting disabled.");
+									Main.getPlugin().voting = false;
+									Main.getPlugin().forcevoted = true;
 								} else if(args[0].equalsIgnoreCase("3")) {
 									VoteHandler.getInstance().addVote(2, 9001);
-									player.sendMessage(Main.getPlugin().prefix + "§6Force voted map. Beginning game..");
-									player.chat("/fs");
+									VoteHandler.getInstance().pickMap();
+									Main.getPlugin().displayName = SettingsManager.getInstance().getData().getString(Main.getPlugin().mapName + ".displayName");
+									player.sendMessage(Main.getPlugin().prefix + "§6Force voted map. Voting disabled.");
+									Main.getPlugin().voting = false;
+									Main.getPlugin().forcevoted = true;
 								} else if(args[0].equalsIgnoreCase("4")) {
 									VoteHandler.getInstance().addVote(3, 9001);
-									player.sendMessage(Main.getPlugin().prefix + "§6Force voted map. Beginning game..");
-									player.chat("/fs");
+									VoteHandler.getInstance().pickMap();
+									Main.getPlugin().displayName = SettingsManager.getInstance().getData().getString(Main.getPlugin().mapName + ".displayName");
+									player.sendMessage(Main.getPlugin().prefix + "§6Force voted map. Voting disabled.");
+									Main.getPlugin().voting = false;
+									Main.getPlugin().forcevoted = true;
 								} else {
 									player.sendMessage(Main.getPlugin().prefix + "§cThat is not a valid option.");
 								}
