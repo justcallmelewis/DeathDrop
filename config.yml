@@ -1,13 +1,13 @@
 # MineDrop Default Config - for SurvivalMC.eu by AlexTWelshie <3
 
 # Basic Game Structure
-neededToStart: 2
-maxPlayers: 16
+neededToStart: 3
+maxPlayers: 12
 maxRounds: 7
 lobbytimer: 180
 
 # Map Voting Options
 maxVotes: 3
 
-# Current gametypes available: Enhanced, Normal and Auto
-gametype: Enhanced
+# Current gametypes available: Enhanced, Normal, Elimination and Auto
+gametype: Auto

@@ -272,13 +272,18 @@ public class Main extends JavaPlugin {
 		case "Normal":
 			setType(GameType.Normal);
 			break;
+		case "Elimination":
+			setType(GameType.Elimination);
+			break;
 		case "Auto":
 			Random random = new Random();
-			int Chance = random.nextInt(1);
+			int Chance = random.nextInt(2);
 			if (Chance == 0) {
+				setType(GameType.Normal);
+			} else if(Chance == 1) {
 				setType(GameType.Enhanced);
 			} else {
-				setType(GameType.Normal);
+				setType(GameType.Elimination);
 			}
 			break;
 		}
