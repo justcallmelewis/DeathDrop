@@ -112,9 +112,9 @@ public class Vote implements CommandExecutor {
 					} else {
 						player.sendMessage(Main.getPlugin().prefix + "§cYou can only vote once.");
 					}
-				} else {
-					player.sendMessage(Main.getPlugin().prefix + "§cVoting is not active right now!");
 				}
+			} else {
+				player.sendMessage(Main.getPlugin().prefix + "§cVoting is not active right now!");
 			}
 		}
 		return true;
