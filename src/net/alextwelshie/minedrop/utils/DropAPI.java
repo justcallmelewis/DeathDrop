@@ -223,20 +223,13 @@ public class DropAPI {
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				if(!eliminated.contains(all)) {
 					notHadTurn.add(all.getName());
+					Main.getPlugin().turns = eliminated.size();
 				}
 			}
 		} else {
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				notHadTurn.add(all.getName());
 			}
-		}
-		
-		if(notHadTurn.size() == 1 && Main.getPlugin().getType() == GameType.Elimination) {
-			gameOver();
-			return;
-		} else if(notHadTurn.size() == 0) {
-			gameOverOnElimination();
-			return;
 		}
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
@@ -252,6 +245,14 @@ public class DropAPI {
 
 	public void setupNextTurn() {
 		Main.getPlugin().turns++;
+		
+		if(notHadTurn.size() == 1 && Main.getPlugin().getType() == GameType.Elimination && Main.getPlugin().turns == eliminated.size()) {
+			gameOver();
+			return;
+		} else if(notHadTurn.size() == 0) {
+			gameOverOnElimination();
+			return;
+		}
 
 		if (Main.getPlugin().turns == Bukkit.getOnlinePlayers().size()) {
 			Main.getPlugin().turns = 0;
@@ -265,13 +266,11 @@ public class DropAPI {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
 				@Override
 				public void run() {
-					if(notHadTurn.size() == 1) {
-						setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(0)));
-					} else {
+
 						Random random = new Random();
 						int playerInt = random.nextInt((notHadTurn.size()));
 						setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
-					}
+					
 				}
 
 			}, 50L);
