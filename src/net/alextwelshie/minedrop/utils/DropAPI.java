@@ -219,15 +219,24 @@ public class DropAPI {
 			}
 		}, 80L);
 
-		notHadTurn.clear();
-		for (Player all : Bukkit.getOnlinePlayers()) {
-			if(!eliminated.contains(all)) {
+		if(Main.getPlugin().getType() == GameType.Elimination) {
+			for (Player all : Bukkit.getOnlinePlayers()) {
+				if(!eliminated.contains(all)) {
+					notHadTurn.add(all.getName());
+				}
+			}
+		} else {
+			for (Player all : Bukkit.getOnlinePlayers()) {
 				notHadTurn.add(all.getName());
 			}
 		}
 		
-		if(notHadTurn.size() == 1) {
+		if(notHadTurn.size() == 1 && Main.getPlugin().getType() == GameType.Elimination) {
+			gameOver();
+			return;
+		} else if(notHadTurn.size() == 0) {
 			gameOverOnElimination();
+			return;
 		}
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
@@ -248,11 +257,7 @@ public class DropAPI {
 			Main.getPlugin().turns = 0;
 			Main.getPlugin().round++;
 			if (Main.getPlugin().round == (Main.getPlugin().maxRounds + 1)) {
-				if(Main.getPlugin().getType() == GameType.Elimination) {
-					gameOverOnElimination();
-				} else {
-					gameOver();
-				}
+				gameOver();
 			} else {
 				newRound();
 			}
@@ -260,9 +265,13 @@ public class DropAPI {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
 				@Override
 				public void run() {
-					Random random = new Random();
-					int playerInt = random.nextInt(notHadTurn.size());
-					setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
+					if(notHadTurn.size() == 1) {
+						setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(0)));
+					} else {
+						Random random = new Random();
+						int playerInt = random.nextInt((notHadTurn.size()));
+						setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
+					}
 				}
 
 			}, 50L);
@@ -273,11 +282,9 @@ public class DropAPI {
 		Main.getPlugin().round = 0;
 		Bukkit.getScheduler().cancelAllTasks();
 
-		Player winner = Bukkit.getPlayer(notHadTurn.get(0));
-		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §a" + board.getPlayerTeam(winner).getPrefix() + winner.getName());
+		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §cNobody");
 		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§b§lCONGRATULATIONS!!");
 		Bukkit.broadcastMessage("");
-
 		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cRestarting in §4§l10 seconds.");
 		Main.getPlugin().board.getObjective("scoreboard").setDisplaySlot(null);
 		Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.getPlugin(), new Runnable() {

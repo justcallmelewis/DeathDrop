@@ -1,6 +1,7 @@
 package net.alextwelshie.minedrop.commands;
 
 import net.alextwelshie.minedrop.Main;
+import net.alextwelshie.minedrop.SettingsManager;
 import net.alextwelshie.minedrop.runnables.LoadWorldInRunnable;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
 import net.alextwelshie.minedrop.utils.DropAPI;
@@ -29,6 +30,7 @@ public class ForceStart implements CommandExecutor {
 
 							Main.getPlugin().voting = false;
 							VoteHandler.getInstance().pickMap();
+							Main.getPlugin().displayName = SettingsManager.getInstance().getData().getString(Main.getPlugin().mapName + ".displayName");
 							Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b" + Main.getPlugin().mapName + " §ahas won!");
 							
 							if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
