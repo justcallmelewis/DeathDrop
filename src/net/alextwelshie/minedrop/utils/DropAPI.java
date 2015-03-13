@@ -149,12 +149,14 @@ public class DropAPI {
 	private void gameOver() {
 
 		Main.getPlugin().round = 0;
+		
+		Bukkit.getScheduler().cancelAllTasks();
 
 		int highest = 0;
 		ArrayList<String> winners = new ArrayList<>();
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			Score score = Main.getPlugin().board.getObjective("scoreboard").getScore(all.getName());
-			if (score.getScore() >= highest) {
+			if (score.getScore() >= highest && !eliminated.contains(all.getName())) {
 				highest = score.getScore();
 				winners.add(score.getPlayer().getName());
 			}
@@ -218,6 +220,12 @@ public class DropAPI {
 					"§6#" + Main.getPlugin().round + " §7" + Main.getPlugin().displayName);
 			}
 		}, 80L);
+		
+		if(eliminated.size() == Bukkit.getOnlinePlayers().size()){
+			gameOverOnElimination();
+		} else if(eliminated.size() == Bukkit.getOnlinePlayers().size() -1) {
+			gameOver();
+		}
 
 		if(Main.getPlugin().getType() == GameType.Elimination) {
 			for (Player all : Bukkit.getOnlinePlayers()) {
@@ -246,14 +254,6 @@ public class DropAPI {
 	public void setupNextTurn() {
 		Main.getPlugin().turns++;
 		
-		if(notHadTurn.size() == 1 && Main.getPlugin().getType() == GameType.Elimination && Main.getPlugin().turns == eliminated.size()) {
-			gameOver();
-			return;
-		} else if(notHadTurn.size() == 0) {
-			gameOverOnElimination();
-			return;
-		}
-
 		if (Main.getPlugin().turns == Bukkit.getOnlinePlayers().size()) {
 			Main.getPlugin().turns = 0;
 			Main.getPlugin().round++;
