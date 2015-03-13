@@ -107,6 +107,26 @@ public class DropAPI {
 		}
 		return failMessages.get(random);
 	}
+	
+	public void eliminatePlayer(Player player) {
+		DropAPI.getInstance().eliminated.add(player.getName());
+		Main.getPlugin().removePlayerFromScoreboard(player);
+		Main.getPlugin().registerFakePlayer("§f§m" + player.getName(), -3);
+		
+		boolean eliminatedScore = true;
+		for(Score score : Main.getPlugin().board.getScores("scoreboard")) {
+			if(score.getScore() == -1) {
+				eliminatedScore = true;
+			} else {
+				eliminatedScore = false;
+			}
+		}
+		
+		if(!eliminatedScore) {
+			Main.getPlugin().registerFakePlayer(" ", -1);
+			Main.getPlugin().registerFakePlayer("§c§lEliminated:", -2);
+		}
+	}
 
 	public void launchFirework(String occasion, Location location) {
 		Color colour = null;
@@ -201,7 +221,13 @@ public class DropAPI {
 
 		notHadTurn.clear();
 		for (Player all : Bukkit.getOnlinePlayers()) {
-			notHadTurn.add(all.getName());
+			if(!eliminated.contains(all)) {
+				notHadTurn.add(all.getName());
+			}
+		}
+		
+		if(notHadTurn.size() == 1) {
+			gameOverOnElimination();
 		}
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
@@ -244,6 +270,35 @@ public class DropAPI {
 	}
 
 	private void gameOverOnElimination() {
-		//lewis
+		Main.getPlugin().round = 0;
+		Bukkit.getScheduler().cancelAllTasks();
+
+		Player winner = Bukkit.getPlayer(notHadTurn.get(0));
+		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §a" + board.getPlayerTeam(winner).getPrefix() + winner.getName());
+		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§b§lCONGRATULATIONS!!");
+		Bukkit.broadcastMessage("");
+
+		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cRestarting in §4§l10 seconds.");
+		Main.getPlugin().board.getObjective("scoreboard").setDisplaySlot(null);
+		Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.getPlugin(), new Runnable() {
+			@Override
+			public void run() {
+				for (Player all : Bukkit.getOnlinePlayers()) {
+					ByteArrayDataOutput out = ByteStreams.newDataOutput();
+					out.writeUTF("Connect");
+					out.writeUTF("hub");
+					all.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+				}
+			}
+		}, 220L);
+
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(), new Runnable() {
+			@Override
+			public void run() {
+				if (Bukkit.getOnlinePlayers().size() <= 0) {
+					Bukkit.shutdown();
+				}
+			}
+		}, 0L, 40L);
 	}
 }

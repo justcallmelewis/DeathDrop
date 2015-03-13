@@ -6,6 +6,7 @@ import net.alextwelshie.minedrop.Main;
 import net.alextwelshie.minedrop.achievements.Achievement;
 import net.alextwelshie.minedrop.achievements.AchievementAPI;
 import net.alextwelshie.minedrop.achievements.AchievementMenu;
+import net.alextwelshie.minedrop.ranks.PlayerManager;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
 import net.alextwelshie.minedrop.utils.BlockChooserGUI;
 import net.alextwelshie.minedrop.utils.DropAPI;
@@ -47,7 +48,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.google.common.io.ByteArrayDataOutput;
@@ -226,9 +226,13 @@ public class Listeners implements Listener {
 		Player player = event.getPlayer();
 		event.setQuitMessage(Main.getPlugin().prefix + "§6Player §6" + player.getName() + " §6has left us!");
 		Main.getPlugin().removePlayerFromScoreboard(player);
+		PlayerManager.getInstance().removeFromArrayLists(player);
 
 		if (Main.getPlugin().getState() == GameState.INGAME && Bukkit.getOnlinePlayers().size() == 0) {
 			Bukkit.shutdown();
+		} else if(Main.getPlugin().getState() == GameState.INGAME && Bukkit.getOnlinePlayers().size() == 1) {
+			Main.getPlugin().round = (Main.getPlugin().maxRounds + 1);
+			DropAPI.getInstance().setupNextTurn();
 		}
 
 	}
@@ -411,12 +415,7 @@ public class Listeners implements Listener {
 						DropAPI.getInstance().setupNextTurn();
 						
 						if(Main.getPlugin().getType() == GameType.Elimination) {
-							DropAPI.getInstance().eliminated.add(player.getName());
-							Main.getPlugin().updateScore(player, -2);
-							
-							if(Main.getPlugin().board.getObjective(DisplaySlot.SIDEBAR).getScore("§cEliminated:") == null) {
-								Main.getPlugin().registerFakePlayer("§cEliminated:", -1);								
-							}
+							DropAPI.getInstance().eliminatePlayer(player);
 						}
 					}
 				}

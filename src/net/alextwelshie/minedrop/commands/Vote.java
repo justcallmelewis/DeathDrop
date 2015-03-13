@@ -45,7 +45,7 @@ public class Vote implements CommandExecutor {
 									VoteHandler.getInstance().addVote(0, 5);
 									break;
 							}
-							player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b" + VoteHandler.getInstance().getVotes(1) + " §6votes.");
+							player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b" + VoteHandler.getInstance().getVotes(0) + " §6votes.");
 						} else if(args[0].equalsIgnoreCase("2")) {
 							switch(PlayerManager.getInstance().getRank(player)) {
 								case "Regular":
@@ -65,7 +65,7 @@ public class Vote implements CommandExecutor {
 									VoteHandler.getInstance().addVote(1, 5);
 									break;
 							}
-							player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b" + VoteHandler.getInstance().getVotes(2) + " §6votes.");
+							player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b" + VoteHandler.getInstance().getVotes(1) + " §6votes.");
 						} else if(args[0].equalsIgnoreCase("3")) {
 							switch(PlayerManager.getInstance().getRank(player)) {
 								case "Regular":
@@ -85,7 +85,7 @@ public class Vote implements CommandExecutor {
 									VoteHandler.getInstance().addVote(2, 5);
 									break;
 							}
-							player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b" + VoteHandler.getInstance().getVotes(3) + " §6votes.");
+							player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b" + VoteHandler.getInstance().getVotes(2) + " §6votes.");
 						} else if(args[0].equalsIgnoreCase("4")) {
 							switch(PlayerManager.getInstance().getRank(player)) {
 								case "Regular":
@@ -105,7 +105,7 @@ public class Vote implements CommandExecutor {
 									VoteHandler.getInstance().addVote(3, 5);
 									break;
 							}
-							player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b" + VoteHandler.getInstance().getVotes(4) + " §6votes.");
+							player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b" + VoteHandler.getInstance().getVotes(3) + " §6votes.");
 						} else {
 							player.sendMessage(Main.getPlugin().prefix + "§cThat is not a valid option.");
 						}
