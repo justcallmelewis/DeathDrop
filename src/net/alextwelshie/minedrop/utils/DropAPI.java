@@ -147,9 +147,7 @@ public class DropAPI {
 	}
 
 	private void gameOver() {
-
-		Main.getPlugin().round = 0;
-		
+		Main.getPlugin().round = 0;	
 		Bukkit.getScheduler().cancelAllTasks();
 
 		int highest = 0;
@@ -223,8 +221,9 @@ public class DropAPI {
 		
 		if(eliminated.size() == Bukkit.getOnlinePlayers().size()){
 			gameOverOnElimination();
-		} else if(eliminated.size() == Bukkit.getOnlinePlayers().size() -1) {
+		} else if(eliminated.size() == (Bukkit.getOnlinePlayers().size() - 1)) {
 			gameOver();
+			return;
 		}
 
 		if(Main.getPlugin().getType() == GameType.Elimination) {
