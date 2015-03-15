@@ -3,8 +3,6 @@ package net.alextwelshie.minedrop.listeners;
 import java.util.Random;
 
 import net.alextwelshie.minedrop.Main;
-import net.alextwelshie.minedrop.achievements.Achievement;
-import net.alextwelshie.minedrop.achievements.AchievementAPI;
 import net.alextwelshie.minedrop.achievements.AchievementMenu;
 import net.alextwelshie.minedrop.ranks.PlayerManager;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
@@ -65,18 +63,21 @@ public class Listeners implements Listener {
 	private void countBlocks(Player player, Location loc) {
 		  int count = 0;
 		  BlockFace[] faces = new BlockFace[] { BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH };
+		  
 		  for (BlockFace bf : faces) {
 		   Location block1 = loc.getBlock().getRelative(bf).getLocation();
-		   Material[] ignore = new Material[] { Material.COAL_BLOCK, Material.OBSIDIAN };
 		   
-		   for(Material mat : ignore){
-		    if(block1.getBlock().getType() != Material.WATER && block1.getBlock().getType() != mat){
-		    	count++;
-		    }
+		   if(Main.getPlugin().mapName == "Chamber"){
+			   if(block1.getBlock().getType() != Material.WATER && block1.getBlock().getType() != Material.OBSIDIAN){
+				   count++;
+			   }
+		   } else {
+			   if(block1.getBlock().getType() != Material.WATER && block1.getBlock().getType() != Material.COAL_BLOCK){
+				   count++;
+			   }
 		   }
-
 		  }
-	
+		  
 		switch (count) {
 		case 2:
 			Main.getPlugin().updateScore(player, 2);
@@ -125,8 +126,14 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
-		event.setFormat(board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY + " » "
-				+ ChatColor.WHITE + "%s");
+		if(!DropAPI.getInstance().eliminated.contains(player.getName())){
+			event.setFormat(board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY + " » "
+					+ ChatColor.WHITE + "%s");
+		} else {
+			event.setFormat("§c[Eliminated] §r" + "%s" + ChatColor.DARK_GRAY + " » "
+					+ ChatColor.WHITE + "%s");
+		}
+		
 	}
 	
 	@EventHandler
@@ -225,15 +232,11 @@ public class Listeners implements Listener {
 	public void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		event.setQuitMessage(Main.getPlugin().prefix + "§6Player §6" + player.getName() + " §6has left us!");
-		Main.getPlugin().removePlayerFromScoreboard(player);
 		PlayerManager.getInstance().removeFromArrayLists(player);
 
 		if (Main.getPlugin().getState() == GameState.INGAME && Bukkit.getOnlinePlayers().size() == 0) {
 			Bukkit.shutdown();
-		} else if(Main.getPlugin().getState() == GameState.INGAME && Bukkit.getOnlinePlayers().size() == 1) {
-			Main.getPlugin().round = (Main.getPlugin().maxRounds + 1);
-			DropAPI.getInstance().setupNextTurn();
-		}
+		} 
 
 	}
 
@@ -258,7 +261,7 @@ public class Listeners implements Listener {
 			if (Main.getPlugin().getState() == GameState.INGAME) {
 				if (Main.getPlugin().whosDropping == null) {
 				} else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
-					if (block.getType() == Material.STATIONARY_WATER) {
+					if (event.getTo().getBlock().isLiquid()) {
 
 						block.setType(Main.getPlugin().blocks.get(player.getName()));
 						block.setData(Main.getPlugin().blockData.get(player.getName()));
@@ -370,7 +373,7 @@ public class Listeners implements Listener {
 						}
 						Main.getPlugin().blocks.put(player.getName(), material);
 						Main.getPlugin().blockData.put(player.getName(), data);
-						AchievementAPI.getInstance().grantAchievement(player, Achievement.PICKBLOCK);
+						//AchievementAPI.getInstance().grantAchievement(player, Achievement.PICKBLOCK);
 						player.sendMessage(Main.getPlugin().prefix + "§6Block chosen.");
 					}
 				}
@@ -411,7 +414,7 @@ public class Listeners implements Listener {
 						DropAPI.getInstance().finishDrop(player);
 						Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 								+ player.getName() + "§c" + DropAPI.getInstance().pickFailMessage());
-						AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRST_LAND_FAIL);
+						//AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRST_LAND_FAIL);
 						DropAPI.getInstance().setupNextTurn();
 						
 						if(Main.getPlugin().getType() == GameType.Elimination) {

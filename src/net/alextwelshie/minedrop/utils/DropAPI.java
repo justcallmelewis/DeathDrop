@@ -109,7 +109,7 @@ public class DropAPI {
 	}
 	
 	public void eliminatePlayer(Player player) {
-		DropAPI.getInstance().eliminated.add(player.getName());
+		eliminated.add(player.getName());
 		Main.getPlugin().removePlayerFromScoreboard(player);
 		Main.getPlugin().registerFakePlayer("§f§m" + player.getName(), -3);
 		
@@ -147,7 +147,7 @@ public class DropAPI {
 	}
 
 	private void gameOver() {
-		Main.getPlugin().round = 0;	
+		Main.getPlugin().round = 0;
 		Bukkit.getScheduler().cancelAllTasks();
 
 		int highest = 0;
@@ -170,7 +170,7 @@ public class DropAPI {
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + " ");
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§3All players were tied at §d" + highest
 					+ " §3points.");
-		} else {
+		} else if(winners.size() == 1) {
 			Player winner = Bukkit.getPlayer(winners.get(0));
 			Bukkit.broadcastMessage("");
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §a"
@@ -178,6 +178,11 @@ public class DropAPI {
 					+ " §6Points");
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§b§lCONGRATULATIONS!!");
 			Bukkit.broadcastMessage("");
+		} else {
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §cNobody");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§b§lCONGRATULATIONS!!");
+			Bukkit.broadcastMessage("");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cRestarting in §4§l10 seconds.");
 		}
 
 		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cRestarting in §4§l10 seconds.");
@@ -206,6 +211,25 @@ public class DropAPI {
 	}
 
 	private void newRound() {
+		
+		if(Main.getPlugin().getType() == GameType.Elimination) {
+			for (Player all : Bukkit.getOnlinePlayers()) {
+				if(!eliminated.contains(all.getName())) {
+					notHadTurn.add(all.getName());	
+				}	
+			}	
+		} else {
+			for (Player all : Bukkit.getOnlinePlayers()) {
+				notHadTurn.add(all.getName());
+			}
+		}
+		
+		if(Main.getPlugin().getType() == GameType.Elimination){
+			if(notHadTurn.size() <= 1){
+				gameOver();
+			}
+		}
+		
 		Main.getPlugin().board.getObjective("scoreboard").setDisplayName("§b§lNEW ROUND!!");
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			onepointeight.sendTitleAndSubtitle(all, "§b§lNEW ROUND!!", "§aRound §6" + Main.getPlugin().round, 10,
@@ -219,26 +243,6 @@ public class DropAPI {
 			}
 		}, 80L);
 		
-		if(eliminated.size() == Bukkit.getOnlinePlayers().size()){
-			gameOverOnElimination();
-		} else if(eliminated.size() == (Bukkit.getOnlinePlayers().size() - 1)) {
-			gameOver();
-			return;
-		}
-
-		if(Main.getPlugin().getType() == GameType.Elimination) {
-			for (Player all : Bukkit.getOnlinePlayers()) {
-				if(!eliminated.contains(all)) {
-					notHadTurn.add(all.getName());
-					Main.getPlugin().turns = eliminated.size();
-				}
-			}
-		} else {
-			for (Player all : Bukkit.getOnlinePlayers()) {
-				notHadTurn.add(all.getName());
-			}
-		}
-
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
@@ -274,36 +278,5 @@ public class DropAPI {
 
 			}, 50L);
 		}
-	}
-
-	private void gameOverOnElimination() {
-		Main.getPlugin().round = 0;
-		Bukkit.getScheduler().cancelAllTasks();
-
-		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §cNobody");
-		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§b§lCONGRATULATIONS!!");
-		Bukkit.broadcastMessage("");
-		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cRestarting in §4§l10 seconds.");
-		Main.getPlugin().board.getObjective("scoreboard").setDisplaySlot(null);
-		Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.getPlugin(), new Runnable() {
-			@Override
-			public void run() {
-				for (Player all : Bukkit.getOnlinePlayers()) {
-					ByteArrayDataOutput out = ByteStreams.newDataOutput();
-					out.writeUTF("Connect");
-					out.writeUTF("hub");
-					all.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
-				}
-			}
-		}, 220L);
-
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(), new Runnable() {
-			@Override
-			public void run() {
-				if (Bukkit.getOnlinePlayers().size() <= 0) {
-					Bukkit.shutdown();
-				}
-			}
-		}, 0L, 40L);
 	}
 }

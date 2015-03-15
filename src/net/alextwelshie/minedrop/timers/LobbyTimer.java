@@ -20,7 +20,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public class LobbyTimer implements Runnable {
 
-	public static int	lobbyTimer	= 181;
+	public static int	lobbyTimer	= Main.getPlugin().config.getInt("lobbytimer") + 1;
 	
 	Scoreboard		board			= Bukkit.getScoreboardManager().getMainScoreboard();
 
