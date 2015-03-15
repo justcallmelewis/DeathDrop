@@ -110,7 +110,6 @@ public class DropAPI {
 	
 	public void eliminatePlayer(Player player) {
 		eliminated.add(player.getName());
-		Bukkit.broadcastMessage("Added player " + player.getName());
 		
 		int score = Main.getPlugin().getScore(player);
 		String prefix = Main.getPlugin().board.getPlayerTeam(player).getPrefix();
@@ -145,14 +144,14 @@ public class DropAPI {
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			Score score = Main.getPlugin().board.getObjective("scoreboard").getScore(all.getName());
 			if(Main.getPlugin().getType() == GameType.Elimination){
-				if (score.getScore() >= highest && notHadTurn.size() == 1) {
+				if (score.getScore() > highest && notHadTurn.size() == 1) {
 					highest = score.getScore();
 					winners.add(score.getPlayer().getName());
 				} else {
-					winners.isEmpty();
+					winners.clear();
 				}
 			} else {
-				if (score.getScore() >= highest) {
+				if (score.getScore() > highest) {
 					highest = score.getScore();
 					winners.add(score.getPlayer().getName());
 				}
@@ -209,17 +208,13 @@ public class DropAPI {
 
 	}
 
-	private void newRound() {
-		
-		Bukkit.broadcastMessage(eliminated.size() + " in eliminated!");
-		
+	private void newRound() {		
 		if(Main.getPlugin().getType() == GameType.Elimination) {
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				if(!eliminated.contains(all.getName())) {
 					notHadTurn.add(all.getName());	
 				}	
 			}
-			Bukkit.broadcastMessage(notHadTurn.size() + " added back to notHadTurn");
 		} else {
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				notHadTurn.add(all.getName());
@@ -272,11 +267,9 @@ public class DropAPI {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
 				@Override
 				public void run() {
-
-						Random random = new Random();
-						int playerInt = random.nextInt((notHadTurn.size()));
-						setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
-					
+					Random random = new Random();
+					int playerInt = random.nextInt((notHadTurn.size()));
+					setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));				
 				}
 
 			}, 50L);
