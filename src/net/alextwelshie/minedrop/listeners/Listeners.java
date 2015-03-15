@@ -401,7 +401,6 @@ public class Listeners implements Listener {
 			if (Main.getPlugin().getState() == GameState.INGAME) {
 				if (block.getType() != Material.STATIONARY_WATER || block.getType() != Material.WATER) {
 					if (Main.getPlugin().whosDropping == null) {
-
 					} else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
 						event.setCancelled(true);
 
@@ -411,15 +410,14 @@ public class Listeners implements Listener {
 
 						onepointeight.sendActionBarText(player, "§cYou failed to land in the water.");
 						DropAPI.getInstance().launchFirework("fail", block.getLocation().subtract(0, 2, 0));
-						DropAPI.getInstance().finishDrop(player);
 						Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 								+ player.getName() + "§c" + DropAPI.getInstance().pickFailMessage());
-						//AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRST_LAND_FAIL);
-						DropAPI.getInstance().setupNextTurn();
-						
 						if(Main.getPlugin().getType() == GameType.Elimination) {
 							DropAPI.getInstance().eliminatePlayer(player);
 						}
+						DropAPI.getInstance().finishDrop(player);
+						//AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRST_LAND_FAIL);
+						DropAPI.getInstance().setupNextTurn();	
 					}
 				}
 

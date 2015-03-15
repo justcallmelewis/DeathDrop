@@ -110,6 +110,7 @@ public class DropAPI {
 	
 	public void eliminatePlayer(Player player) {
 		eliminated.add(player.getName());
+		Bukkit.broadcastMessage("Added player " + player.getName());
 		Main.getPlugin().removePlayerFromScoreboard(player);
 		Main.getPlugin().registerFakePlayer("§f§m" + player.getName(), -3);
 		
@@ -154,10 +155,20 @@ public class DropAPI {
 		ArrayList<String> winners = new ArrayList<>();
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			Score score = Main.getPlugin().board.getObjective("scoreboard").getScore(all.getName());
-			if (score.getScore() >= highest && !eliminated.contains(all.getName())) {
-				highest = score.getScore();
-				winners.add(score.getPlayer().getName());
+			if(Main.getPlugin().getType() == GameType.Elimination){
+				if (score.getScore() >= highest && notHadTurn.size() == 1) {
+					highest = score.getScore();
+					winners.add(score.getPlayer().getName());
+				} else {
+					winners.isEmpty();
+				}
+			} else {
+				if (score.getScore() >= highest) {
+					highest = score.getScore();
+					winners.add(score.getPlayer().getName());
+				}
 			}
+			
 		}
 
 		if (winners.size() >= 2) {
@@ -182,7 +193,6 @@ public class DropAPI {
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §cNobody");
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§b§lCONGRATULATIONS!!");
 			Bukkit.broadcastMessage("");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cRestarting in §4§l10 seconds.");
 		}
 
 		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cRestarting in §4§l10 seconds.");
@@ -212,12 +222,15 @@ public class DropAPI {
 
 	private void newRound() {
 		
+		Bukkit.broadcastMessage(eliminated.size() + " in eliminated!");
+		
 		if(Main.getPlugin().getType() == GameType.Elimination) {
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				if(!eliminated.contains(all.getName())) {
 					notHadTurn.add(all.getName());	
 				}	
-			}	
+			}
+			Bukkit.broadcastMessage(notHadTurn.size() + " added back to notHadTurn");
 		} else {
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				notHadTurn.add(all.getName());
@@ -227,6 +240,7 @@ public class DropAPI {
 		if(Main.getPlugin().getType() == GameType.Elimination){
 			if(notHadTurn.size() <= 1){
 				gameOver();
+				return;
 			}
 		}
 		
