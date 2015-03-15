@@ -111,22 +111,11 @@ public class DropAPI {
 	public void eliminatePlayer(Player player) {
 		eliminated.add(player.getName());
 		Bukkit.broadcastMessage("Added player " + player.getName());
+		
+		int score = Main.getPlugin().getScore(player);
+		String prefix = Main.getPlugin().board.getPlayerTeam(player).getPrefix();
 		Main.getPlugin().removePlayerFromScoreboard(player);
-		Main.getPlugin().registerFakePlayer("§f§m" + player.getName(), -3);
-		
-		boolean eliminatedScore = true;
-		for(Score score : Main.getPlugin().board.getScores("scoreboard")) {
-			if(score.getScore() == -1) {
-				eliminatedScore = true;
-			} else {
-				eliminatedScore = false;
-			}
-		}
-		
-		if(!eliminatedScore) {
-			Main.getPlugin().registerFakePlayer(" ", -1);
-			Main.getPlugin().registerFakePlayer("§c§lEliminated:", -2);
-		}
+		Main.getPlugin().registerFakePlayer(prefix + "§m" + player.getName(), score);
 	}
 
 	public void launchFirework(String occasion, Location location) {
