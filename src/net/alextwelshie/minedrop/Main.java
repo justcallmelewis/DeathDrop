@@ -78,7 +78,6 @@ public class Main extends JavaPlugin {
 		fillSuccessMessages();
 		fillBlockChooser();
 		fillVotes();
-		fillMaps();
 		registration();
 	}
 
@@ -138,7 +137,6 @@ public class Main extends JavaPlugin {
 
 	private void fillVotes() {
 		for (String map : VoteHandler.getInstance().maps) {
-			VoteHandler.getInstance().votes.put(map, 1);
 			VoteHandler.getInstance().votes.put(map, 0);
 		}
 	}

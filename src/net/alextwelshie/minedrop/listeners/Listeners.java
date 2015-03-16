@@ -206,9 +206,7 @@ public class Listeners implements Listener {
 		onepointeight
 				.sendHeaderAndFooter(player, "§6SurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6MD1");
 		
-		if(Main.getPlugin().voting) {
-			VoteHandler.getInstance().sendVotingMessage(player);
-		}
+		VoteHandler.getInstance().sendVotingMessage(player);
 		player.teleport(new Location(Bukkit.getWorld("world"), -1386.5, 10, 941.5, 0, 0));
 
 		givePlayerItems(player);
