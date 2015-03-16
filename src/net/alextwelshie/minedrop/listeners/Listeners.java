@@ -84,20 +84,20 @@ public class Listeners implements Listener {
 		case 2:
 			Main.getPlugin().updateScore(player, 2);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
-					+ player.getName() + " §bscored a §a§lDOUBLE!!");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6(+2 points)");
+					+ player.getName() + " §ascored a §b§lDOUBLE!!");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6(+1 Bonus point)");
 			break;
 		case 3:
 			Main.getPlugin().updateScore(player, 3);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
-					+ player.getName() + " §bscored a §a§lTRIPLE!!");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6(+3 points)");
+					+ player.getName() + " §ascored a §b§lTRIPLE!!");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6(+2 Bonus points)");
 			break;
 		case 4:
 			Main.getPlugin().updateScore(player, 4);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
-					+ player.getName() + " §bscored a §a§lQUAD!!");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6(+4 points)");
+					+ player.getName() + " §ascored a §b§lQUAD!!");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6(+3 Bonus points)");
 			break;
 		default:
 			Main.getPlugin().increaseScore(player);

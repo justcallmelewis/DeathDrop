@@ -77,7 +77,6 @@ public class Main extends JavaPlugin {
 		fillErrorMessages();
 		fillSuccessMessages();
 		fillBlockChooser();
-		fillMaps();
 		fillVotes();
 		registration();
 	}
@@ -104,12 +103,28 @@ public class Main extends JavaPlugin {
 
 		maps.add(0, "Brickwork");
 		maps.add(1, "Chamber");
-		maps.add(1, "AquaticDepths");
-		maps.add(2, "Rainbow");
-		maps.add(3, "Cake");
-		maps.add(4, "HighDive");
-		maps.add(4, "Valley");
-		maps.add(5, "Icy");
+		maps.add(2, "AquaticDepths");
+		maps.add(3, "Rainbow");
+		maps.add(4, "Cake");
+		maps.add(5, "HighDive");
+		maps.add(6, "Valley");
+		maps.add(7, "Icy");
+		for (int i = 1; i <= maxVotes; i++) {
+			if (i == 1) {
+				VoteHandler.getInstance().maps.clear();
+			}
+			int random = new Random().nextInt((maps.size() - 1));
+			VoteHandler.getInstance().maps.add(maps.get(random));
+			maps.remove(random);
+		}
+	}
+	
+	private void fillMapsBig() {
+		ArrayList<String> maps = new ArrayList<>();
+
+		maps.add(0, "AquaticDepths");
+		maps.add(1, "HighDive");
+		maps.add(2, "Valley");
 		for (int i = 1; i <= maxVotes; i++) {
 			if (i == 1) {
 				VoteHandler.getInstance().maps.clear();
@@ -232,20 +247,26 @@ public class Main extends JavaPlugin {
 
 	public void fillSuccessMessages() {
 		DropAPI drop = DropAPI.getInstance();
+		
 		drop.successMessages.add(" landed like a cat!");
 		drop.successMessages.add(" splooshed successfully into the water.");
 		drop.successMessages.add(" pooped out a block. Yaay.");
 		drop.successMessages.add(" wedi glanio yn y ddŵr.");
 		drop.successMessages.add(" cheated.. probably.");
+		drop.successMessages.add(" landed and the crowd went wild.");
+		drop.successMessages.add(" just got wet.");
 	}
 
 	public void fillErrorMessages() {
 		DropAPI drop = DropAPI.getInstance();
+		
 		drop.failMessages.add(" did a Sherlock Holmes.");
 		drop.failMessages.add(" did the flop.");
 		drop.failMessages.add(" failed to become Tom Daley.");
 		drop.failMessages.add("'s face became the floor.");
 		drop.failMessages.add(" suicided. Maybe on purpose?");
+		drop.failMessages.add(" failed and cried like a baby.");
+		drop.failMessages.add(" thought he was Buzz Lightyear.");
 	}
 
 	private void registration() {
