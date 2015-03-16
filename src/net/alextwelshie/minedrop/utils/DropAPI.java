@@ -150,7 +150,7 @@ public class DropAPI {
 					winners.clear();
 				}
 			} else {
-				if (score.getScore() > highest) {
+				if (score.getScore() >= highest) {
 					highest = score.getScore();
 					winners.add(score.getPlayer().getName());
 				}

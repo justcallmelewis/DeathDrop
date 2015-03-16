@@ -77,6 +77,7 @@ public class Main extends JavaPlugin {
 		fillErrorMessages();
 		fillSuccessMessages();
 		fillBlockChooser();
+		fillMaps();
 		fillVotes();
 		registration();
 	}
@@ -119,6 +120,7 @@ public class Main extends JavaPlugin {
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private void fillMapsBig() {
 		ArrayList<String> maps = new ArrayList<>();
 
