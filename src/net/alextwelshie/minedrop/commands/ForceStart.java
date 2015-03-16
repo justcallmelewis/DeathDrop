@@ -24,20 +24,22 @@ public class ForceStart implements CommandExecutor {
 				if (args.length == 0) {
 					if (Bukkit.getScheduler().isCurrentlyRunning(Main.getPlugin().lobbyTimer)) {
 						if (!Main.getPlugin().began) {
-							
+
 							Main.getPlugin().began = true;
 							Main.getPlugin().neededToStart = 0;
 
 							Main.getPlugin().voting = false;
 							VoteHandler.getInstance().pickMap();
-							Main.getPlugin().displayName = SettingsManager.getInstance().getData().getString(Main.getPlugin().mapName + ".displayName");
-							Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b" + Main.getPlugin().mapName + " §ahas won!");
-							
+							Main.getPlugin().displayName = SettingsManager.getInstance().getData()
+									.getString(Main.getPlugin().mapName + ".displayName");
+							Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b"
+									+ Main.getPlugin().mapName + " §ahas won!");
+
 							if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
 								Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new LoadWorldInRunnable());
 								DropAPI.getInstance().broadcastMapData();
 							}
-	
+
 							LobbyTimer.lobbyTimer = 1;
 							player.sendMessage("§eGame began.");
 						} else {

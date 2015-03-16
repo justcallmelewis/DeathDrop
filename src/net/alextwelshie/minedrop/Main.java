@@ -59,8 +59,8 @@ public class Main extends JavaPlugin {
 
 	public GameState		state;
 	public GameType			type;
-	
-	PlayerManager	pl	= PlayerManager.getInstance();
+
+	PlayerManager			pl				= PlayerManager.getInstance();
 
 	public static Main getPlugin() {
 		return JavaPlugin.getPlugin(Main.class);
@@ -81,27 +81,27 @@ public class Main extends JavaPlugin {
 		fillVotes();
 		registration();
 	}
-	
+
 	public String getFormattedTime(int seconds) {
-	  int remainder = seconds % 3600;
-	  int mins = remainder / 60;
-	  
-	  if(mins == 1) {
-		  return String.valueOf(mins) + " min";
-	  } else {
-		  return String.valueOf(mins) + " mins";
-	  }
+		int remainder = seconds % 3600;
+		int mins = remainder / 60;
+
+		if (mins == 1) {
+			return String.valueOf(mins) + " min";
+		} else {
+			return String.valueOf(mins) + " mins";
+		}
 	}
-	
+
 	private void setupScoreboards() {
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
 		board = manager.getMainScoreboard();
 		board.registerNewObjective("scoreboard", "dummy");
 	}
-	
-	private void fillMaps() {		
+
+	private void fillMaps() {
 		ArrayList<String> maps = new ArrayList<>();
-		
+
 		maps.add(0, "Brickwork");
 		maps.add(1, "Chamber");
 		maps.add(1, "AquaticDepths");
@@ -110,8 +110,8 @@ public class Main extends JavaPlugin {
 		maps.add(4, "HighDive");
 		maps.add(4, "Valley");
 		maps.add(5, "Icy");
-		for(int i = 1; i <= maxVotes; i++) {
-			if(i == 1) {
+		for (int i = 1; i <= maxVotes; i++) {
+			if (i == 1) {
 				VoteHandler.getInstance().maps.clear();
 			}
 			int random = new Random().nextInt((maps.size() - 1));
@@ -119,9 +119,9 @@ public class Main extends JavaPlugin {
 			maps.remove(random);
 		}
 	}
-	
+
 	private void fillVotes() {
-		for(String map : VoteHandler.getInstance().maps) {
+		for (String map : VoteHandler.getInstance().maps) {
 			VoteHandler.getInstance().votes.put(map, 0);
 		}
 	}
@@ -130,7 +130,7 @@ public class Main extends JavaPlugin {
 		config = getConfig();
 		saveDefaultConfig();
 	}
-	
+
 	public boolean isPremium(Player player) {
 		return PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Hive")
 				|| PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Special");
@@ -141,7 +141,7 @@ public class Main extends JavaPlugin {
 				| PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Admin")
 				|| PlayerManager.getInstance().getRank(player).equalsIgnoreCase("Owner");
 	}
-	
+
 	private String getRankTeam(Player p) {
 		switch (pl.getRank(p)) {
 		case "Regular":
@@ -164,14 +164,14 @@ public class Main extends JavaPlugin {
 	public void registerPlayerOnScoreboard(Player player) {
 		Score score = board.getObjective("scoreboard").getScore(player.getDisplayName());
 		score.setScore(0);
-		
+
 		board.getTeam(getRankTeam(player)).addPlayer(player);
 
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			all.setScoreboard(board);
 		}
 	}
-	
+
 	public void registerFakePlayer(String player, int initialScore) {
 		Score score = board.getObjective("scoreboard").getScore(player);
 		score.setScore(initialScore);
@@ -199,7 +199,7 @@ public class Main extends JavaPlugin {
 
 	public void removePlayerFromScoreboard(Player player) {
 		board.resetScores(player.getDisplayName());
-		
+
 		board.getTeam(getRankTeam(player)).removePlayer(player);
 
 		for (Player all : Bukkit.getOnlinePlayers()) {
@@ -292,9 +292,9 @@ public class Main extends JavaPlugin {
 			int Chance = random.nextInt(2);
 			if (Chance == 0) {
 				setType(GameType.Normal);
-			} else if(Chance == 1) {
+			} else if (Chance == 1) {
 				setType(GameType.Enhanced);
-			} else {
+			} else if (Chance == 2) {
 				setType(GameType.Elimination);
 			}
 			break;

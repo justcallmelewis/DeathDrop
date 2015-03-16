@@ -17,7 +17,6 @@ public class SettingsManager {
 	FileConfiguration				data;
 	File							dfile;
 
-
 	private static SettingsManager	instance	= new SettingsManager();
 
 	public static SettingsManager getInstance() {
@@ -37,8 +36,7 @@ public class SettingsManager {
 			try {
 				dfile.createNewFile();
 			} catch (IOException e) {
-				Bukkit.getServer().getLogger()
-				.severe(ChatColor.RED + "Could not create data.yml!");
+				Bukkit.getServer().getLogger().severe(ChatColor.RED + "Could not create data.yml!");
 			}
 		}
 		data = YamlConfiguration.loadConfiguration(dfile);
@@ -52,8 +50,7 @@ public class SettingsManager {
 		try {
 			data.save(dfile);
 		} catch (IOException e) {
-			Bukkit.getServer().getLogger()
-			.severe(ChatColor.RED + "Could not save data.yml!");
+			Bukkit.getServer().getLogger().severe(ChatColor.RED + "Could not save data.yml!");
 		}
 	}
 
@@ -69,8 +66,7 @@ public class SettingsManager {
 		try {
 			config.save(cfile);
 		} catch (IOException e) {
-			Bukkit.getServer().getLogger()
-			.severe(ChatColor.RED + "Could not save config.yml!");
+			Bukkit.getServer().getLogger().severe(ChatColor.RED + "Could not save config.yml!");
 		}
 	}
 

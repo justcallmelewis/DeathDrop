@@ -21,8 +21,8 @@ import org.bukkit.scoreboard.Scoreboard;
 public class LobbyTimer implements Runnable {
 
 	public static int	lobbyTimer	= Main.getPlugin().config.getInt("lobbytimer") + 1;
-	
-	Scoreboard		board			= Bukkit.getScoreboardManager().getMainScoreboard();
+
+	Scoreboard			board		= Bukkit.getScoreboardManager().getMainScoreboard();
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
@@ -31,26 +31,46 @@ public class LobbyTimer implements Runnable {
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			all.setLevel(lobbyTimer);
 		}
-		
-		if(Bukkit.getOnlinePlayers().size() <= Main.getPlugin().neededToStart) {
-			if(lobbyTimer % 60 == 0 && lobbyTimer != 0) {
-				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Players waiting: §b" + Bukkit.getOnlinePlayers().size());
+
+		if (Bukkit.getOnlinePlayers().size() <= Main.getPlugin().neededToStart) {
+			if (lobbyTimer % 60 == 0 && lobbyTimer != 0) {
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Players waiting: §b"
+						+ Bukkit.getOnlinePlayers().size());
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Players needed to start: §b0");
-				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Time till start: §b" + Main.getPlugin().getFormattedTime(lobbyTimer));
-				if(!Main.getPlugin().voting && !Main.getPlugin().forcevoted) {
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Time till start: §b"
+						+ Main.getPlugin().getFormattedTime(lobbyTimer));
+				if (!Main.getPlugin().voting && !Main.getPlugin().forcevoted) {
 					Bukkit.broadcastMessage("");
-					Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cVoting will be enabled when we get enough players.");
+					Bukkit.broadcastMessage(Main.getPlugin().prefix
+							+ "§cVoting will be enabled when we get enough players.");
 				}
 			}
 		} else {
-			if(lobbyTimer % 20 == 0 && lobbyTimer != 0) {
-				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Time till start: §b" + Main.getPlugin().getFormattedTime(lobbyTimer));
+			if (lobbyTimer % 20 == 0 && lobbyTimer != 0) {
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Time till start: §b"
+						+ Main.getPlugin().getFormattedTime(lobbyTimer));
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6You can vote like this - /vote #.");
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Maps choices up for voting:");
-				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§3§l1. §b" + SettingsManager.getInstance().getData().getString(VoteHandler.getInstance().maps.get(0) + ".displayName") +"§8 - §a" + VoteHandler.getInstance().getVotes(0) + " §6votes.");
-				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§3§l2. §b" + SettingsManager.getInstance().getData().getString(VoteHandler.getInstance().maps.get(1) + ".displayName") +"§8 - §a" + VoteHandler.getInstance().getVotes(1) + " §6votes.");
-				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§3§l3. §b" + SettingsManager.getInstance().getData().getString(VoteHandler.getInstance().maps.get(2) + ".displayName") +"§8 - §a" + VoteHandler.getInstance().getVotes(2) + " §6votes.");
-				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§3§l4. §b" + SettingsManager.getInstance().getData().getString(VoteHandler.getInstance().maps.get(3) + ".displayName") +"§8 - §a" + VoteHandler.getInstance().getVotes(3) + " §6votes.");
+				Bukkit.broadcastMessage(Main.getPlugin().prefix
+						+ "§3§l1. §b"
+						+ SettingsManager.getInstance().getData()
+								.getString(VoteHandler.getInstance().maps.get(0) + ".displayName") + "§8 - §a"
+						+ VoteHandler.getInstance().getVotes(0) + " §6votes.");
+				Bukkit.broadcastMessage(Main.getPlugin().prefix
+						+ "§3§l2. §b"
+						+ SettingsManager.getInstance().getData()
+								.getString(VoteHandler.getInstance().maps.get(1) + ".displayName") + "§8 - §a"
+						+ VoteHandler.getInstance().getVotes(1) + " §6votes.");
+				Bukkit.broadcastMessage(Main.getPlugin().prefix
+						+ "§3§l3. §b"
+						+ SettingsManager.getInstance().getData()
+								.getString(VoteHandler.getInstance().maps.get(2) + ".displayName") + "§8 - §a"
+						+ VoteHandler.getInstance().getVotes(2) + " §6votes.");
+				Bukkit.broadcastMessage(Main.getPlugin().prefix
+						+ "§3§l4. §b"
+						+ SettingsManager.getInstance().getData()
+								.getString(VoteHandler.getInstance().maps.get(3) + ".displayName") + "§8 - §a"
+						+ VoteHandler.getInstance().getVotes(3) + " §6votes.");
 			}
 		}
 
@@ -64,12 +84,14 @@ public class LobbyTimer implements Runnable {
 			}
 			break;
 		case 10:
-			
+
 			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
 				Main.getPlugin().voting = false;
-				VoteHandler.getInstance().pickMap();	
-				Main.getPlugin().displayName = SettingsManager.getInstance().getData().getString(Main.getPlugin().mapName + ".displayName");
-				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b" + Main.getPlugin().mapName + " §ahas won!");
+				VoteHandler.getInstance().pickMap();
+				Main.getPlugin().displayName = SettingsManager.getInstance().getData()
+						.getString(Main.getPlugin().mapName + ".displayName");
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b"
+						+ Main.getPlugin().mapName + " §ahas won!");
 				Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new LoadWorldInRunnable());
 				DropAPI.getInstance().broadcastMapData();
 			}
@@ -80,7 +102,7 @@ public class LobbyTimer implements Runnable {
 				lobbyTimer = 999;
 				Main.getPlugin().board.getObjective("scoreboard").setDisplaySlot(DisplaySlot.SIDEBAR);
 				Main.getPlugin().began = true;
-				
+
 				board.getObjective("scoreboard").setDisplayName("§6#1 §7" + Main.getPlugin().displayName);
 
 				OnePointEight onepointeight = OnePointEight.getInstance();

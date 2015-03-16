@@ -61,23 +61,25 @@ public class Listeners implements Listener {
 	OnePointEight	onepointeight	= OnePointEight.getInstance();
 
 	private void countBlocks(Player player, Location loc) {
-		  int count = 0;
-		  BlockFace[] faces = new BlockFace[] { BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH };
-		  
-		  for (BlockFace bf : faces) {
-		   Location block1 = loc.getBlock().getRelative(bf).getLocation();
-		   
-		   if(Main.getPlugin().mapName == "Chamber"){
-			   if(block1.getBlock().getType() != Material.WATER && block1.getBlock().getType() != Material.OBSIDIAN){
-				   count++;
-			   }
-		   } else {
-			   if(block1.getBlock().getType() != Material.WATER && block1.getBlock().getType() != Material.COAL_BLOCK){
-				   count++;
-			   }
-		   }
-		  }
-		  
+		int count = 0;
+		BlockFace[] faces = new BlockFace[] { BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH };
+
+		for (BlockFace bf : faces) {
+			Location block1 = loc.getBlock().getRelative(bf).getLocation();
+
+			if (Main.getPlugin().mapName == "Chamber") {
+				if (block1.getBlock().getType() != Material.WATER
+						&& block1.getBlock().getType() != Material.OBSIDIAN) {
+					count++;
+				}
+			} else {
+				if (block1.getBlock().getType() != Material.WATER
+						&& block1.getBlock().getType() != Material.COAL_BLOCK) {
+					count++;
+				}
+			}
+		}
+
 		switch (count) {
 		case 2:
 			Main.getPlugin().updateScore(player, 2);
@@ -122,44 +124,43 @@ public class Listeners implements Listener {
 		quartz.setItemMeta(quartzmeta);
 		player.getInventory().setItem(8, quartz);
 	}
-	
+
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
-		if(!DropAPI.getInstance().eliminated.contains(player.getName())){
+		if (!DropAPI.getInstance().eliminated.contains(player.getName())) {
 			event.setFormat(board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY + " » "
 					+ ChatColor.WHITE + "%s");
 		} else {
-			event.setFormat("§c[Eliminated] §r" + "%s" + ChatColor.DARK_GRAY + " » "
-					+ ChatColor.WHITE + "%s");
+			event.setFormat("§c[Eliminated] " + board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY + " » " + ChatColor.WHITE + "%s");
 		}
-		
+
 	}
-	
+
 	@EventHandler
 	public void onCmd(PlayerCommandPreprocessEvent event) {
 		Player player = event.getPlayer();
 		String message = event.getMessage().toLowerCase();
 		switch (message.toLowerCase()) {
-			case "/list":
-				String players = "";
-				for(Player all : Bukkit.getOnlinePlayers()) {
-					String pl = board.getPlayerTeam(player).getPrefix() + all.getName();
-					
-					if(Main.getPlugin().whosDropping.equalsIgnoreCase(all.getName())) {
-						pl = board.getPlayerTeam(player).getPrefix() + all.getName() + "§d(Currently Dropping)";
-					}
-					if(players.isEmpty()) {
-						players = pl;
-					} else {
-						pl += ", ";
-						players += pl;
-					}
+		case "/list":
+			String players = "";
+			for (Player all : Bukkit.getOnlinePlayers()) {
+				String pl = board.getPlayerTeam(player).getPrefix() + all.getName();
+
+				if (Main.getPlugin().whosDropping.equalsIgnoreCase(all.getName())) {
+					pl = board.getPlayerTeam(player).getPrefix() + all.getName() + "§d(Currently Dropping)";
 				}
-				event.setCancelled(true);
-				player.sendMessage(Main.getPlugin().prefix + "§3Currently online:");
-				player.sendMessage(Main.getPlugin().prefix + players);
-				break;
+				if (players.isEmpty()) {
+					players = pl;
+				} else {
+					pl += ", ";
+					players += pl;
+				}
+			}
+			event.setCancelled(true);
+			player.sendMessage(Main.getPlugin().prefix + "§3Currently online:");
+			player.sendMessage(Main.getPlugin().prefix + players);
+			break;
 		}
 	}
 
@@ -197,12 +198,11 @@ public class Listeners implements Listener {
 		Main.getPlugin().registerPlayerOnScoreboard(player);
 		event.setJoinMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix() + player.getName()
 				+ " §6has joined the game");
-		
 
 		onepointeight.sendTitleAndSubtitle(player, "§6Welcome to §6MineDrop!", "§3(Early beta, expect bugs!)", 40,
 				80, 40);
 		onepointeight
-		.sendHeaderAndFooter(player, "§6SurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6MD1");
+				.sendHeaderAndFooter(player, "§6SurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6MD1");
 
 		player.teleport(new Location(Bukkit.getWorld("world"), -1386.5, 10, 941.5, 0, 0));
 
@@ -217,13 +217,12 @@ public class Listeners implements Listener {
 					all.sendMessage(Main.getPlugin().prefix + "§6Shortening timer to "
 							+ (LobbyTimer.lobbyTimer - 1) + " seconds..");
 				}
-				
+
 				Main.getPlugin().voting = true;
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§aVoting is now enabled!");
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Use /vote or /v to vote.");
 			}
-			
-			
+
 		}
 
 	}
@@ -236,7 +235,7 @@ public class Listeners implements Listener {
 
 		if (Main.getPlugin().getState() == GameState.INGAME && Bukkit.getOnlinePlayers().size() == 0) {
 			Bukkit.shutdown();
-		} 
+		}
 
 	}
 
@@ -287,42 +286,42 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		Material material;
-		if (event.getItem().getType() == null) {
-			return;
-		} else if (event.getItem().getType() != null && event.getItem().getType() != Material.AIR) {
-			material = event.getItem().getType();
-		} else {
-			return;
-		}
-		if (event.getAction() == null) {
-		} else if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if (player.hasPermission("srv.build")) {
-				event.setCancelled(false);
-			} else {
-				event.setCancelled(true);
+
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
+			ItemStack mat = event.getItem();
+
+			if (mat == null) {
+				if (!player.hasPermission("srv.build")) {
+					event.setCancelled(true);
+				} else {
+					event.setCancelled(false);
+				}
+				return;
 			}
-			switch (material) {
-			case STAINED_CLAY:
+
+			if (mat.getType() == Material.STAINED_CLAY) {
 				if (Main.getPlugin().getState() == GameState.INGAME) {
 					player.sendMessage(Main.getPlugin().prefix + "§cYou can't change your block ingame silly!");
+					return;
 				} else {
 					player.openInventory(BlockChooserGUI.getInventory(player));
 				}
-				break;
-			case BEACON:
+			} else if (mat.getType() == Material.BEACON) {
 				player.sendMessage(Main.getPlugin().prefix
 						+ "§cAchievements aren't enabled at the moment due to certain reasons beyond our control. Please check back later.");
-				break;
-			case QUARTZ:
+				return;
+			} else if (mat.getType() == Material.QUARTZ) {
 				ByteArrayDataOutput quartzout = ByteStreams.newDataOutput();
 				quartzout.writeUTF("Connect");
 				quartzout.writeUTF("hub");
 				player.sendPluginMessage(Main.getPlugin(), "BungeeCord", quartzout.toByteArray());
-				break;
-			default:
-				break;
+				return;
 			}
+		}
+
+		if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.PHYSICAL) {
+			event.setCancelled(true);
+			return;
 		}
 	}
 
@@ -412,12 +411,12 @@ public class Listeners implements Listener {
 						DropAPI.getInstance().launchFirework("fail", block.getLocation().subtract(0, 2, 0));
 						Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 								+ player.getName() + "§c" + DropAPI.getInstance().pickFailMessage());
-						if(Main.getPlugin().getType() == GameType.Elimination) {
+						if (Main.getPlugin().getType() == GameType.Elimination) {
 							DropAPI.getInstance().eliminatePlayer(player);
 						}
 						DropAPI.getInstance().finishDrop(player);
 						//AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRST_LAND_FAIL);
-						DropAPI.getInstance().setupNextTurn();	
+						DropAPI.getInstance().setupNextTurn();
 					}
 				}
 

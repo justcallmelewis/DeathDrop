@@ -17,7 +17,7 @@ import com.google.common.io.ByteStreams;
 
 public class EndGame implements CommandExecutor {
 
-	@SuppressWarnings({ "deprecation", "unused" })
+	@SuppressWarnings({ "deprecation" })
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
@@ -30,14 +30,14 @@ public class EndGame implements CommandExecutor {
 
 							Main.getPlugin().whosDropping = null;
 							for (Player all : Bukkit.getOnlinePlayers()) {
-								DropAPI.getInstance().teleportToMapSpawn(player);
+								DropAPI.getInstance().teleportToMapSpawn(all);
 							}
-							
+
 							Main.getPlugin().round = Main.getPlugin().maxRounds + 1;
 
 							if (Main.getPlugin().round == (Main.getPlugin().maxRounds + 1)) {
 								Main.getPlugin().round = 0;
-								
+
 								Bukkit.getScheduler().cancelAllTasks();
 
 								int highest = 0;
@@ -82,7 +82,8 @@ public class EndGame implements CommandExecutor {
 											ByteArrayDataOutput out = ByteStreams.newDataOutput();
 											out.writeUTF("Connect");
 											out.writeUTF("hub");
-											all.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+											all.sendPluginMessage(Main.getPlugin(), "BungeeCord",
+													out.toByteArray());
 										}
 									}
 								}, 220L);

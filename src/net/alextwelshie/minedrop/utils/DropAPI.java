@@ -42,7 +42,7 @@ public class DropAPI {
 	Scoreboard		board			= Bukkit.getScoreboardManager().getMainScoreboard();
 
 	OnePointEight	onepointeight	= OnePointEight.getInstance();
-	SettingsManager settings		= SettingsManager.getInstance();
+	SettingsManager	settings		= SettingsManager.getInstance();
 
 	public void setupPlayer(Player player) {
 		notHadTurn.remove(player.getName());
@@ -70,8 +70,7 @@ public class DropAPI {
 	}
 
 	public void teleportToMapSpawn(Player player) {
-		World w = Bukkit.getServer().getWorld(
-				settings.getData().getString(Main.getPlugin().mapName + ".world"));
+		World w = Bukkit.getServer().getWorld(settings.getData().getString(Main.getPlugin().mapName + ".world"));
 		double x = settings.getData().getDouble(Main.getPlugin().mapName + ".spec.x");
 		double y = settings.getData().getDouble(Main.getPlugin().mapName + ".spec.y");
 		double z = settings.getData().getDouble(Main.getPlugin().mapName + ".spec.z");
@@ -107,10 +106,10 @@ public class DropAPI {
 		}
 		return failMessages.get(random);
 	}
-	
+
 	public void eliminatePlayer(Player player) {
 		eliminated.add(player.getName());
-		
+
 		int score = Main.getPlugin().getScore(player);
 		String prefix = Main.getPlugin().board.getPlayerTeam(player).getPrefix();
 		Main.getPlugin().removePlayerFromScoreboard(player);
@@ -143,7 +142,7 @@ public class DropAPI {
 		ArrayList<String> winners = new ArrayList<>();
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			Score score = Main.getPlugin().board.getObjective("scoreboard").getScore(all.getName());
-			if(Main.getPlugin().getType() == GameType.Elimination){
+			if (Main.getPlugin().getType() == GameType.Elimination) {
 				if (score.getScore() > highest && notHadTurn.size() == 1) {
 					highest = score.getScore();
 					winners.add(score.getPlayer().getName());
@@ -156,7 +155,7 @@ public class DropAPI {
 					winners.add(score.getPlayer().getName());
 				}
 			}
-			
+
 		}
 
 		if (winners.size() >= 2) {
@@ -169,7 +168,7 @@ public class DropAPI {
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + " ");
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§3All players were tied at §d" + highest
 					+ " §3points.");
-		} else if(winners.size() == 1) {
+		} else if (winners.size() == 1) {
 			Player winner = Bukkit.getPlayer(winners.get(0));
 			Bukkit.broadcastMessage("");
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §a"
@@ -208,26 +207,26 @@ public class DropAPI {
 
 	}
 
-	private void newRound() {		
-		if(Main.getPlugin().getType() == GameType.Elimination) {
+	private void newRound() {
+		if (Main.getPlugin().getType() == GameType.Elimination) {
 			for (Player all : Bukkit.getOnlinePlayers()) {
-				if(!eliminated.contains(all.getName())) {
-					notHadTurn.add(all.getName());	
-				}	
+				if (!eliminated.contains(all.getName())) {
+					notHadTurn.add(all.getName());
+				}
 			}
 		} else {
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				notHadTurn.add(all.getName());
 			}
 		}
-		
-		if(Main.getPlugin().getType() == GameType.Elimination){
-			if(notHadTurn.size() <= 1){
+
+		if (Main.getPlugin().getType() == GameType.Elimination) {
+			if (notHadTurn.size() <= 1) {
 				gameOver();
 				return;
 			}
 		}
-		
+
 		Main.getPlugin().board.getObjective("scoreboard").setDisplayName("§b§lNEW ROUND!!");
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			onepointeight.sendTitleAndSubtitle(all, "§b§lNEW ROUND!!", "§aRound §6" + Main.getPlugin().round, 10,
@@ -237,10 +236,10 @@ public class DropAPI {
 			@Override
 			public void run() {
 				Main.getPlugin().board.getObjective("scoreboard").setDisplayName(
-					"§6#" + Main.getPlugin().round + " §7" + Main.getPlugin().displayName);
+						"§6#" + Main.getPlugin().round + " §7" + Main.getPlugin().displayName);
 			}
 		}, 80L);
-		
+
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
@@ -254,7 +253,7 @@ public class DropAPI {
 
 	public void setupNextTurn() {
 		Main.getPlugin().turns++;
-		
+
 		if (Main.getPlugin().turns == Bukkit.getOnlinePlayers().size()) {
 			Main.getPlugin().turns = 0;
 			Main.getPlugin().round++;
@@ -269,7 +268,7 @@ public class DropAPI {
 				public void run() {
 					Random random = new Random();
 					int playerInt = random.nextInt((notHadTurn.size()));
-					setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));				
+					setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
 				}
 
 			}, 50L);

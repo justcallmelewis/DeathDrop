@@ -41,14 +41,15 @@ public class PlayerManager {
 		}
 		return rank;
 	}
-	
+
 	public void removeFromArrayLists(Player player) {
 		//Not had turn
 		DropAPI.getInstance().notHadTurn.remove(player.getName());
-		if(Main.getPlugin().getType() == GameType.Elimination && DropAPI.getInstance().eliminated.contains(player.getName())) {
+		if (Main.getPlugin().getType() == GameType.Elimination
+				&& DropAPI.getInstance().eliminated.contains(player.getName())) {
 			DropAPI.getInstance().eliminated.remove(player.getName());
 		}
-		
+
 	}
 
 	public boolean hasAchievement(Player p, Achievement a) {

@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import net.alextwelshie.minedrop.Main;
 import net.alextwelshie.minedrop.ranks.PlayerManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,8 +24,7 @@ public class BlockChooserGUI {
 			player.getInventory().getItemInHand().setType(block.getType());
 			Main.getPlugin().blocks.put(player.getName(), block.getType());
 			Main.getPlugin().blockData.put(player.getName(), block.getData().getData());
-		} else if (!player.isOp() && Main.getPlugin().isPremium(player)
-				&& !Main.getPlugin().isStaff(player)) {
+		} else if (!player.isOp() && Main.getPlugin().isPremium(player) && !Main.getPlugin().isStaff(player)) {
 			//premium
 			if (!staff.containsKey(block.getType())) {
 				player.getInventory().getItemInHand().setType(block.getType());
@@ -34,8 +34,7 @@ public class BlockChooserGUI {
 				player.closeInventory();
 				player.sendMessage(Main.getPlugin().prefix + "§cThese blocks are reserved for staff only. Sorry.");
 			}
-		} else if (!player.isOp() && !Main.getPlugin().isPremium(player)
-				&& !Main.getPlugin().isStaff(player)) {
+		} else if (!player.isOp() && !Main.getPlugin().isPremium(player) && !Main.getPlugin().isStaff(player)) {
 			if (!staff.containsKey(block.getType())) {
 				if (!premium.containsKey(block.getType())) {
 					player.getInventory().getItemInHand().setType(block.getType());
