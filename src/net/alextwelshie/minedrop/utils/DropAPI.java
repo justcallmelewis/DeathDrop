@@ -125,12 +125,21 @@ public class DropAPI {
 		}
 		Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
 		FireworkMeta fwm = fw.getFireworkMeta();
+
 		FireworkEffect effect = FireworkEffect.builder().flicker(false).withColor(colour).with(Type.BURST)
 				.trail(true).build();
 
 		fwm.addEffect(effect);
 		fwm.setPower(1);
 		fw.setFireworkMeta(fwm);
+		
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
+			
+			@Override
+			public void run() {
+				fw.detonate();		
+			}
+		}, 10L);
 	}
 
 	private void gameOver() {
@@ -149,7 +158,7 @@ public class DropAPI {
 					winners.clear();
 				}
 			} else {
-				if (score.getScore() >= highest) {
+				if (score.getScore() > highest) {
 					highest = score.getScore();
 					winners.add(score.getPlayer().getName());
 				}
@@ -247,7 +256,7 @@ public class DropAPI {
 				setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
 			}
 
-		}, 60l);
+		}, 40l);
 	}
 
 	public void setupNextTurn() {
@@ -270,7 +279,7 @@ public class DropAPI {
 					setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
 				}
 
-			}, 50L);
+			}, 40L);
 		}
 	}
 }

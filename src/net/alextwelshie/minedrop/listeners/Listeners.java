@@ -18,6 +18,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
@@ -70,12 +71,12 @@ public class Listeners implements Listener {
 			Location block1 = loc.getBlock().getRelative(bf).getLocation();
 
 			if (Main.getPlugin().mapName == "Chamber") {
-				if (block1.getBlock().getType() != Material.WATER
+				if (block1.getBlock().getType() != Material.STATIONARY_WATER
 						&& block1.getBlock().getType() != Material.OBSIDIAN) {
 					count++;
 				}
 			} else {
-				if (block1.getBlock().getType() != Material.WATER
+				if (block1.getBlock().getType() != Material.STATIONARY_WATER
 						&& block1.getBlock().getType() != Material.COAL_BLOCK) {
 					count++;
 				}
@@ -84,22 +85,19 @@ public class Listeners implements Listener {
 
 		switch (count) {
 		case 2:
-			Main.getPlugin().updateScore(player, 2);
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
-					+ player.getName() + " §ascored a §b§lDOUBLE!!");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6(+1 Bonus point)");
-			break;
-		case 3:
 			Main.getPlugin().updateScore(player, 3);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
-					+ player.getName() + " §ascored a §b§lTRIPLE!!");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6(+2 Bonus points)");
+					+ player.getName() + " §alanded in the water and earned §b§l2 Bonus Points.");
+			break;
+		case 3:
+			Main.getPlugin().updateScore(player, 4);
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
+					+ player.getName() + " §alanded in the water and earned §b§l3 Bonus Points.");
 			break;
 		case 4:
 			Main.getPlugin().updateScore(player, 4);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
-					+ player.getName() + " §ascored a §b§lQUAD!!");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6(+3 Bonus points)");
+					+ player.getName() + " §alanded in the water and earned §b§l4 Bonus Points.");
 			break;
 		default:
 			Main.getPlugin().increaseScore(player);
@@ -271,18 +269,21 @@ public class Listeners implements Listener {
 			if (Main.getPlugin().getState() == GameState.INGAME) {
 				if (Main.getPlugin().whosDropping == null) {
 				} else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
-					if (block.getTypeId() == 8 || block.getTypeId() == 9) {
+					if (block.getType() == Material.STATIONARY_WATER) {
 						Material type = Main.getPlugin().blocks.get(player.getName());
 						byte data = Main.getPlugin().blockData.get(player.getName());
-						FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation().add(0, 3, 0), type, data);
-						fallingBlock.setDropItem(false);
-								
+						
+						
+		
 						onepointeight.sendActionBarText(player, "§aYou successfully landed in the water!");
 
-						DropAPI.getInstance().launchFirework("success", block.getLocation().subtract(0, 1, 0));
+						DropAPI.getInstance().launchFirework("success", loc);
+						FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation().add(0, 2, 0), type, data);
+						fallingBlock.setDropItem(false);
 						DropAPI.getInstance().finishDrop(player);
 						Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 								+ player.getName() + "§a" + DropAPI.getInstance().pickSuccessMessage());
+						player.playSound(loc, Sound.LEVEL_UP, 5, 1);
 						if (Main.getPlugin().getType() == GameType.Enhanced) {
 							countBlocks(player, loc);
 						} else {
@@ -403,11 +404,13 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onDamage(EntityDamageEvent event) {
 		Player player = null;
+		Location loc = null;
 		if (event.getEntity() instanceof Player) {
 			player = (Player) event.getEntity();
+			loc = player.getLocation();
 		}
-
-		if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+		
+		if (event.getCause() == DamageCause.FALL || event.getCause() == DamageCause.VOID) {
 			Block block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
 			if (Main.getPlugin().getState() == GameState.INGAME) {
 				if (block.getType() != Material.STATIONARY_WATER || block.getType() != Material.WATER) {
@@ -418,14 +421,16 @@ public class Listeners implements Listener {
 						for (Player all : Bukkit.getOnlinePlayers()) {
 							onepointeight.sendTitle(all, "§4Fail!", 5, 20, 5);
 						}
-
+						
 						onepointeight.sendActionBarText(player, "§cYou failed to land in the water.");
-						DropAPI.getInstance().launchFirework("fail", block.getLocation().subtract(0, 2, 0));
+						DropAPI.getInstance().launchFirework("fail", loc);
 						Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 								+ player.getName() + "§c" + DropAPI.getInstance().pickFailMessage());
+						
 						if (Main.getPlugin().getType() == GameType.Elimination) {
 							DropAPI.getInstance().eliminatePlayer(player);
 						}
+						player.playSound(loc, Sound.HORSE_DEATH, 5, 1);
 						DropAPI.getInstance().finishDrop(player);
 						//AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRST_LAND_FAIL);
 						DropAPI.getInstance().setupNextTurn();

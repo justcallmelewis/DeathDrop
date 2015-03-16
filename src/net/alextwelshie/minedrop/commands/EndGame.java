@@ -45,7 +45,7 @@ public class EndGame implements CommandExecutor {
 								for (Player all : Bukkit.getOnlinePlayers()) {
 									Score score = Main.getPlugin().board.getObjective("scoreboard").getScore(
 											all.getName());
-									if (score.getScore() >= highest) {
+									if (score.getScore() > highest) {
 										highest = score.getScore();
 										winners.add(score.getPlayer().getName());
 									}
