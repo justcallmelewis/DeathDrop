@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.alextwelshie.minedrop.Main;
+import net.alextwelshie.minedrop.SettingsManager;
+
+import org.bukkit.entity.Player;
 
 public class VoteHandler {
 
@@ -101,5 +104,34 @@ public class VoteHandler {
 	public void setVote(int map, int number) {
 		String mapName = maps.get(map);
 		votes.put(mapName, number);
+	}
+	
+	public void sendVotingMessage(Player player) {
+		player.sendMessage(Main.getPlugin().prefix + "§6You can vote like this - /vote #.");
+		player.sendMessage(Main.getPlugin().prefix + "§6Maps choices up for voting:");
+		player.sendMessage(Main.getPlugin().prefix
+				+ "§3§l1. §b"
+				+ SettingsManager.getInstance().getData()
+						.getString(VoteHandler.getInstance().maps.get(0) + ".displayName") + "§8 - §a"
+				+ VoteHandler.getInstance().getVotes(0) + " §6votes.");
+		player.sendMessage(Main.getPlugin().prefix
+				+ "§3§l2. §b"
+				+ SettingsManager.getInstance().getData()
+						.getString(VoteHandler.getInstance().maps.get(1) + ".displayName") + "§8 - §a"
+				+ VoteHandler.getInstance().getVotes(1) + " §6votes.");
+		player.sendMessage(Main.getPlugin().prefix
+				+ "§3§l3. §b"
+				+ SettingsManager.getInstance().getData()
+						.getString(VoteHandler.getInstance().maps.get(2) + ".displayName") + "§8 - §a"
+				+ VoteHandler.getInstance().getVotes(2) + " §6votes.");
+		if(VoteHandler.getInstance().getVotes(3) == null) {
+			
+		} else {
+			player.sendMessage(Main.getPlugin().prefix
+					+ "§3§l4. §b"
+					+ SettingsManager.getInstance().getData()
+							.getString(VoteHandler.getInstance().maps.get(3) + ".displayName") + "§8 - §a"
+					+ VoteHandler.getInstance().getVotes(3) + " §6votes.");
+		}
 	}
 }

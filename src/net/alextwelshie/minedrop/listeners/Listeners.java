@@ -11,6 +11,7 @@ import net.alextwelshie.minedrop.utils.DropAPI;
 import net.alextwelshie.minedrop.utils.GameState;
 import net.alextwelshie.minedrop.utils.GameType;
 import net.alextwelshie.minedrop.utils.OnePointEight;
+import net.alextwelshie.minedrop.voting.VoteHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,6 +21,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -203,7 +205,8 @@ public class Listeners implements Listener {
 				80, 40);
 		onepointeight
 				.sendHeaderAndFooter(player, "§6SurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6MD1");
-
+		
+		VoteHandler.getInstance().sendVotingMessage(player);
 		player.teleport(new Location(Bukkit.getWorld("world"), -1386.5, 10, 941.5, 0, 0));
 
 		givePlayerItems(player);
@@ -261,10 +264,11 @@ public class Listeners implements Listener {
 				if (Main.getPlugin().whosDropping == null) {
 				} else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
 					if (event.getTo().getBlock().isLiquid()) {
-
-						block.setType(Main.getPlugin().blocks.get(player.getName()));
-						block.setData(Main.getPlugin().blockData.get(player.getName()));
-
+						Material type = Main.getPlugin().blocks.get(player.getName());
+						byte data = Main.getPlugin().blockData.get(player.getName());
+						FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation().add(0, 3, 0), type, data);
+						fallingBlock.setDropItem(false);
+								
 						onepointeight.sendActionBarText(player, "§aYou successfully landed in the water!");
 
 						DropAPI.getInstance().launchFirework("success", block.getLocation().subtract(0, 2, 0));

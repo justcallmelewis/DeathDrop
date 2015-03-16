@@ -1,7 +1,6 @@
 package net.alextwelshie.minedrop.commands;
 
 import net.alextwelshie.minedrop.Main;
-import net.alextwelshie.minedrop.SettingsManager;
 import net.alextwelshie.minedrop.ranks.PlayerManager;
 import net.alextwelshie.minedrop.voting.VoteHandler;
 
@@ -18,28 +17,7 @@ public class Vote implements CommandExecutor {
 			Player player = (Player) sender;
 			if (Main.getPlugin().voting) {
 				if (args.length == 0 || args.length > 1) {
-					player.sendMessage(Main.getPlugin().prefix + "§6You can vote like this - /vote #.");
-					player.sendMessage(Main.getPlugin().prefix + "§6Maps choices up for voting:");
-					player.sendMessage(Main.getPlugin().prefix
-							+ "§3§l1. §b"
-							+ SettingsManager.getInstance().getData()
-									.getString(VoteHandler.getInstance().maps.get(0) + ".displayName") + "§8 - §a"
-							+ VoteHandler.getInstance().getVotes(0) + " §6votes.");
-					player.sendMessage(Main.getPlugin().prefix
-							+ "§3§l2. §b"
-							+ SettingsManager.getInstance().getData()
-									.getString(VoteHandler.getInstance().maps.get(1) + ".displayName") + "§8 - §a"
-							+ VoteHandler.getInstance().getVotes(1) + " §6votes.");
-					player.sendMessage(Main.getPlugin().prefix
-							+ "§3§l3. §b"
-							+ SettingsManager.getInstance().getData()
-									.getString(VoteHandler.getInstance().maps.get(2) + ".displayName") + "§8 - §a"
-							+ VoteHandler.getInstance().getVotes(2) + " §6votes.");
-					player.sendMessage(Main.getPlugin().prefix
-							+ "§3§l4. §b"
-							+ SettingsManager.getInstance().getData()
-									.getString(VoteHandler.getInstance().maps.get(3) + ".displayName") + "§8 - §a"
-							+ VoteHandler.getInstance().getVotes(3) + " §6votes.");
+					VoteHandler.getInstance().sendVotingMessage(player);	
 				} else if (args.length == 1) {
 					if (!VoteHandler.getInstance().voted.contains(player.getName())) {
 						VoteHandler.getInstance().voted.add(player.getName());
@@ -107,26 +85,31 @@ public class Vote implements CommandExecutor {
 							player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b"
 									+ VoteHandler.getInstance().getVotes(2) + " §6votes.");
 						} else if (args[0].equalsIgnoreCase("4")) {
-							switch (PlayerManager.getInstance().getRank(player)) {
-							case "Regular":
-							case "Special":
-								VoteHandler.getInstance().addVote(3, 1);
-								break;
-							case "Hive":
-								VoteHandler.getInstance().addVote(3, 2);
-								break;
-							case "Mod":
-								VoteHandler.getInstance().addVote(3, 3);
-								break;
-							case "Admin":
-								VoteHandler.getInstance().addVote(3, 4);
-								break;
-							case "Owner":
-								VoteHandler.getInstance().addVote(3, 5);
-								break;
+							if(VoteHandler.getInstance().getVotes(3) == null) {
+								player.sendMessage(Main.getPlugin().prefix + "§cThat is not a valid option.");
+								return true;
+							} else {
+								switch (PlayerManager.getInstance().getRank(player)) {
+									case "Regular":
+									case "Special":
+										VoteHandler.getInstance().addVote(3, 1);
+										break;
+									case "Hive":
+										VoteHandler.getInstance().addVote(3, 2);
+										break;
+									case "Mod":
+										VoteHandler.getInstance().addVote(3, 3);
+										break;
+									case "Admin":
+										VoteHandler.getInstance().addVote(3, 4);
+										break;
+									case "Owner":
+										VoteHandler.getInstance().addVote(3, 5);
+										break;
+								}
+								player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b"
+										+ VoteHandler.getInstance().getVotes(3) + " §6votes.");
 							}
-							player.sendMessage(Main.getPlugin().prefix + "§6Vote received. Your map now has §b"
-									+ VoteHandler.getInstance().getVotes(3) + " §6votes.");
 						} else {
 							player.sendMessage(Main.getPlugin().prefix + "§cThat is not a valid option.");
 						}

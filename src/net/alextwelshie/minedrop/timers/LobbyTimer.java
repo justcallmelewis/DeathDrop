@@ -49,28 +49,9 @@ public class LobbyTimer implements Runnable {
 			if (lobbyTimer % 20 == 0 && lobbyTimer != 0) {
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Time till start: §b"
 						+ Main.getPlugin().getFormattedTime(lobbyTimer));
-				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6You can vote like this - /vote #.");
-				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Maps choices up for voting:");
-				Bukkit.broadcastMessage(Main.getPlugin().prefix
-						+ "§3§l1. §b"
-						+ SettingsManager.getInstance().getData()
-								.getString(VoteHandler.getInstance().maps.get(0) + ".displayName") + "§8 - §a"
-						+ VoteHandler.getInstance().getVotes(0) + " §6votes.");
-				Bukkit.broadcastMessage(Main.getPlugin().prefix
-						+ "§3§l2. §b"
-						+ SettingsManager.getInstance().getData()
-								.getString(VoteHandler.getInstance().maps.get(1) + ".displayName") + "§8 - §a"
-						+ VoteHandler.getInstance().getVotes(1) + " §6votes.");
-				Bukkit.broadcastMessage(Main.getPlugin().prefix
-						+ "§3§l3. §b"
-						+ SettingsManager.getInstance().getData()
-								.getString(VoteHandler.getInstance().maps.get(2) + ".displayName") + "§8 - §a"
-						+ VoteHandler.getInstance().getVotes(2) + " §6votes.");
-				Bukkit.broadcastMessage(Main.getPlugin().prefix
-						+ "§3§l4. §b"
-						+ SettingsManager.getInstance().getData()
-								.getString(VoteHandler.getInstance().maps.get(3) + ".displayName") + "§8 - §a"
-						+ VoteHandler.getInstance().getVotes(3) + " §6votes.");
+				for(Player all : Bukkit.getOnlinePlayers()) {
+					VoteHandler.getInstance().sendVotingMessage(all);
+				}
 			}
 		}
 
