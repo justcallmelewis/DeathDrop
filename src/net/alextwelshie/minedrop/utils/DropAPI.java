@@ -125,7 +125,6 @@ public class DropAPI {
 		}
 		Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
 		FireworkMeta fwm = fw.getFireworkMeta();
-
 		FireworkEffect effect = FireworkEffect.builder().flicker(false).withColor(colour).with(Type.BURST)
 				.trail(true).build();
 

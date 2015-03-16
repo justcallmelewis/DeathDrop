@@ -271,7 +271,7 @@ public class Listeners implements Listener {
 			if (Main.getPlugin().getState() == GameState.INGAME) {
 				if (Main.getPlugin().whosDropping == null) {
 				} else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
-					if (event.getTo().getBlock().isLiquid()) {
+					if (block.getTypeId() == 8 || block.getTypeId() == 9) {
 						Material type = Main.getPlugin().blocks.get(player.getName());
 						byte data = Main.getPlugin().blockData.get(player.getName());
 						FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation().add(0, 3, 0), type, data);
@@ -279,7 +279,7 @@ public class Listeners implements Listener {
 								
 						onepointeight.sendActionBarText(player, "§aYou successfully landed in the water!");
 
-						DropAPI.getInstance().launchFirework("success", block.getLocation().subtract(0, 2, 0));
+						DropAPI.getInstance().launchFirework("success", block.getLocation().subtract(0, 1, 0));
 						DropAPI.getInstance().finishDrop(player);
 						Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 								+ player.getName() + "§a" + DropAPI.getInstance().pickSuccessMessage());
