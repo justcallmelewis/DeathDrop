@@ -142,25 +142,42 @@ public class Listeners implements Listener {
 		Player player = event.getPlayer();
 		String message = event.getMessage().toLowerCase();
 		switch (message.toLowerCase()) {
-		case "/list":
-			String players = "";
-			for (Player all : Bukkit.getOnlinePlayers()) {
-				String pl = board.getPlayerTeam(player).getPrefix() + all.getName();
-
-				if (Main.getPlugin().whosDropping.equalsIgnoreCase(all.getName())) {
-					pl = board.getPlayerTeam(player).getPrefix() + all.getName() + "§d(Currently Dropping)";
-				}
-				if (players.isEmpty()) {
-					players = pl;
+			case "/list":
+				if(Main.getPlugin().getState() == GameState.INGAME) {
+					String players = "";
+					for (Player all : Bukkit.getOnlinePlayers()) {
+						String pl = board.getPlayerTeam(player).getPrefix() + all.getName();
+		
+						if (Main.getPlugin().whosDropping.equalsIgnoreCase(all.getName())) {
+							pl = board.getPlayerTeam(player).getPrefix() + all.getName() + " §d(Currently Dropping)";
+						}
+						if (players.isEmpty()) {
+							players = pl;
+						} else {
+							pl += ", ";
+							players += pl;
+						}
+					}
+					event.setCancelled(true);
+					player.sendMessage(Main.getPlugin().prefix + "§3Currently online:");
+					player.sendMessage(Main.getPlugin().prefix + players);
 				} else {
-					pl += ", ";
-					players += pl;
+					String players = "";
+					for (Player all : Bukkit.getOnlinePlayers()) {
+						String pl = board.getPlayerTeam(player).getPrefix() + all.getName();
+
+						if (players.isEmpty()) {
+							players = pl + ".";
+						} else {
+							pl += ", ";
+							players += pl;
+						}
+					}
+					event.setCancelled(true);
+					player.sendMessage(Main.getPlugin().prefix + "§3Currently online:");
+					player.sendMessage(Main.getPlugin().prefix + players);
 				}
-			}
-			event.setCancelled(true);
-			player.sendMessage(Main.getPlugin().prefix + "§3Currently online:");
-			player.sendMessage(Main.getPlugin().prefix + players);
-			break;
+				break;
 		}
 	}
 
@@ -410,14 +427,18 @@ public class Listeners implements Listener {
 			loc = player.getLocation();
 		}
 		
-		if (event.getCause() == DamageCause.FALL || event.getCause() == DamageCause.VOID) {
+		if (event.getCause() == DamageCause.FALL || event.getCause() == DamageCause.VOID || event.getCause() == DamageCause.LIGHTNING) {
 			Block block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
 			if (Main.getPlugin().getState() == GameState.INGAME) {
 				if (block.getType() != Material.STATIONARY_WATER || block.getType() != Material.WATER) {
 					if (Main.getPlugin().whosDropping == null) {
 					} else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
 						event.setCancelled(true);
-
+						
+						if(event.getCause() == DamageCause.LIGHTNING) {
+							player.setFireTicks(0);
+						}
+						
 						for (Player all : Bukkit.getOnlinePlayers()) {
 							onepointeight.sendTitle(all, "§4Fail!", 5, 20, 5);
 						}

@@ -15,11 +15,9 @@ public class Vote implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			if (Main.getPlugin().voting) {
 				if (args.length == 0 || args.length > 1) {
 					VoteHandler.getInstance().sendVotingMessage(player);	
 				} else if (args.length == 1) {
-					if (!VoteHandler.getInstance().voted.contains(player.getName())) {
 						VoteHandler.getInstance().voted.add(player.getName());
 						if (args[0].equalsIgnoreCase("1")) {
 							switch (PlayerManager.getInstance().getRank(player)) {
@@ -113,13 +111,7 @@ public class Vote implements CommandExecutor {
 						} else {
 							player.sendMessage(Main.getPlugin().prefix + "§cThat is not a valid option.");
 						}
-					} else {
-						player.sendMessage(Main.getPlugin().prefix + "§cYou can only vote once.");
-					}
 				}
-			} else {
-				player.sendMessage(Main.getPlugin().prefix + "§cVoting is not active right now!");
-			}
 		}
 		return true;
 	}

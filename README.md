@@ -7,7 +7,8 @@ For more information on our server visit our website at http://www.survivalmc.eu
 
 TO-DO LIST:
 ===========
-  - [ ] New gametypes (Both)
-  - [ ] Set gametype random to map (Alex/Lewis/Both)
-  - [ ] Achievements (Alex)
-  - [ ] Statistics (Alex)
+  - [ ] AFK timer
+  - [ ] New gametypes
+  - [ ] Set gametype random to map
+  - [ ] Achievements
+  - [ ] Statistics
