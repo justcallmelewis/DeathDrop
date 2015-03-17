@@ -11,11 +11,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 public class EndGame implements CommandExecutor {
+
+	Scoreboard	board	= Bukkit.getScoreboardManager().getMainScoreboard();
 
 	@SuppressWarnings({ "deprecation" })
 	@Override
@@ -68,8 +71,9 @@ public class EndGame implements CommandExecutor {
 											+ winner.getName());
 									Bukkit.broadcastMessage(Main.getPlugin().prefix + "§b§lCONGRATULATIONS!!");
 									Bukkit.broadcastMessage(Main.getPlugin().prefix + " ");
-									Bukkit.broadcastMessage(Main.getPlugin().prefix + "§3Player §d"
-											+ winner.getName() + " §3won with §d" + highest + " §3points.");
+									Bukkit.broadcastMessage(Main.getPlugin().prefix + "§3Player "
+											+ board.getPlayerTeam(winner).getPrefix() + winner.getName()
+											+ " §3won with §d" + highest + " §3points.");
 								}
 
 								Bukkit.broadcastMessage(Main.getPlugin().prefix

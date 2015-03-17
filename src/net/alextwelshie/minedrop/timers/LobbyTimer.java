@@ -36,7 +36,8 @@ public class LobbyTimer implements Runnable {
 			if (lobbyTimer % 60 == 0 && lobbyTimer != 0) {
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Players waiting: §b"
 						+ Bukkit.getOnlinePlayers().size());
-				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Players needed to start: §b0");
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Players needed to start: §b"
+						+ Main.getPlugin().config.getInt("neededToStart"));
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Time till start: §b"
 						+ Main.getPlugin().getFormattedTime(lobbyTimer));
 				if (!Main.getPlugin().voting && !Main.getPlugin().forcevoted) {
@@ -49,7 +50,7 @@ public class LobbyTimer implements Runnable {
 			if (lobbyTimer % 20 == 0 && lobbyTimer != 0) {
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Time till start: §b"
 						+ Main.getPlugin().getFormattedTime(lobbyTimer));
-				for(Player all : Bukkit.getOnlinePlayers()) {
+				for (Player all : Bukkit.getOnlinePlayers()) {
 					VoteHandler.getInstance().sendVotingMessage(all);
 				}
 			}

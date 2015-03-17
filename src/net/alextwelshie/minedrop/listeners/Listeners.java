@@ -12,7 +12,6 @@ import net.alextwelshie.minedrop.utils.DropAPI;
 import net.alextwelshie.minedrop.utils.GameState;
 import net.alextwelshie.minedrop.utils.GameType;
 import net.alextwelshie.minedrop.utils.OnePointEight;
-import net.alextwelshie.minedrop.voting.VoteHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,6 +28,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -63,6 +64,7 @@ public class Listeners implements Listener {
 	int				message			= 0;
 
 	OnePointEight	onepointeight	= OnePointEight.getInstance();
+	SettingsManager	settings		= SettingsManager.getInstance();
 
 	private void countBlocks(Player player, Location loc) {
 		int count = 0;
@@ -133,7 +135,8 @@ public class Listeners implements Listener {
 			event.setFormat(board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY + " » "
 					+ ChatColor.WHITE + "%s");
 		} else {
-			event.setFormat("§c[Eliminated] " + board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY + " » " + ChatColor.WHITE + "%s");
+			event.setFormat("§c[Eliminated] " + board.getPlayerTeam(player).getPrefix() + "%s"
+					+ ChatColor.DARK_GRAY + " » " + ChatColor.WHITE + "%s");
 		}
 
 	}
@@ -143,42 +146,42 @@ public class Listeners implements Listener {
 		Player player = event.getPlayer();
 		String message = event.getMessage().toLowerCase();
 		switch (message.toLowerCase()) {
-			case "/list":
-				if(Main.getPlugin().getState() == GameState.INGAME) {
-					String players = "";
-					for (Player all : Bukkit.getOnlinePlayers()) {
-						String pl = board.getPlayerTeam(player).getPrefix() + all.getName();
-		
-						if (Main.getPlugin().whosDropping.equalsIgnoreCase(all.getName())) {
-							pl = board.getPlayerTeam(player).getPrefix() + all.getName() + " §d(Currently Dropping)";
-						}
-						if (players.isEmpty()) {
-							players = pl;
-						} else {
-							pl += ", ";
-							players += pl;
-						}
-					}
-					event.setCancelled(true);
-					player.sendMessage(Main.getPlugin().prefix + "§3Currently online:");
-					player.sendMessage(Main.getPlugin().prefix + players);
-				} else {
-					String players = "";
-					for (Player all : Bukkit.getOnlinePlayers()) {
-						String pl = board.getPlayerTeam(player).getPrefix() + all.getName();
+		case "/list":
+			if (Main.getPlugin().getState() == GameState.INGAME) {
+				String players = "";
+				for (Player all : Bukkit.getOnlinePlayers()) {
+					String pl = board.getPlayerTeam(player).getPrefix() + all.getName();
 
-						if (players.isEmpty()) {
-							players = pl + ".";
-						} else {
-							pl += ", ";
-							players += pl;
-						}
+					if (Main.getPlugin().whosDropping.equalsIgnoreCase(all.getName())) {
+						pl = board.getPlayerTeam(player).getPrefix() + all.getName() + " §d(Currently Dropping)";
 					}
-					event.setCancelled(true);
-					player.sendMessage(Main.getPlugin().prefix + "§3Currently online:");
-					player.sendMessage(Main.getPlugin().prefix + players);
+					if (players.isEmpty()) {
+						players = pl;
+					} else {
+						pl += ", ";
+						players += pl;
+					}
 				}
-				break;
+				event.setCancelled(true);
+				player.sendMessage(Main.getPlugin().prefix + "§3Currently online:");
+				player.sendMessage(Main.getPlugin().prefix + players);
+			} else {
+				String players = "";
+				for (Player all : Bukkit.getOnlinePlayers()) {
+					String pl = board.getPlayerTeam(player).getPrefix() + all.getName();
+
+					if (players.isEmpty()) {
+						players = pl + ".";
+					} else {
+						pl += ", ";
+						players += pl;
+					}
+				}
+				event.setCancelled(true);
+				player.sendMessage(Main.getPlugin().prefix + "§3Currently online:");
+				player.sendMessage(Main.getPlugin().prefix + players);
+			}
+			break;
 		}
 	}
 
@@ -220,9 +223,8 @@ public class Listeners implements Listener {
 		onepointeight.sendTitleAndSubtitle(player, "§6Welcome to §6MineDrop!", "§3(Early beta, expect bugs!)", 40,
 				80, 40);
 		onepointeight
-				.sendHeaderAndFooter(player, "§6SurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6MD1");
-		
-		
+		.sendHeaderAndFooter(player, "§6SurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6MD1");
+
 		player.teleport(new Location(Bukkit.getWorld("world"), -1386.5, 10, 941.5, 0, 0));
 
 		givePlayerItems(player);
@@ -241,16 +243,11 @@ public class Listeners implements Listener {
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§aVoting is now enabled!");
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Use /vote or /v to vote.");
 			}
-				Bukkit.broadcastMessage("");
-				
-				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
-					
-					@Override
-					public void run() {
-						VoteHandler.getInstance().sendVotingMessage(player);
-					}
-				}, 40);
-		}
+		} else if(Bukkit.getOnlinePlayers().size() >= 5 && Bukkit.getOnlinePlayers().size() < 7){
+			Main.getPlugin().maxRounds = 10;
+		} else if(Bukkit.getOnlinePlayers().size() >= 7){
+			Main.getPlugin().maxRounds = 12;
+		} 
 
 	}
 
@@ -262,6 +259,12 @@ public class Listeners implements Listener {
 
 		if (Main.getPlugin().getState() == GameState.INGAME && Bukkit.getOnlinePlayers().size() == 0) {
 			Bukkit.shutdown();
+		}
+		
+		if(Bukkit.getOnlinePlayers().size() < 5){
+			Main.getPlugin().maxRounds = Main.getPlugin().config.getInt("maxRounds");
+		} else if(Bukkit.getOnlinePlayers().size() < 7){
+			Main.getPlugin().maxRounds = 10;
 		}
 
 	}
@@ -279,22 +282,35 @@ public class Listeners implements Listener {
 	}
 
 	@EventHandler
+	public void onBlock(BlockIgniteEvent event) {
+		if (event.getCause() == IgniteCause.LIGHTNING) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
 	public void onPlayerMoveEvent(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
 		Location loc = player.getLocation();
 		Block block = loc.getWorld().getBlockAt(loc);
 		if (block.getType() != Material.AIR) {
-			if (Main.getPlugin().getState() == GameState.INGAME) {				
+			if (Main.getPlugin().getState() == GameState.INGAME) {
 				if (Main.getPlugin().whosDropping == null) {
 				} else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
+					if (loc.getY() < settings.getData().getDouble(Main.getPlugin().mapName + ".jump.y")) {
+						Bukkit.getScheduler().cancelTask(DropAPI.getInstance().timerTask);
+						DropAPI.getInstance().timer = 16;
+					}
+
 					if (block.getType() == Material.STATIONARY_WATER) {
 						Material type = Main.getPlugin().blocks.get(player.getName());
 						byte data = Main.getPlugin().blockData.get(player.getName());
-		
+
 						onepointeight.sendActionBarText(player, "§aYou successfully landed in the water!");
 
 						DropAPI.getInstance().launchFirework("success", loc);
-						FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation().add(0, 2, 0), type, data);
+						FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(
+								block.getLocation().add(0, 2, 0), type, data);
 						fallingBlock.setDropItem(false);
 						DropAPI.getInstance().finishDrop(player);
 						Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
@@ -425,32 +441,35 @@ public class Listeners implements Listener {
 			player = (Player) event.getEntity();
 			loc = player.getLocation();
 		}
-		
-		if (event.getCause() == DamageCause.FALL || event.getCause() == DamageCause.VOID || event.getCause() == DamageCause.LIGHTNING) {
+
+		if (event.getCause() == DamageCause.FALL || event.getCause() == DamageCause.VOID
+				|| event.getCause() == DamageCause.LIGHTNING) {
 			Block block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
 			if (Main.getPlugin().getState() == GameState.INGAME) {
 				if (block.getType() != Material.STATIONARY_WATER || block.getType() != Material.WATER) {
 					if (Main.getPlugin().whosDropping == null) {
 					} else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
 						event.setCancelled(true);
-						
-						if(event.getCause() == DamageCause.LIGHTNING) {
+
+						if (event.getCause() == DamageCause.LIGHTNING) {
 							player.setFireTicks(0);
 						}
-						
+
 						for (Player all : Bukkit.getOnlinePlayers()) {
 							onepointeight.sendTitle(all, "§4Fail!", 5, 20, 5);
 						}
-						
+
 						onepointeight.sendActionBarText(player, "§cYou failed to land in the water.");
 						DropAPI.getInstance().launchFirework("fail", loc);
 						Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 								+ player.getName() + "§c" + DropAPI.getInstance().pickFailMessage());
-						
+
 						if (Main.getPlugin().getType() == GameType.Elimination) {
 							DropAPI.getInstance().eliminatePlayer(player);
 						}
 						player.playSound(loc, Sound.HORSE_DEATH, 5, 1);
+						Bukkit.getScheduler().cancelTask(DropAPI.getInstance().timerTask);
+						DropAPI.getInstance().timer = 0;
 						DropAPI.getInstance().finishDrop(player);
 						//AchievementAPI.getInstance().grantAchievement(player, Achievement.FIRST_LAND_FAIL);
 						DropAPI.getInstance().setupNextTurn();

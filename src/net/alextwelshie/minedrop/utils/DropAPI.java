@@ -35,8 +35,8 @@ public class DropAPI {
 	public ArrayList<String>		notHadTurn		= new ArrayList<>();
 
 	private static final DropAPI	instance		= new DropAPI();
-	public int timer = 0;
-	public int timerTask = 36;
+	public int						timer			= 16;
+	public int						timerTask;
 
 	public static DropAPI getInstance() {
 		return instance;
@@ -47,41 +47,35 @@ public class DropAPI {
 	OnePointEight	onepointeight	= OnePointEight.getInstance();
 	SettingsManager	settings		= SettingsManager.getInstance();
 
-	public void setupPlayer(Player player) {
+	private void jumpCountdown(Player player) {
 		double jumpY = SettingsManager.getInstance().getData().getDouble(Main.getPlugin().mapName + ".jump.y");
+		timer--;
+		if (player.getLocation().getY() > jumpY - 1) {
+			if (timer == 5) {
+				player.playSound(player.getLocation(), Sound.NOTE_PLING, 5, 1);
+				player.sendMessage(Main.getPlugin().prefix + "§c§lAre you jumping?");
+				player.sendMessage(Main.getPlugin().prefix + "§c§lIf not, please use /hub.");
+			} else if (timer == 0) {
+				player.getWorld().strikeLightning(player.getLocation());
+				Bukkit.getScheduler().cancelTask(timerTask);
+			}
+		}
+	}
+
+	public void setupPlayer(Player player) {
+
 		notHadTurn.remove(player.getName());
 		Main.getPlugin().whosDropping = player.getName();
 		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§aPlayer " + board.getPlayerTeam(player).getPrefix()
 				+ player.getName() + "§a, you're up!");
 		teleportToDropZone(player);
-		timerTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(), new Runnable() {
-			
+		timerTask = Bukkit.getScheduler().scheduleAsyncRepeatingTask(Main.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
-				if(player.getLocation().getY() == jumpY) {
-					timer++;
-					System.out.println(timer);
-					if(timer == 5) {
-						player.playSound(player.getLocation(), Sound.NOTE_PLING, 3, 1);
-						player.sendMessage(Main.getPlugin().prefix + "§cAre you jumping?");
-						player.sendMessage(Main.getPlugin().prefix + "§cIf not, please use /hub.");
-					} else if(timer == 10) {
-						player.playSound(player.getLocation(), Sound.NOTE_PLING, 5, 1);
-						player.sendMessage(Main.getPlugin().prefix + "§c§lAre you jumping?");
-						player.sendMessage(Main.getPlugin().prefix + "§c§lIf not, please use /hub.");
-					} else if(timer == 15) {
-						player.playSound(player.getLocation(), Sound.NOTE_PLING, 5, 3);
-						player.getWorld().strikeLightning(player.getLocation());
-						timer = 0;
-						Bukkit.getScheduler().cancelTask(timerTask);
-					}
-				} else if(player.getLocation().getY() < jumpY) {
-					timer = 0;
-					Bukkit.getScheduler().cancelTask(timerTask);
-				}
+				jumpCountdown(player);
 			}
-		}, 0L, 20L);`
-		
+		}, 20L, 20L);
+
 		if (Main.getPlugin().round == 1 && Main.getPlugin().turns == 0) {
 			Bukkit.getScheduler().callSyncMethod(Main.getPlugin(),
 					new EffectAddInRunnable(player, PotionEffectType.SLOW, 30, 255));
@@ -94,6 +88,7 @@ public class DropAPI {
 		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Map: §b" + Main.getPlugin().displayName);
 		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Author: §bN/A");
 		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Gametype: §b" + Main.getPlugin().getType().name());
+		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Rounds: §b" + Main.getPlugin().maxRounds);
 	}
 
 	public void finishDrop(Player player) {
@@ -164,12 +159,12 @@ public class DropAPI {
 		fwm.addEffect(effect);
 		fwm.setPower(1);
 		fw.setFireworkMeta(fwm);
-		
+
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
-			
+
 			@Override
 			public void run() {
-				fw.detonate();		
+				fw.detonate();
 			}
 		}, 10L);
 	}
@@ -211,7 +206,7 @@ public class DropAPI {
 		} else if (winners.size() == 1) {
 			Player winner = Bukkit.getPlayer(winners.get(0));
 			Bukkit.broadcastMessage("");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §a"
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: "
 					+ board.getPlayerTeam(winner).getPrefix() + winner.getName() + "§8 - §b" + highest
 					+ " §6Points");
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§b§lCONGRATULATIONS!!");
@@ -248,6 +243,8 @@ public class DropAPI {
 	}
 
 	private void newRound() {
+		timer = 16;
+
 		if (Main.getPlugin().getType() == GameType.Elimination) {
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				if (!eliminated.contains(all.getName())) {
@@ -288,10 +285,12 @@ public class DropAPI {
 				setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
 			}
 
-		}, 40l);
+		}, 60L);
 	}
 
 	public void setupNextTurn() {
+		timer = 16;
+
 		Main.getPlugin().turns++;
 
 		if (Main.getPlugin().turns == Bukkit.getOnlinePlayers().size()) {
@@ -311,7 +310,7 @@ public class DropAPI {
 					setupPlayer(Bukkit.getPlayerExact(notHadTurn.get(playerInt)));
 				}
 
-			}, 40L);
+			}, 60L);
 		}
 	}
 }

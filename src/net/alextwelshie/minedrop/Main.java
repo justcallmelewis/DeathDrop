@@ -119,7 +119,7 @@ public class Main extends JavaPlugin {
 			maps.remove(random);
 		}
 	}
-	
+
 	@SuppressWarnings("unused")
 	private void fillMapsBig() {
 		ArrayList<String> maps = new ArrayList<>();
@@ -249,7 +249,7 @@ public class Main extends JavaPlugin {
 
 	public void fillSuccessMessages() {
 		DropAPI drop = DropAPI.getInstance();
-		
+
 		drop.successMessages.add(" landed like a cat!");
 		drop.successMessages.add(" splooshed successfully into the water.");
 		drop.successMessages.add(" pooped out a block. Yaay.");
@@ -261,7 +261,7 @@ public class Main extends JavaPlugin {
 
 	public void fillErrorMessages() {
 		DropAPI drop = DropAPI.getInstance();
-		
+
 		drop.failMessages.add(" did a Sherlock Holmes.");
 		drop.failMessages.add(" did the flop.");
 		drop.failMessages.add(" failed to become Tom Daley.");
