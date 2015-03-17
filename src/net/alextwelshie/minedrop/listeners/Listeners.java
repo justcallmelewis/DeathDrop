@@ -3,6 +3,7 @@ package net.alextwelshie.minedrop.listeners;
 import java.util.Random;
 
 import net.alextwelshie.minedrop.Main;
+import net.alextwelshie.minedrop.SettingsManager;
 import net.alextwelshie.minedrop.achievements.AchievementMenu;
 import net.alextwelshie.minedrop.ranks.PlayerManager;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
@@ -283,14 +284,12 @@ public class Listeners implements Listener {
 		Location loc = player.getLocation();
 		Block block = loc.getWorld().getBlockAt(loc);
 		if (block.getType() != Material.AIR) {
-			if (Main.getPlugin().getState() == GameState.INGAME) {
+			if (Main.getPlugin().getState() == GameState.INGAME) {				
 				if (Main.getPlugin().whosDropping == null) {
 				} else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
 					if (block.getType() == Material.STATIONARY_WATER) {
 						Material type = Main.getPlugin().blocks.get(player.getName());
 						byte data = Main.getPlugin().blockData.get(player.getName());
-						
-						
 		
 						onepointeight.sendActionBarText(player, "§aYou successfully landed in the water!");
 

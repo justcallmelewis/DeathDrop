@@ -35,6 +35,8 @@ public class DropAPI {
 	public ArrayList<String>		notHadTurn		= new ArrayList<>();
 
 	private static final DropAPI	instance		= new DropAPI();
+	public int timer = 0;
+	public int timerTask = 36;
 
 	public static DropAPI getInstance() {
 		return instance;
@@ -46,29 +48,40 @@ public class DropAPI {
 	SettingsManager	settings		= SettingsManager.getInstance();
 
 	public void setupPlayer(Player player) {
-		int timer = 16;
 		double jumpY = SettingsManager.getInstance().getData().getDouble(Main.getPlugin().mapName + ".jump.y");
 		notHadTurn.remove(player.getName());
 		Main.getPlugin().whosDropping = player.getName();
 		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§aPlayer " + board.getPlayerTeam(player).getPrefix()
 				+ player.getName() + "§a, you're up!");
 		teleportToDropZone(player);
-		for(int i = 0; i < timer; i++) {
-			if(player.getLocation().getY() == jumpY) {
-				if(i == 5) {
-					player.playSound(player.getLocation(), Sound.NOTE_PLING, 3, 1);
-					player.sendMessage(Main.getPlugin().prefix + "§cAre you jumping?");
-					player.sendMessage(Main.getPlugin().prefix + "§cIf not, please use /hub.");
-				} else if(i == 10) {
-					player.playSound(player.getLocation(), Sound.NOTE_PLING, 5, 1);
-					player.sendMessage(Main.getPlugin().prefix + "§c§lAre you jumping?");
-					player.sendMessage(Main.getPlugin().prefix + "§c§lIf not, please use /hub.");
-				} else if(i == 15) {
-					player.playSound(player.getLocation(), Sound.NOTE_PLING, 5, 3);
-					player.getWorld().strikeLightning(player.getLocation());
+		timerTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(), new Runnable() {
+			
+			@Override
+			public void run() {
+				if(player.getLocation().getY() == jumpY) {
+					timer++;
+					System.out.println(timer);
+					if(timer == 5) {
+						player.playSound(player.getLocation(), Sound.NOTE_PLING, 3, 1);
+						player.sendMessage(Main.getPlugin().prefix + "§cAre you jumping?");
+						player.sendMessage(Main.getPlugin().prefix + "§cIf not, please use /hub.");
+					} else if(timer == 10) {
+						player.playSound(player.getLocation(), Sound.NOTE_PLING, 5, 1);
+						player.sendMessage(Main.getPlugin().prefix + "§c§lAre you jumping?");
+						player.sendMessage(Main.getPlugin().prefix + "§c§lIf not, please use /hub.");
+					} else if(timer == 15) {
+						player.playSound(player.getLocation(), Sound.NOTE_PLING, 5, 3);
+						player.getWorld().strikeLightning(player.getLocation());
+						timer = 0;
+						Bukkit.getScheduler().cancelTask(timerTask);
+					}
+				} else if(player.getLocation().getY() < jumpY) {
+					timer = 0;
+					Bukkit.getScheduler().cancelTask(timerTask);
 				}
 			}
-		}
+		}, 0L, 20L);`
+		
 		if (Main.getPlugin().round == 1 && Main.getPlugin().turns == 0) {
 			Bukkit.getScheduler().callSyncMethod(Main.getPlugin(),
 					new EffectAddInRunnable(player, PotionEffectType.SLOW, 30, 255));
