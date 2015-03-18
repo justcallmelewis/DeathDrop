@@ -53,6 +53,10 @@ public class DropAPI {
 		if (player.getLocation().getY() > jumpY - 1) {
 			if (timer == 5) {
 				player.playSound(player.getLocation(), Sound.NOTE_PLING, 5, 1);
+				player.sendMessage(Main.getPlugin().prefix + "§cAre you jumping?");
+				player.sendMessage(Main.getPlugin().prefix + "§cIf not, please use /hub.");
+			} else if (timer == 10) {
+				player.playSound(player.getLocation(), Sound.NOTE_PLING, 5, 1);
 				player.sendMessage(Main.getPlugin().prefix + "§c§lAre you jumping?");
 				player.sendMessage(Main.getPlugin().prefix + "§c§lIf not, please use /hub.");
 			} else if (timer == 0) {
@@ -169,7 +173,7 @@ public class DropAPI {
 		}, 10L);
 	}
 
-	private void gameOver() {
+	public void gameOver() {
 		Main.getPlugin().round = 0;
 		Bukkit.getScheduler().cancelAllTasks();
 
