@@ -9,7 +9,7 @@ TO-DO LIST:
 ===========
   - [X] Properly get EndGame working
   - [X] AFK timer
-  - [ ] New gametypes
-  - [ ] Set gametype random to map
+  - [X] New gametypes
+  - [X] Set gametype random to map
   - [ ] Achievements
   - [ ] Statistics
