@@ -30,20 +30,20 @@ public class EndGame implements CommandExecutor {
 							}
 
 							DropAPI.getInstance().gameOver();
-							} else {
-								player.sendMessage("§cGame already ended.");
-							}
 						} else {
-							player.sendMessage("§cGame can't end - lobby is still in progress! Try /bg instead.");
+							player.sendMessage("§cGame already ended.");
 						}
 					} else {
-
+						player.sendMessage("§cGame can't end - lobby is still in progress! Try /bg instead.");
 					}
 				} else {
-					player.sendMessage("§4Illegal command.");
+
 				}
+			} else {
+				player.sendMessage("§4Illegal command.");
 			}
+		}
 		return true;
 	}
-		
+
 }

@@ -220,10 +220,10 @@ public class Listeners implements Listener {
 		event.setJoinMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix() + player.getName()
 				+ " §6has joined the game");
 
-		onepointeight.sendTitleAndSubtitle(player, "§6Welcome to §6MineDrop!", "§3(Early beta, expect bugs!)", 40,
+		onepointeight.sendTitleAndSubtitle(player, "§6Welcome to §6MineDrop!", "§bPlay.SurvivalMC§8.§aEU", 40,
 				80, 40);
 		onepointeight
-		.sendHeaderAndFooter(player, "§6SurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6MD1");
+				.sendHeaderAndFooter(player, "§6SurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6MD1");
 
 		player.teleport(new Location(Bukkit.getWorld("world"), -1386.5, 10, 941.5, 0, 0));
 
@@ -243,11 +243,11 @@ public class Listeners implements Listener {
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§aVoting is now enabled!");
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Use /vote or /v to vote.");
 			}
-		} else if(Bukkit.getOnlinePlayers().size() >= 5 && Bukkit.getOnlinePlayers().size() < 7){
+		} else if (Bukkit.getOnlinePlayers().size() >= 5 && Bukkit.getOnlinePlayers().size() < 7) {
 			Main.getPlugin().maxRounds = 10;
-		} else if(Bukkit.getOnlinePlayers().size() >= 7){
+		} else if (Bukkit.getOnlinePlayers().size() >= 7) {
 			Main.getPlugin().maxRounds = 12;
-		} 
+		}
 
 	}
 
@@ -260,10 +260,10 @@ public class Listeners implements Listener {
 		if (Main.getPlugin().getState() == GameState.INGAME && Bukkit.getOnlinePlayers().size() == 0) {
 			Bukkit.shutdown();
 		}
-		
-		if(Bukkit.getOnlinePlayers().size() < 5){
+
+		if (Bukkit.getOnlinePlayers().size() < 5) {
 			Main.getPlugin().maxRounds = Main.getPlugin().config.getInt("maxRounds");
-		} else if(Bukkit.getOnlinePlayers().size() < 7){
+		} else if (Bukkit.getOnlinePlayers().size() < 7) {
 			Main.getPlugin().maxRounds = 10;
 		}
 

@@ -116,43 +116,27 @@ public class Main extends JavaPlugin {
 			}
 			int random = new Random().nextInt((maps.size() - 1));
 			VoteHandler.getInstance().maps.add(maps.get(random));
-			
+
 			Random randomVar = new Random();
 			String gametype = "Elimination";
-			switch (randomVar.nextInt(9)) {
-				case 0:
-				case 2:
-				case 4:
-					gametype = "Enhanced";
-					break;
-				case 1:
-				case 3:
-					gametype = "Elimination";
-					break;
-				case 6:
-				case 8:
-				case 9:
-					gametype = "Normal";
-					break;
+			switch (randomVar.nextInt(8)) {
+			case 0:
+			case 8:
+			case 4:
+				gametype = "Enhanced";
+				break;
+			case 1:
+			case 6:
+			case 3:
+				gametype = "Elimination";
+				break;
+			case 2:
+			case 5:
+			case 7:
+				gametype = "Normal";
+				break;
 			}
 			VoteHandler.getInstance().mapGametype.put(maps.get(random), gametype);
-			maps.remove(random);
-		}
-	}
-
-	@SuppressWarnings("unused")
-	private void fillMapsBig() {
-		ArrayList<String> maps = new ArrayList<>();
-
-		maps.add(0, "AquaticDepths");
-		maps.add(1, "HighDive");
-		maps.add(2, "Valley");
-		for (int i = 1; i <= maxVotes; i++) {
-			if (i == 1) {
-				VoteHandler.getInstance().maps.clear();
-			}
-			int random = new Random().nextInt((maps.size() - 1));
-			VoteHandler.getInstance().maps.add(maps.get(random));	
 			maps.remove(random);
 		}
 	}

@@ -53,10 +53,6 @@ public class DropAPI {
 		if (player.getLocation().getY() > jumpY - 1) {
 			if (timer == 5) {
 				player.playSound(player.getLocation(), Sound.NOTE_PLING, 5, 1);
-				player.sendMessage(Main.getPlugin().prefix + "§cAre you jumping?");
-				player.sendMessage(Main.getPlugin().prefix + "§cIf not, please use /hub.");
-			} else if (timer == 10) {
-				player.playSound(player.getLocation(), Sound.NOTE_PLING, 5, 1);
 				player.sendMessage(Main.getPlugin().prefix + "§c§lAre you jumping?");
 				player.sendMessage(Main.getPlugin().prefix + "§c§lIf not, please use /hub.");
 			} else if (timer == 0) {
@@ -170,7 +166,7 @@ public class DropAPI {
 			public void run() {
 				fw.detonate();
 			}
-		}, 10L);
+		}, 12L);
 	}
 
 	public void gameOver() {
@@ -182,14 +178,14 @@ public class DropAPI {
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			Score score = Main.getPlugin().board.getObjective("scoreboard").getScore(all.getName());
 			if (Main.getPlugin().getType() == GameType.Elimination) {
-				if (score.getScore() > highest && notHadTurn.size() == 1) {
+				if (score.getScore() >= highest && score.getScore() != 0 && notHadTurn.size() == 1) {
 					highest = score.getScore();
 					winners.add(score.getPlayer().getName());
 				} else {
 					winners.clear();
 				}
 			} else {
-				if (score.getScore() > highest) {
+				if (score.getScore() >= highest && score.getScore() != highest) {
 					highest = score.getScore();
 					winners.add(score.getPlayer().getName());
 				}
