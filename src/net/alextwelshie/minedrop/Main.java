@@ -116,6 +116,26 @@ public class Main extends JavaPlugin {
 			}
 			int random = new Random().nextInt((maps.size() - 1));
 			VoteHandler.getInstance().maps.add(maps.get(random));
+			
+			Random randomVar = new Random();
+			String gametype = "Elimination";
+			switch (randomVar.nextInt(9)) {
+				case 0:
+				case 2:
+				case 4:
+					gametype = "Enhanced";
+					break;
+				case 1:
+				case 3:
+					gametype = "Elimination";
+					break;
+				case 6:
+				case 8:
+				case 9:
+					gametype = "Normal";
+					break;
+			}
+			VoteHandler.getInstance().mapGametype.put(maps.get(random), gametype);
 			maps.remove(random);
 		}
 	}
@@ -132,7 +152,7 @@ public class Main extends JavaPlugin {
 				VoteHandler.getInstance().maps.clear();
 			}
 			int random = new Random().nextInt((maps.size() - 1));
-			VoteHandler.getInstance().maps.add(maps.get(random));
+			VoteHandler.getInstance().maps.add(maps.get(random));	
 			maps.remove(random);
 		}
 	}
@@ -312,13 +332,19 @@ public class Main extends JavaPlugin {
 			break;
 		case "Auto":
 			Random random = new Random();
-			int Chance = random.nextInt(2);
+			int Chance = random.nextInt(5);
 			if (Chance == 0) {
 				setType(GameType.Normal);
 			} else if (Chance == 1) {
 				setType(GameType.Enhanced);
 			} else if (Chance == 2) {
 				setType(GameType.Elimination);
+			} else if (Chance == 3) {
+				setType(GameType.Elimination);
+			} else if (Chance == 4) {
+				setType(GameType.Enhanced);
+			} else if (Chance == 5) {
+				setType(GameType.Normal);
 			}
 			break;
 		}

@@ -5,6 +5,7 @@ import net.alextwelshie.minedrop.SettingsManager;
 import net.alextwelshie.minedrop.runnables.LoadWorldInRunnable;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
 import net.alextwelshie.minedrop.utils.DropAPI;
+import net.alextwelshie.minedrop.utils.GameType;
 import net.alextwelshie.minedrop.voting.VoteHandler;
 
 import org.bukkit.Bukkit;
@@ -34,11 +35,9 @@ public class ForceStart implements CommandExecutor {
 									.getString(Main.getPlugin().mapName + ".displayName");
 							Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b"
 									+ Main.getPlugin().mapName + " §ahas won!");
-
-							if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
-								Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new LoadWorldInRunnable());
-								DropAPI.getInstance().broadcastMapData();
-							}
+							Main.getPlugin().setType(GameType.valueOf(VoteHandler.getInstance().mapGametype.get(Main.getPlugin().mapName)));
+							Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new LoadWorldInRunnable());
+							DropAPI.getInstance().broadcastMapData();
 
 							LobbyTimer.lobbyTimer = 1;
 							player.sendMessage("§eGame began.");

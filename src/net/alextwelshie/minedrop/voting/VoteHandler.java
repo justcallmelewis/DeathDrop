@@ -20,6 +20,7 @@ public class VoteHandler {
 	public List<String>				maps	= new ArrayList<>();
 	public List<String>				voted	= new ArrayList<>();
 	public HashMap<String, Integer>	votes	= new HashMap<>();
+	public HashMap<String, String>	mapGametype	= new HashMap<>();
 
 	public void pickMap() {
 		Main main = Main.getPlugin();
@@ -112,17 +113,17 @@ public class VoteHandler {
 		player.sendMessage(Main.getPlugin().prefix
 				+ "§3§l1. §b"
 				+ SettingsManager.getInstance().getData()
-				.getString(VoteHandler.getInstance().maps.get(0) + ".displayName") + "§8 - §a"
+				.getString(VoteHandler.getInstance().maps.get(0) + ".displayName") + " §c(" + mapGametype.get(maps.get(0)) + ") §8 - §a"
 				+ VoteHandler.getInstance().getVotes(0) + " §6votes.");
 		player.sendMessage(Main.getPlugin().prefix
 				+ "§3§l2. §b"
 				+ SettingsManager.getInstance().getData()
-				.getString(VoteHandler.getInstance().maps.get(1) + ".displayName") + "§8 - §a"
+				.getString(VoteHandler.getInstance().maps.get(1) + ".displayName") + " §c(" + mapGametype.get(maps.get(1)) + ") §8 - §a"
 				+ VoteHandler.getInstance().getVotes(1) + " §6votes.");
 		player.sendMessage(Main.getPlugin().prefix
 				+ "§3§l3. §b"
 				+ SettingsManager.getInstance().getData()
-				.getString(VoteHandler.getInstance().maps.get(2) + ".displayName") + "§8 - §a"
+				.getString(VoteHandler.getInstance().maps.get(2) + ".displayName") + " §c(" + mapGametype.get(maps.get(2)) + ") §8 - §a"
 				+ VoteHandler.getInstance().getVotes(2) + " §6votes.");
 		if (VoteHandler.getInstance().getVotes(3) == null) {
 
@@ -130,7 +131,7 @@ public class VoteHandler {
 			player.sendMessage(Main.getPlugin().prefix
 					+ "§3§l4. §b"
 					+ SettingsManager.getInstance().getData()
-					.getString(VoteHandler.getInstance().maps.get(3) + ".displayName") + "§8 - §a"
+					.getString(VoteHandler.getInstance().maps.get(3) + ".displayName") + " §c(" + mapGametype.get(maps.get(3)) + ") §8 - §a"
 					+ VoteHandler.getInstance().getVotes(3) + " §6votes.");
 		}
 	}

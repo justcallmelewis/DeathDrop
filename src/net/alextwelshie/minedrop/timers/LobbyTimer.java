@@ -8,6 +8,7 @@ import net.alextwelshie.minedrop.runnables.LoadWorldInRunnable;
 import net.alextwelshie.minedrop.runnables.TeleportInRunnable;
 import net.alextwelshie.minedrop.utils.DropAPI;
 import net.alextwelshie.minedrop.utils.GameState;
+import net.alextwelshie.minedrop.utils.GameType;
 import net.alextwelshie.minedrop.utils.OnePointEight;
 import net.alextwelshie.minedrop.voting.VoteHandler;
 
@@ -74,6 +75,7 @@ public class LobbyTimer implements Runnable {
 						.getString(Main.getPlugin().mapName + ".displayName");
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b"
 						+ Main.getPlugin().mapName + " §ahas won!");
+				Main.getPlugin().setType(GameType.valueOf(VoteHandler.getInstance().mapGametype.get(Main.getPlugin().mapName)));
 				Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new LoadWorldInRunnable());
 				DropAPI.getInstance().broadcastMapData();
 			}
