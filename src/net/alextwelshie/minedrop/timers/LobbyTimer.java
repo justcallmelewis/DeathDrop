@@ -81,6 +81,37 @@ public class LobbyTimer implements Runnable {
 				DropAPI.getInstance().broadcastMapData();
 			}
 			break;
+		case 5:
+			if(Bukkit.getOnlinePlayers().size() >= Main.getPlugin().config.getInt("neededToStart")){
+				if(Main.getPlugin().getType() == GameType.Normal){
+					Bukkit.broadcastMessage("");
+					Bukkit.broadcastMessage("§b—————————[ §a§lHow To Play §b]—————————");
+					Bukkit.broadcastMessage("§6— You goal is to land in the water.");
+					Bukkit.broadcastMessage("§6— Hitting a block has no penalty");
+					Bukkit.broadcastMessage("§6— The person with the most points wins.");
+					Bukkit.broadcastMessage("§b——————————————————————————————");
+					Bukkit.broadcastMessage("");
+				} else if(Main.getPlugin().getType() == GameType.Elimination){
+					Bukkit.broadcastMessage("");
+					Bukkit.broadcastMessage("§b—————————[ §a§lHow To Play §b]—————————");
+					Bukkit.broadcastMessage("§6— You goal is to land in the water.");
+					Bukkit.broadcastMessage("§6— If you hit a block, you are out.");
+					Bukkit.broadcastMessage("§6— The last person remaining wins.");
+					Bukkit.broadcastMessage("§b——————————————————————————————");
+					Bukkit.broadcastMessage("");
+				} else {
+					Bukkit.broadcastMessage("");
+					Bukkit.broadcastMessage("§b—————————[ §a§lHow To Play §b]—————————");
+					Bukkit.broadcastMessage("§6— You goal is to land in the water.");
+					Bukkit.broadcastMessage("§6— Jumping by blocks or in between gives you bonus points.");
+					Bukkit.broadcastMessage("§6— Hitting a block has no penalty");
+					Bukkit.broadcastMessage("§6— The person with the most points wins.");
+					Bukkit.broadcastMessage("§b——————————————————————————————");
+					Bukkit.broadcastMessage("");
+				}
+			}
+			
+			break;
 		case 0:
 			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
 				Main.getPlugin().setState(GameState.INGAME);

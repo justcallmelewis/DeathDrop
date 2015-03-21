@@ -108,6 +108,7 @@ public class DropAPI {
 	}
 
 	public void teleportToDropZone(Player player) {
+		player.playSound(player.getLocation(), Sound.NOTE_PLING, 5, 1);
 		World w = Bukkit.getServer().getWorld(settings.getData().getString(Main.getPlugin().mapName + ".world"));
 		double x = settings.getData().getDouble(Main.getPlugin().mapName + ".jump.x");
 		double y = settings.getData().getDouble(Main.getPlugin().mapName + ".jump.y");
@@ -140,7 +141,8 @@ public class DropAPI {
 		int score = Main.getPlugin().getScore(player);
 		String prefix = Main.getPlugin().board.getPlayerTeam(player).getPrefix();
 		Main.getPlugin().removePlayerFromScoreboard(player);
-		Main.getPlugin().registerFakePlayer(prefix + "§m" + player.getName(), score);
+		Main.getPlugin().registerFakePlayer(
+				prefix + board.getPlayerTeam(player).getPrefix() + "§m" + player.getName(), score);
 	}
 
 	public void launchFirework(String occasion, Location location) {
@@ -166,7 +168,7 @@ public class DropAPI {
 			public void run() {
 				fw.detonate();
 			}
-		}, 12L);
+		}, 10L);
 	}
 
 	public void gameOver() {
@@ -178,7 +180,7 @@ public class DropAPI {
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			Score score = Main.getPlugin().board.getObjective("scoreboard").getScore(all.getName());
 			if (Main.getPlugin().getType() == GameType.Elimination) {
-				if (score.getScore() >= highest && score.getScore() != 0 && notHadTurn.size() == 1) {
+				if (score.getScore() >= highest && notHadTurn.size() == 1) {
 					highest = score.getScore();
 					winners.add(score.getPlayer().getName());
 				} else {

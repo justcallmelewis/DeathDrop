@@ -99,7 +99,7 @@ public class Main extends JavaPlugin {
 		board.registerNewObjective("scoreboard", "dummy");
 	}
 
-	private void fillMaps() {
+	public void fillMaps() {
 		ArrayList<String> maps = new ArrayList<>();
 
 		maps.add(0, "Brickwork");
@@ -140,8 +140,53 @@ public class Main extends JavaPlugin {
 			maps.remove(random);
 		}
 	}
+	
+	public void fillMapsLarge() {
+		ArrayList<String> maps = new ArrayList<>();
 
-	private void fillVotes() {
+		maps.add(0, "AquaticDepths");
+		maps.add(1, "HighDive");
+		maps.add(2, "Valley");
+		maps.add(3, "Factory");
+		for (int i = 1; i <= maxVotes; i++) {
+			if (i == 1) {
+				VoteHandler.getInstance().maps.clear();
+			}
+			int random = new Random().nextInt((maps.size() - 1));
+			VoteHandler.getInstance().maps.add(maps.get(random));
+
+			Random randomVar = new Random();
+			String gametype = "Elimination";
+			switch (randomVar.nextInt(8)) {
+			case 0:
+			case 8:
+			case 4:
+				gametype = "Enhanced";
+				break;
+			case 1:
+			case 6:
+			case 3:
+				gametype = "Elimination";
+				break;
+			case 2:
+			case 5:
+			case 7:
+				gametype = "Normal";
+				break;
+			}
+			VoteHandler.getInstance().mapGametype.put(maps.get(random), gametype);
+			maps.remove(random);
+		}
+	}
+	
+	public void resetVoting(){
+		VoteHandler.getInstance().maps.clear();
+		VoteHandler.getInstance().voted.clear();
+		VoteHandler.getInstance().votes.clear();
+		VoteHandler.getInstance().mapGametype.clear();
+	}
+
+	public void fillVotes() {
 		for (String map : VoteHandler.getInstance().maps) {
 			VoteHandler.getInstance().votes.put(map, 0);
 		}
@@ -182,11 +227,13 @@ public class Main extends JavaPlugin {
 		}
 	}
 
+	public void registerPlayerTeam(Player player) {
+		board.getTeam(getRankTeam(player)).addPlayer(player);
+	}
+
 	public void registerPlayerOnScoreboard(Player player) {
 		Score score = board.getObjective("scoreboard").getScore(player.getDisplayName());
 		score.setScore(0);
-
-		board.getTeam(getRankTeam(player)).addPlayer(player);
 
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			all.setScoreboard(board);
@@ -218,10 +265,12 @@ public class Main extends JavaPlugin {
 		this.type = type;
 	}
 
+	public void removePlayerTeam(Player player) {
+		board.getTeam(getRankTeam(player)).removePlayer(player);
+	}
+
 	public void removePlayerFromScoreboard(Player player) {
 		board.resetScores(player.getDisplayName());
-
-		board.getTeam(getRankTeam(player)).removePlayer(player);
 
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			all.setScoreboard(board);

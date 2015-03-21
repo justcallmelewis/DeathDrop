@@ -46,6 +46,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -87,6 +88,11 @@ public class Listeners implements Listener {
 		}
 
 		switch (count) {
+		case 1:
+			Main.getPlugin().updateScore(player, 2);
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
+					+ player.getName() + " §alanded in the water and earned §b§l1 Bonus Points.");
+			break;
 		case 2:
 			Main.getPlugin().updateScore(player, 3);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
@@ -98,7 +104,7 @@ public class Listeners implements Listener {
 					+ player.getName() + " §alanded in the water and earned §b§l3 Bonus Points.");
 			break;
 		case 4:
-			Main.getPlugin().updateScore(player, 4);
+			Main.getPlugin().updateScore(player, 5);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §alanded in the water and earned §b§l4 Bonus Points.");
 			break;
@@ -126,6 +132,15 @@ public class Listeners implements Listener {
 		quartzmeta.setDisplayName("§6Return to Hub");
 		quartz.setItemMeta(quartzmeta);
 		player.getInventory().setItem(8, quartz);
+	}
+	
+	@EventHandler
+	public void onPing(ServerListPingEvent event){
+		if(Main.getPlugin().getState() == GameState.LOBBY){
+			event.setMotd("Voting" + "\n" + "§d§lLobby");
+		} else if(Main.getPlugin().getState() == GameState.INGAME){
+			event.setMotd(settings.getData().getString(Main.getPlugin().mapName + ".displayName") + "\n" + "In-Game");
+		}
 	}
 
 	@EventHandler
@@ -216,14 +231,15 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
+		Main.getPlugin().registerPlayerTeam(player);
 		Main.getPlugin().registerPlayerOnScoreboard(player);
 		event.setJoinMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix() + player.getName()
 				+ " §6has joined the game");
 
-		onepointeight.sendTitleAndSubtitle(player, "§6Welcome to §6MineDrop!", "§bPlay.SurvivalMC§8.§aEU", 40,
-				80, 40);
+		onepointeight.sendTitleAndSubtitle(player, "§6Welcome to §6MineDrop!", "§bBrought to you by SurvivalMC", 40, 80,
+				40);
 		onepointeight
-				.sendHeaderAndFooter(player, "§6SurvivalMC§8.§aeu §3- §aPrivate Server", "§aPlaying on §6MD1");
+		.sendHeaderAndFooter(player, "§bSurvivalMC§8.§aeu §3- §aMineDrop Server", "§ahttp://survivalmc.eu");
 
 		player.teleport(new Location(Bukkit.getWorld("world"), -1386.5, 10, 941.5, 0, 0));
 
@@ -243,10 +259,18 @@ public class Listeners implements Listener {
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§aVoting is now enabled!");
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Use /vote or /v to vote.");
 			}
-		} else if (Bukkit.getOnlinePlayers().size() >= 5 && Bukkit.getOnlinePlayers().size() < 7) {
+		} else if ((Bukkit.getOnlinePlayers().size() > 5 && Bukkit.getOnlinePlayers().size() < 7)
+				&& Main.getPlugin().getState() == GameState.LOBBY) {
 			Main.getPlugin().maxRounds = 10;
-		} else if (Bukkit.getOnlinePlayers().size() >= 7) {
+			Main.getPlugin().resetVoting();
+			Main.getPlugin().fillMapsLarge();
+			Main.getPlugin().fillVotes();
+			Bukkit.broadcastMessage(Main.getPlugin().prefix
+					+ "§6More players detected, increasing Max Rounds and new map rotation");
+		} else if (Bukkit.getOnlinePlayers().size() >= 7 && Main.getPlugin().getState() == GameState.LOBBY) {
 			Main.getPlugin().maxRounds = 12;
+			Bukkit.broadcastMessage(Main.getPlugin().prefix
+					+ "§6More players detected, increasing Max Rounds");
 		}
 
 	}
@@ -260,11 +284,21 @@ public class Listeners implements Listener {
 		if (Main.getPlugin().getState() == GameState.INGAME && Bukkit.getOnlinePlayers().size() == 0) {
 			Bukkit.shutdown();
 		}
+		
+		if(Bukkit.getOnlinePlayers().size() < Main.getPlugin().config.getInt("neededToStart")){
+			Main.getPlugin().voting = false;
+		}
 
-		if (Bukkit.getOnlinePlayers().size() < 5) {
+		if (Bukkit.getOnlinePlayers().size() < 5 && Main.getPlugin().getState() == GameState.LOBBY) {
 			Main.getPlugin().maxRounds = Main.getPlugin().config.getInt("maxRounds");
-		} else if (Bukkit.getOnlinePlayers().size() < 7) {
+			Bukkit.broadcastMessage(Main.getPlugin().prefix
+					+ "§6Setting Max rounds to default and new map rotation, due to less players.");
+		} else if (Bukkit.getOnlinePlayers().size() < 7 && Main.getPlugin().getState() == GameState.LOBBY) {
 			Main.getPlugin().maxRounds = 10;
+			Main.getPlugin().resetVoting();
+			Main.getPlugin().fillMaps();
+			Main.getPlugin().fillVotes();
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Setting Max rounds to §b10 and new map rotation, due to less players.");
 		}
 
 	}
