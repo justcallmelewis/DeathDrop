@@ -108,8 +108,7 @@ public class Main extends JavaPlugin {
 		maps.add(3, "Rainbow");
 		maps.add(4, "Cake");
 		maps.add(5, "HighDive");
-		maps.add(6, "Valley");
-		maps.add(7, "Icy");
+		maps.add(6, "Icy");
 		for (int i = 1; i <= maxVotes; i++) {
 			if (i == 1) {
 				VoteHandler.getInstance().maps.clear();
@@ -120,19 +119,19 @@ public class Main extends JavaPlugin {
 			Random randomVar = new Random();
 			String gametype = "Elimination";
 			switch (randomVar.nextInt(8)) {
-			case 0:
+			case 5:
 			case 8:
-			case 4:
+			case 6:
 				gametype = "Enhanced";
 				break;
-			case 1:
-			case 6:
+			case 2:
 			case 3:
+			case 7:
 				gametype = "Elimination";
 				break;
-			case 2:
-			case 5:
-			case 7:
+			case 4:
+			case 1:
+			case 0:
 				gametype = "Normal";
 				break;
 			}
@@ -140,7 +139,7 @@ public class Main extends JavaPlugin {
 			maps.remove(random);
 		}
 	}
-	
+
 	public void fillMapsLarge() {
 		ArrayList<String> maps = new ArrayList<>();
 
@@ -178,8 +177,8 @@ public class Main extends JavaPlugin {
 			maps.remove(random);
 		}
 	}
-	
-	public void resetVoting(){
+
+	public void resetVoting() {
 		VoteHandler.getInstance().maps.clear();
 		VoteHandler.getInstance().voted.clear();
 		VoteHandler.getInstance().votes.clear();

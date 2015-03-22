@@ -133,13 +133,14 @@ public class Listeners implements Listener {
 		quartz.setItemMeta(quartzmeta);
 		player.getInventory().setItem(8, quartz);
 	}
-	
+
 	@EventHandler
-	public void onPing(ServerListPingEvent event){
-		if(Main.getPlugin().getState() == GameState.LOBBY){
+	public void onPing(ServerListPingEvent event) {
+		if (Main.getPlugin().getState() == GameState.LOBBY) {
 			event.setMotd("Voting" + "\n" + "§d§lLobby");
-		} else if(Main.getPlugin().getState() == GameState.INGAME){
-			event.setMotd(settings.getData().getString(Main.getPlugin().mapName + ".displayName") + "\n" + "In-Game");
+		} else if (Main.getPlugin().getState() == GameState.INGAME) {
+			event.setMotd(settings.getData().getString(Main.getPlugin().mapName + ".displayName") + "\n"
+					+ "In-Game");
 		}
 	}
 
@@ -236,10 +237,8 @@ public class Listeners implements Listener {
 		event.setJoinMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix() + player.getName()
 				+ " §6has joined the game");
 
-		onepointeight.sendTitleAndSubtitle(player, "§6Welcome to §6MineDrop!", "§bBrought to you by SurvivalMC", 40, 80,
-				40);
-		onepointeight
-		.sendHeaderAndFooter(player, "§bSurvivalMC§8.§aeu §3- §aMineDrop Server", "§ahttp://survivalmc.eu");
+		onepointeight.sendTitleAndSubtitle(player, "§6Welcome to §6MineDrop!", "§bBrought to you by SurvivalMC",
+				40, 80, 40);
 
 		player.teleport(new Location(Bukkit.getWorld("world"), -1386.5, 10, 941.5, 0, 0));
 
@@ -269,8 +268,7 @@ public class Listeners implements Listener {
 					+ "§6More players detected, increasing Max Rounds and new map rotation");
 		} else if (Bukkit.getOnlinePlayers().size() >= 7 && Main.getPlugin().getState() == GameState.LOBBY) {
 			Main.getPlugin().maxRounds = 12;
-			Bukkit.broadcastMessage(Main.getPlugin().prefix
-					+ "§6More players detected, increasing Max Rounds");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6More players detected, increasing Max Rounds");
 		}
 
 	}
@@ -284,8 +282,8 @@ public class Listeners implements Listener {
 		if (Main.getPlugin().getState() == GameState.INGAME && Bukkit.getOnlinePlayers().size() == 0) {
 			Bukkit.shutdown();
 		}
-		
-		if(Bukkit.getOnlinePlayers().size() < Main.getPlugin().config.getInt("neededToStart")){
+
+		if (Bukkit.getOnlinePlayers().size() < Main.getPlugin().config.getInt("neededToStart")) {
 			Main.getPlugin().voting = false;
 		}
 
@@ -298,7 +296,8 @@ public class Listeners implements Listener {
 			Main.getPlugin().resetVoting();
 			Main.getPlugin().fillMaps();
 			Main.getPlugin().fillVotes();
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Setting Max rounds to §b10 and new map rotation, due to less players.");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix
+					+ "§6Setting Max rounds to §b10 and new map rotation, due to less players.");
 		}
 
 	}

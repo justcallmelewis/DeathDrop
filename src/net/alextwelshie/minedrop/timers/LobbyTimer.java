@@ -82,8 +82,8 @@ public class LobbyTimer implements Runnable {
 			}
 			break;
 		case 5:
-			if(Bukkit.getOnlinePlayers().size() >= Main.getPlugin().config.getInt("neededToStart")){
-				if(Main.getPlugin().getType() == GameType.Normal){
+			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().config.getInt("neededToStart")) {
+				if (Main.getPlugin().getType() == GameType.Normal) {
 					Bukkit.broadcastMessage("");
 					Bukkit.broadcastMessage("§b—————————[ §a§lHow To Play §b]—————————");
 					Bukkit.broadcastMessage("§6— You goal is to land in the water.");
@@ -91,7 +91,7 @@ public class LobbyTimer implements Runnable {
 					Bukkit.broadcastMessage("§6— The person with the most points wins.");
 					Bukkit.broadcastMessage("§b——————————————————————————————");
 					Bukkit.broadcastMessage("");
-				} else if(Main.getPlugin().getType() == GameType.Elimination){
+				} else if (Main.getPlugin().getType() == GameType.Elimination) {
 					Bukkit.broadcastMessage("");
 					Bukkit.broadcastMessage("§b—————————[ §a§lHow To Play §b]—————————");
 					Bukkit.broadcastMessage("§6— You goal is to land in the water.");
@@ -110,7 +110,7 @@ public class LobbyTimer implements Runnable {
 					Bukkit.broadcastMessage("");
 				}
 			}
-			
+
 			break;
 		case 0:
 			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {

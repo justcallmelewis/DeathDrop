@@ -168,7 +168,7 @@ public class DropAPI {
 			public void run() {
 				fw.detonate();
 			}
-		}, 10L);
+		}, 11L);
 	}
 
 	public void gameOver() {
