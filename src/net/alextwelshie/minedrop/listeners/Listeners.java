@@ -6,6 +6,7 @@ import net.alextwelshie.minedrop.Main;
 import net.alextwelshie.minedrop.SettingsManager;
 import net.alextwelshie.minedrop.achievements.AchievementMenu;
 import net.alextwelshie.minedrop.ranks.PlayerManager;
+import net.alextwelshie.minedrop.statistics.StatisticsManager;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
 import net.alextwelshie.minedrop.utils.BlockChooserGUI;
 import net.alextwelshie.minedrop.utils.DropAPI;
@@ -244,7 +245,7 @@ public class Listeners implements Listener {
 
 		givePlayerItems(player);
 
-		if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
+		if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart && Main.getPlugin().getState() == GameState.LOBBY) {
 			if (!Main.getPlugin().shortened) {
 				Main.getPlugin().shortened = true;
 				LobbyTimer.lobbyTimer = 46;
@@ -258,17 +259,24 @@ public class Listeners implements Listener {
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§aVoting is now enabled!");
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6Use /vote or /v to vote.");
 			}
-		} else if ((Bukkit.getOnlinePlayers().size() > 5 && Bukkit.getOnlinePlayers().size() < 7)
-				&& Main.getPlugin().getState() == GameState.LOBBY) {
-			Main.getPlugin().maxRounds = 10;
-			Main.getPlugin().resetVoting();
-			Main.getPlugin().fillMapsLarge();
-			Main.getPlugin().fillVotes();
-			Bukkit.broadcastMessage(Main.getPlugin().prefix
-					+ "§6More players detected, increasing Max Rounds and new map rotation");
-		} else if (Bukkit.getOnlinePlayers().size() >= 7 && Main.getPlugin().getState() == GameState.LOBBY) {
-			Main.getPlugin().maxRounds = 12;
-			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6More players detected, increasing Max Rounds");
+			
+			if (Bukkit.getOnlinePlayers().size() >= 5 && Bukkit.getOnlinePlayers().size() < 7) {
+				Main.getPlugin().maxRounds = 10;
+				Main.getPlugin().resetVoting();
+				Main.getPlugin().fillMapsLarge();
+				Main.getPlugin().fillVotes();
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§aMore players detected!");
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6New max rounds: §b" + Main.getPlugin().maxRounds);
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6New map rotation: §blarge maps.");
+			} else if (Bukkit.getOnlinePlayers().size() >= 7) {
+				Main.getPlugin().maxRounds = 12;
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6More players detected!");
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6New max rounds: §b" + Main.getPlugin().maxRounds);
+			}
+		}
+		
+		if(!StatisticsManager.getInstance().isExisting(player)) {
+			StatisticsManager.getInstance().addNewUser(player);
 		}
 
 	}
@@ -278,7 +286,8 @@ public class Listeners implements Listener {
 		Player player = event.getPlayer();
 		event.setQuitMessage(Main.getPlugin().prefix + "§6Player §6" + player.getName() + " §6has left us!");
 		PlayerManager.getInstance().removeFromArrayLists(player);
-
+		Main.getPlugin().removePlayerFromScoreboard(player);
+		
 		if (Main.getPlugin().getState() == GameState.INGAME && Bukkit.getOnlinePlayers().size() == 0) {
 			Bukkit.shutdown();
 		}
@@ -289,17 +298,21 @@ public class Listeners implements Listener {
 
 		if (Bukkit.getOnlinePlayers().size() < 5 && Main.getPlugin().getState() == GameState.LOBBY) {
 			Main.getPlugin().maxRounds = Main.getPlugin().config.getInt("maxRounds");
-			Bukkit.broadcastMessage(Main.getPlugin().prefix
-					+ "§6Setting Max rounds to default and new map rotation, due to less players.");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cLess players detected!");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6New max rounds: §b" + Main.getPlugin().maxRounds);
 		} else if (Bukkit.getOnlinePlayers().size() < 7 && Main.getPlugin().getState() == GameState.LOBBY) {
 			Main.getPlugin().maxRounds = 10;
 			Main.getPlugin().resetVoting();
 			Main.getPlugin().fillMaps();
 			Main.getPlugin().fillVotes();
-			Bukkit.broadcastMessage(Main.getPlugin().prefix
-					+ "§6Setting Max rounds to §b10 and new map rotation, due to less players.");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§aMore players detected!");
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6New max rounds: §b" + Main.getPlugin().maxRounds);
+			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6New map rotation: §bdefault maps.");
 		}
-
+		
+		if(Main.getPlugin().getState() == GameState.INGAME) {
+			StatisticsManager.getInstance().addPoints(player, Main.getPlugin().points.get(player.getName()));
+		}
 	}
 
 	@EventHandler
@@ -341,6 +354,9 @@ public class Listeners implements Listener {
 
 						onepointeight.sendActionBarText(player, "§aYou successfully landed in the water!");
 
+						Main.getPlugin().points.put(player.getName(), (Main.getPlugin().points.get(player.getName()) + 5));
+						player.sendMessage("§e[SurvivalMC] §aYou earned §b5 §apoints!");
+						
 						DropAPI.getInstance().launchFirework("success", loc);
 						FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(
 								block.getLocation().add(0, 2, 0), type, data);

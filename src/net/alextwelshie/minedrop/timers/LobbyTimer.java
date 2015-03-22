@@ -6,6 +6,7 @@ import net.alextwelshie.minedrop.Main;
 import net.alextwelshie.minedrop.SettingsManager;
 import net.alextwelshie.minedrop.runnables.LoadWorldInRunnable;
 import net.alextwelshie.minedrop.runnables.TeleportInRunnable;
+import net.alextwelshie.minedrop.statistics.StatisticsManager;
 import net.alextwelshie.minedrop.utils.DropAPI;
 import net.alextwelshie.minedrop.utils.GameState;
 import net.alextwelshie.minedrop.utils.GameType;
@@ -89,7 +90,7 @@ public class LobbyTimer implements Runnable {
 					Bukkit.broadcastMessage("§6— You goal is to land in the water.");
 					Bukkit.broadcastMessage("§6— Hitting a block has no penalty");
 					Bukkit.broadcastMessage("§6— The person with the most points wins.");
-					Bukkit.broadcastMessage("§b——————————————————————————————");
+					Bukkit.broadcastMessage("§b——————————————————————————————-————————");
 					Bukkit.broadcastMessage("");
 				} else if (Main.getPlugin().getType() == GameType.Elimination) {
 					Bukkit.broadcastMessage("");
@@ -97,7 +98,7 @@ public class LobbyTimer implements Runnable {
 					Bukkit.broadcastMessage("§6— You goal is to land in the water.");
 					Bukkit.broadcastMessage("§6— If you hit a block, you are out.");
 					Bukkit.broadcastMessage("§6— The last person remaining wins.");
-					Bukkit.broadcastMessage("§b——————————————————————————————");
+					Bukkit.broadcastMessage("§b——————————————————————————————-————————");
 					Bukkit.broadcastMessage("");
 				} else {
 					Bukkit.broadcastMessage("");
@@ -106,7 +107,7 @@ public class LobbyTimer implements Runnable {
 					Bukkit.broadcastMessage("§6— Jumping by blocks or in between gives you bonus points.");
 					Bukkit.broadcastMessage("§6— Hitting a block has no penalty");
 					Bukkit.broadcastMessage("§6— The person with the most points wins.");
-					Bukkit.broadcastMessage("§b——————————————————————————————");
+					Bukkit.broadcastMessage("§b——————————————————————————————-————————");
 					Bukkit.broadcastMessage("");
 				}
 			}
@@ -123,7 +124,8 @@ public class LobbyTimer implements Runnable {
 
 				OnePointEight onepointeight = OnePointEight.getInstance();
 				for (Player all : Bukkit.getOnlinePlayers()) {
-
+					StatisticsManager.getInstance().addGamePlayed(all);
+					Main.getPlugin().points.put(all.getName(), 0);
 					onepointeight.sendTitle(all, "§aHere.. §bwe.. §cgo!");
 					all.getInventory().clear();
 					if (!Main.getPlugin().blocks.containsKey(all.getName())
