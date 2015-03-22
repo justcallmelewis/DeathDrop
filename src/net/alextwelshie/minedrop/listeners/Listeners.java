@@ -93,21 +93,29 @@ public class Listeners implements Listener {
 			Main.getPlugin().updateScore(player, 2);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §alanded in the water and earned §b§l1 Bonus Points.");
+			player.sendMessage("§e[SurvivalMC] §aYou earned §b6 §apoints!");
+			
 			break;
 		case 2:
 			Main.getPlugin().updateScore(player, 3);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §alanded in the water and earned §b§l2 Bonus Points.");
+			player.sendMessage("§e[SurvivalMC] §aYou earned §b7 §apoints!");
+			
 			break;
 		case 3:
 			Main.getPlugin().updateScore(player, 4);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §alanded in the water and earned §b§l3 Bonus Points.");
+			player.sendMessage("§e[SurvivalMC] §aYou earned §b8 §apoints!");
+			
 			break;
 		case 4:
 			Main.getPlugin().updateScore(player, 5);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §alanded in the water and earned §b§l4 Bonus Points.");
+			player.sendMessage("§e[SurvivalMC] §aYou earned §b9 §apoints!");
+			
 			break;
 		default:
 			Main.getPlugin().increaseScore(player);
@@ -364,22 +372,23 @@ public class Listeners implements Listener {
 						onepointeight.sendActionBarText(player, "§aYou successfully landed in the water!");
 
 						Main.getPlugin().points.put(player.getName(), (Main.getPlugin().points.get(player.getName()) + 5));
-						player.sendMessage("§e[SurvivalMC] §aYou earned §b5 §apoints!");
 						
 						DropAPI.getInstance().launchFirework("success", loc);
 						FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(
 								block.getLocation().add(0, 2, 0), type, data);
 						fallingBlock.setDropItem(false);
 						DropAPI.getInstance().finishDrop(player);
-						Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
-								+ player.getName() + "§a" + DropAPI.getInstance().pickSuccessMessage());
+						
 						player.playSound(loc, Sound.LEVEL_UP, 5, 1);
 						if (Main.getPlugin().getType() == GameType.Enhanced) {
 							countBlocks(player, loc);
 						} else {
 							Main.getPlugin().increaseScore(player);
+							Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
+									+ player.getName() + "§a" + DropAPI.getInstance().pickSuccessMessage());
 						}
 						DropAPI.getInstance().setupNextTurn();
+						player.sendMessage("§e[SurvivalMC] §aYou earned §b5 §apoints!");
 					}
 				}
 			}
