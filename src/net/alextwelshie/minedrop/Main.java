@@ -69,6 +69,7 @@ public class Main extends JavaPlugin {
 	public HashMap<String, Material>	blocks		= new HashMap<>();
 	public HashMap<String, Byte>		blockData	= new HashMap<>();
 
+	public HashMap<String, Integer>		chatPoints 		= new HashMap<>();
 	public HashMap<String, Integer>		points 		= new HashMap<>();
 	@Override
 	public void onEnable() {

@@ -148,12 +148,18 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
-		if (!DropAPI.getInstance().eliminated.contains(player.getName())) {
-			event.setFormat(board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY + " » "
-					+ ChatColor.WHITE + "%s");
+		if(Main.getPlugin().getState() == GameState.LOBBY) {
+			event.setFormat("§e" + Main.getPlugin().chatPoints.get(player.getName()) + " §8\u2759 " + 
+					Main.getPlugin().board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY 
+					+ " » " + ChatColor.WHITE + "%s");
 		} else {
-			event.setFormat("§c[Eliminated] " + board.getPlayerTeam(player).getPrefix() + "%s"
-					+ ChatColor.DARK_GRAY + " » " + ChatColor.WHITE + "%s");
+			if (!DropAPI.getInstance().eliminated.contains(player.getName())) {
+				event.setFormat(board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY + " » "
+						+ ChatColor.WHITE + "%s");
+			} else {
+				event.setFormat("§c[Eliminated] " + board.getPlayerTeam(player).getPrefix() + "%s"
+						+ ChatColor.DARK_GRAY + " » " + ChatColor.WHITE + "%s");
+			}
 		}
 
 	}
@@ -277,6 +283,9 @@ public class Listeners implements Listener {
 		
 		if(!StatisticsManager.getInstance().isExisting(player)) {
 			StatisticsManager.getInstance().addNewUser(player);
+			Main.getPlugin().chatPoints.put(player.getName(), 0);
+		} else {
+			Main.getPlugin().chatPoints.put(player.getName(), StatisticsManager.getInstance().getPoints(player));
 		}
 
 	}
