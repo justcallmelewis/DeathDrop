@@ -122,11 +122,11 @@ public class Listeners implements Listener {
 		clay.setItemMeta(claymeta);
 		player.getInventory().setItem(0, clay);
 
-		ItemStack achieve = new ItemStack(Material.BEACON, 1);
+		/*ItemStack achieve = new ItemStack(Material.BEACON, 1);
 		ItemMeta achievemeta = achieve.getItemMeta();
 		achievemeta.setDisplayName("§aAchievement §6Menu");
 		achieve.setItemMeta(achievemeta);
-		player.getInventory().setItem(4, achieve);
+		player.getInventory().setItem(4, achieve);*/
 
 		ItemStack quartz = new ItemStack(Material.QUARTZ, 1);
 		ItemMeta quartzmeta = quartz.getItemMeta();
