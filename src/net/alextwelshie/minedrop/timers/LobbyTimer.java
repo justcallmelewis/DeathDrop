@@ -26,7 +26,7 @@ public class LobbyTimer implements Runnable {
 
 	Scoreboard			board		= Bukkit.getScoreboardManager().getMainScoreboard();
 
-	@SuppressWarnings({ "deprecation", "unchecked" })
+	@SuppressWarnings({ "unchecked", "deprecation", "incomplete-switch" })
 	@Override
 	public void run() {
 		lobbyTimer--;
@@ -68,14 +68,16 @@ public class LobbyTimer implements Runnable {
 			}
 			break;
 		case 10:
+			String displayName = SettingsManager.getInstance().getData()
+					.getString(Main.getPlugin().mapName + ".displayName");
 
 			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
 				Main.getPlugin().voting = false;
 				VoteHandler.getInstance().pickMap();
 				Main.getPlugin().displayName = SettingsManager.getInstance().getData()
 						.getString(Main.getPlugin().mapName + ".displayName");
-				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b"
-						+ Main.getPlugin().mapName + " §ahas won!");
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b" + displayName
+						+ " §ahas won!");
 				Main.getPlugin().setType(
 						GameType.valueOf(VoteHandler.getInstance().mapGametype.get(Main.getPlugin().mapName)));
 				Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new LoadWorldInRunnable());
@@ -83,8 +85,10 @@ public class LobbyTimer implements Runnable {
 			}
 			break;
 		case 5:
-			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().config.getInt("neededToStart")) {
-				if (Main.getPlugin().getType() == GameType.Normal) {
+			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().config.getInt("neededToStart")
+					&& Main.getPlugin().getState() == GameState.LOBBY) {
+				switch (Main.getPlugin().getType()) {
+				case Normal:
 					Bukkit.broadcastMessage("");
 					Bukkit.broadcastMessage("§b—————————[ §a§lHow To Play §b]—————————");
 					Bukkit.broadcastMessage("§6— You goal is to land in the water.");
@@ -92,7 +96,8 @@ public class LobbyTimer implements Runnable {
 					Bukkit.broadcastMessage("§6— The person with the most points wins.");
 					Bukkit.broadcastMessage("§b——————————————————————————————-————————");
 					Bukkit.broadcastMessage("");
-				} else if (Main.getPlugin().getType() == GameType.Elimination) {
+					break;
+				case Elimination:
 					Bukkit.broadcastMessage("");
 					Bukkit.broadcastMessage("§b—————————[ §a§lHow To Play §b]—————————");
 					Bukkit.broadcastMessage("§6— You goal is to land in the water.");
@@ -100,7 +105,8 @@ public class LobbyTimer implements Runnable {
 					Bukkit.broadcastMessage("§6— The last person remaining wins.");
 					Bukkit.broadcastMessage("§b——————————————————————————————-————————");
 					Bukkit.broadcastMessage("");
-				} else {
+					break;
+				case Enhanced:
 					Bukkit.broadcastMessage("");
 					Bukkit.broadcastMessage("§b—————————[ §a§lHow To Play §b]—————————");
 					Bukkit.broadcastMessage("§6— You goal is to land in the water.");
@@ -109,11 +115,12 @@ public class LobbyTimer implements Runnable {
 					Bukkit.broadcastMessage("§6— The person with the most points wins.");
 					Bukkit.broadcastMessage("§b——————————————————————————————-————————");
 					Bukkit.broadcastMessage("");
+					break;
 				}
 			}
-
 			break;
 		case 0:
+			DropAPI dropapi = DropAPI.getInstance();
 			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
 				Main.getPlugin().setState(GameState.INGAME);
 				lobbyTimer = 999;
@@ -135,7 +142,7 @@ public class LobbyTimer implements Runnable {
 						Main.getPlugin().blockData.put(all.getName(), random);
 					}
 
-					DropAPI.getInstance().notHadTurn.add(all.getName());
+					dropapi.notHadTurn.add(all.getName());
 
 					if (Main.getPlugin().blockData.get(all.getName()) == 0) {
 						Material material = Main.getPlugin().blocks.get(all.getName());
@@ -153,9 +160,8 @@ public class LobbyTimer implements Runnable {
 				Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.getPlugin(), new Runnable() {
 					@Override
 					public void run() {
-						Player player = Bukkit.getPlayerExact(DropAPI.getInstance().notHadTurn.get(Main
-								.getPlugin().turns));
-						DropAPI.getInstance().setupPlayer(player);
+						Player player = Bukkit.getPlayerExact(dropapi.notHadTurn.get(Main.getPlugin().turns));
+						dropapi.setupPlayer(player);
 					}
 				}, 120L);
 				Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new TeleportInRunnable());

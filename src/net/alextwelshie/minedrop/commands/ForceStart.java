@@ -5,6 +5,7 @@ import net.alextwelshie.minedrop.SettingsManager;
 import net.alextwelshie.minedrop.runnables.LoadWorldInRunnable;
 import net.alextwelshie.minedrop.timers.LobbyTimer;
 import net.alextwelshie.minedrop.utils.DropAPI;
+import net.alextwelshie.minedrop.utils.GameState;
 import net.alextwelshie.minedrop.utils.GameType;
 import net.alextwelshie.minedrop.voting.VoteHandler;
 
@@ -23,7 +24,7 @@ public class ForceStart implements CommandExecutor {
 			Player player = (Player) sender;
 			if (Main.getPlugin().isStaff(player)) {
 				if (args.length == 0) {
-					if (Bukkit.getScheduler().isCurrentlyRunning(Main.getPlugin().lobbyTimer)) {
+					if (Main.getPlugin().getState() == GameState.LOBBY) {
 						if (!Main.getPlugin().began) {
 
 							Main.getPlugin().began = true;

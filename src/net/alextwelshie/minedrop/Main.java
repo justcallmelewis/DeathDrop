@@ -69,8 +69,9 @@ public class Main extends JavaPlugin {
 	public HashMap<String, Material>	blocks		= new HashMap<>();
 	public HashMap<String, Byte>		blockData	= new HashMap<>();
 
-	public HashMap<String, Integer>		chatPoints 		= new HashMap<>();
-	public HashMap<String, Integer>		points 		= new HashMap<>();
+	public HashMap<String, Integer>		chatPoints	= new HashMap<>();
+	public HashMap<String, Integer>		points		= new HashMap<>();
+
 	@Override
 	public void onEnable() {
 		setupConfig();
@@ -111,7 +112,7 @@ public class Main extends JavaPlugin {
 		maps.add(4, "Cake");
 		maps.add(5, "HighDive");
 		maps.add(6, "Icy");
-		
+
 		for (int i = 1; i <= maxVotes; i++) {
 			if (i == 1) {
 				VoteHandler.getInstance().maps.clear();
@@ -149,7 +150,7 @@ public class Main extends JavaPlugin {
 		maps.add(1, "HighDive");
 		maps.add(2, "Valley");
 		maps.add(3, "Factory");
-		
+
 		for (int i = 0; i <= (maps.size() - 1); i++) {
 			int random = i;
 			if (i == 0) {

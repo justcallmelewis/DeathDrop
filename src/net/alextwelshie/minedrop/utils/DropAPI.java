@@ -76,7 +76,6 @@ public class DropAPI {
 				jumpCountdown(player);
 			}
 		}, 20L, 20L);
-		
 
 		if (Main.getPlugin().round == 1 && Main.getPlugin().turns == 0) {
 			Bukkit.getScheduler().callSyncMethod(Main.getPlugin(),
@@ -176,6 +175,7 @@ public class DropAPI {
 	public void gameOver() {
 		Main.getPlugin().round = 0;
 		Bukkit.getScheduler().cancelAllTasks();
+		Main.getPlugin().setState(GameState.RESTARTING);
 
 		int highest = 0;
 		ArrayList<String> winners = new ArrayList<>();
@@ -259,7 +259,8 @@ public class DropAPI {
 				if (!eliminated.contains(all.getName())) {
 					notHadTurn.add(all.getName());
 					Main.getPlugin().points.put(all.getName(), (Main.getPlugin().points.get(all.getName()) + 1));
-					all.sendMessage("§e[SurvivalMC] §aYou earned §b1 §apoints! You now have §b" + StatisticsManager.getInstance().getPoints(all) + " §apoints.");
+					all.sendMessage("§e[SurvivalMC] §aYou earned §b1 §apoints! You now have §b"
+							+ StatisticsManager.getInstance().getPoints(all) + " §apoints.");
 				}
 			}
 		} else {
