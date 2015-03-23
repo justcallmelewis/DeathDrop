@@ -12,4 +12,4 @@ TO-DO LIST:
   - [X] New gametypes
   - [X] Set gametype random to map
   - [ ] Achievements
-  - [ ] Statistics
+  - [X] Statistics (70% Done)
