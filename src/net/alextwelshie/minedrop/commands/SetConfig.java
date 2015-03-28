@@ -40,12 +40,23 @@ public class SetConfig implements CommandExecutor {
 
 								player.sendMessage(Main.getPlugin().prefix + "§6Value of " + variable
 										+ " set to: " + value);
+								
+								Main.getPlugin().saveConfig();
+							} else if (value.equals("Elimination")) {
+								Main.getPlugin().config.set(variable, value);
+								Main.getPlugin().setType(GameType.valueOf(value.toString()));
+
+								player.sendMessage(Main.getPlugin().prefix + "§6Value of " + variable
+										+ " set to: " + value);
+								
+								Main.getPlugin().saveConfig();
 							} else if (value.equals("Normal")) {
 								Main.getPlugin().config.set(variable, value);
 								Main.getPlugin().setType(GameType.valueOf(value.toString()));
 
 								player.sendMessage(Main.getPlugin().prefix + "§6Value of " + variable
 										+ " set to: " + value);
+								Main.getPlugin().saveConfig();
 							} else {
 								player.sendMessage(Main.getPlugin().prefix + "§cGametype does not exist.");
 							}
@@ -67,6 +78,8 @@ public class SetConfig implements CommandExecutor {
 								}
 								player.sendMessage(Main.getPlugin().prefix + "§6Value of " + variable
 										+ " set to: " + value);
+								
+								Main.getPlugin().saveConfig();
 							} else {
 								player.sendMessage(Main.getPlugin().prefix + "§cValue is not numeric.");
 							}
@@ -88,6 +101,8 @@ public class SetConfig implements CommandExecutor {
 											+ "§6Due to this change, players needed is now less than online player count.");
 									player.sendMessage(Main.getPlugin().prefix + "§aBeginning game..");
 								}
+								
+								Main.getPlugin().saveConfig();
 							} else {
 								player.sendMessage(Main.getPlugin().prefix + "§cValue is not numeric.");
 							}
@@ -103,6 +118,8 @@ public class SetConfig implements CommandExecutor {
 
 								player.sendMessage(Main.getPlugin().prefix + "§6Value of " + variable
 										+ " set to: " + value);
+								
+								Main.getPlugin().saveConfig();
 							} else {
 								player.sendMessage(Main.getPlugin().prefix + "§cValue is not numeric.");
 							}

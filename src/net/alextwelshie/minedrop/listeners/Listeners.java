@@ -130,8 +130,8 @@ public class Listeners implements Listener {
 				}
 				player.playSound(loc, Sound.LEVEL_UP, 5, 1);
 
-				Main.getPlugin().points.put(player.getName(), (Main.getPlugin().points.get(player.getName()) + 5));
-
+				statistics.points.put(player.getName(), (statistics.points.get(player.getName()) + 5));
+				statistics.successDrops.put(player.getName(), statistics.successDrops.get(player.getName()) + 1);
 				dropapi.launchFirework("success", loc);
 				FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation().add(0, 2, 0),
 						type, data);
@@ -173,6 +173,7 @@ public class Listeners implements Listener {
 						dropapi.timer = 0;
 						dropapi.finishDrop(player);
 						//api.grantAchievement(player, Achievement.FIRST_LAND_FAIL);
+						statistics.failedDrops.put(player.getName(), statistics.failedDrops.get(player.getName()) + 1);
 						dropapi.setupNextTurn();
 					}
 				}
@@ -210,34 +211,34 @@ public class Listeners implements Listener {
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §alanded in the water and earned §b§l1 Bonus Points.");
 			player.sendMessage(Main.getPlugin().prefix + "§b§l+6 §6Points");
-			Main.getPlugin().points.put(player.getName(), (Main.getPlugin().points.get(player.getName()) + 6));
+			StatisticsManager.getInstance().points.put(player.getName(), (StatisticsManager.getInstance().points.get(player.getName()) + 6));
 			break;
 		case 2:
 			Main.getPlugin().updateScore(player, 3);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §alanded in the water and earned §b§l2 Bonus Points.");
 			player.sendMessage(Main.getPlugin().prefix + "§b§l+7 §6Points");
-			Main.getPlugin().points.put(player.getName(), (Main.getPlugin().points.get(player.getName()) + 7));
+			StatisticsManager.getInstance().points.put(player.getName(), (StatisticsManager.getInstance().points.get(player.getName()) + 7));
 			break;
 		case 3:
 			Main.getPlugin().updateScore(player, 4);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §alanded in the water and earned §b§l3 Bonus Points.");
 			player.sendMessage(Main.getPlugin().prefix + "§b§l+8 §6Points");
-			Main.getPlugin().points.put(player.getName(), (Main.getPlugin().points.get(player.getName()) + 8));
+			StatisticsManager.getInstance().points.put(player.getName(), (StatisticsManager.getInstance().points.get(player.getName()) + 8));
 			break;
 		case 4:
 			Main.getPlugin().updateScore(player, 5);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §alanded in the water and earned §b§l4 Bonus Points.");
 			player.sendMessage(Main.getPlugin().prefix + "§b§l+9 §6Points");
-			Main.getPlugin().points.put(player.getName(), (Main.getPlugin().points.get(player.getName()) + 9));
+			StatisticsManager.getInstance().points.put(player.getName(), (StatisticsManager.getInstance().points.get(player.getName()) + 9));
 			break;
 		default:
 			dropapi.pickSuccessMessage();
 			player.sendMessage(Main.getPlugin().prefix + "§b§l+5 §6Points");
 			Main.getPlugin().increaseScore(player);
-			Main.getPlugin().points.put(player.getName(), (Main.getPlugin().points.get(player.getName()) + 5));
+			StatisticsManager.getInstance().points.put(player.getName(), (StatisticsManager.getInstance().points.get(player.getName()) + 5));
 			break;
 		}
 	}
@@ -284,10 +285,17 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onPing(ServerListPingEvent event) {
 		if (Main.getPlugin().getState() == GameState.LOBBY) {
-			event.setMotd("Voting" + "\n" + "§d§lLobby");
+			event.setMotd("Voting" 
+						+ "\n" 
+						+ "§d§lLobby");
 		} else if (Main.getPlugin().getState() == GameState.INGAME) {
-			event.setMotd(settings.getData().getString(Main.getPlugin().mapName + ".displayName") + "\n"
-					+ "In-Game");
+			event.setMotd(settings.getData().getString(Main.getPlugin().mapName + ".displayName") 
+					+ "\n"
+					+ "§8In-Game");
+		} else {
+			event.setMotd(settings.getData().getString(Main.getPlugin().mapName + ".displayName") 
+					+ "\n"
+					+ "§4Restarting");
 		}
 	}
 
@@ -295,7 +303,7 @@ public class Listeners implements Listener {
 	public void onChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
 		if (Main.getPlugin().getState() == GameState.LOBBY) {
-			event.setFormat("§e" + Main.getPlugin().chatPoints.get(player.getName()) + " §8\u2759 "
+			event.setFormat("§e" + StatisticsManager.getInstance().chatPoints.get(player.getName()) + " §8\u2759 "
 					+ Main.getPlugin().board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY
 					+ " » " + ChatColor.WHITE + "%s");
 		} else {
@@ -397,7 +405,7 @@ public class Listeners implements Listener {
 
 		givePlayerItems(player);
 		
-		Main.getPlugin().chatPoints.put(player.getName(), statistics.getPoints(player));
+		StatisticsManager.getInstance().chatPoints.put(player.getName(), statistics.getPoints(player));
 
 		reducedTimeBroadcast();
 
@@ -416,7 +424,7 @@ public class Listeners implements Listener {
 		}
 
 		if (Main.getPlugin().getState() == GameState.INGAME) {
-			statistics.addPoints(player, Main.getPlugin().points.get(player.getName()));
+			statistics.addPoints(player, StatisticsManager.getInstance().points.get(player.getName()));
 		}
 
 		newMapRotationDown();

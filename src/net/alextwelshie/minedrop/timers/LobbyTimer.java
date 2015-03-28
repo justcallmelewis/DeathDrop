@@ -132,7 +132,9 @@ public class LobbyTimer implements Runnable {
 				OnePointEight onepointeight = OnePointEight.getInstance();
 				for (Player all : Bukkit.getOnlinePlayers()) {
 					StatisticsManager.getInstance().addGamePlayed(all);
-					Main.getPlugin().points.put(all.getName(), 0);
+					StatisticsManager.getInstance().points.put(all.getName(), 0);
+					StatisticsManager.getInstance().failedDrops.put(all.getName(), 0);
+					StatisticsManager.getInstance().successDrops.put(all.getName(), 0);
 					onepointeight.sendTitle(all, "§aHere.. §bwe.. §cgo!");
 					all.getInventory().clear();
 					if (!Main.getPlugin().blocks.containsKey(all.getName())

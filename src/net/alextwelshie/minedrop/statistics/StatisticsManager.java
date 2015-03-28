@@ -3,8 +3,8 @@ package net.alextwelshie.minedrop.statistics;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
 
-import net.alextwelshie.minedrop.Main;
 import net.alextwelshie.minedrop.ranks.ConnectionPoolManager;
 
 import org.bukkit.Bukkit;
@@ -20,7 +20,12 @@ public class StatisticsManager {
 
 	ConnectionPoolManager	cpm			= new ConnectionPoolManager();
 	Connection				connection	= cpm.getConnectionFromPool();
-
+	
+	public HashMap<String, Integer>	successDrops = new HashMap<>();
+	public HashMap<String, Integer>	failedDrops = new HashMap<>();
+	public HashMap<String, Integer>	chatPoints = new HashMap<>();
+	public HashMap<String, Integer>	points = new HashMap<>();
+	
 	public int getPoints(Player p) {
 		int points = 0;
 		try {
@@ -153,6 +158,36 @@ public class StatisticsManager {
 			e.printStackTrace();
 		}
 	}
+	
+	public void addSuccessfulDrops(Player p, int amount) {
+		try {
+			PreparedStatement achievement = connection
+					.prepareStatement("UPDATE `minedrop` SET successfulDrops=? WHERE uuid=?;");
+			achievement.setInt(1, amount);
+			achievement.setString(2, p.getUniqueId().toString().replace("-", ""));
+			achievement.execute();
+			achievement.close();
+
+			cpm.returnConnectionToPool(connection);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void addFailedDrops(Player p, int amount) {
+		try {
+			PreparedStatement achievement = connection
+					.prepareStatement("UPDATE `minedrop` SET failedDrops=? WHERE uuid=?;");
+			achievement.setInt(1, amount);
+			achievement.setString(2, p.getUniqueId().toString().replace("-", ""));
+			achievement.execute();
+			achievement.close();
+
+			cpm.returnConnectionToPool(connection);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void addGamePlayed(Player p) {
 		try {
@@ -169,12 +204,23 @@ public class StatisticsManager {
 		}
 	}
 
-	public void syncMapToDatabase() {
+	public void syncPointsToDatabase() {
 		for (Player all : Bukkit.getOnlinePlayers()) {
-			int points = Main.getPlugin().points.get(all.getName());
+			int points = this.points.get(all.getName());
 			addPoints(all, points);
 			System.out.println("Added " + points + " points to " + all.getName() + " in database.");
 		}
-
+	}
+	
+	public void syncDropsToDatabase() {
+		for (Player all : Bukkit.getOnlinePlayers()) {
+			int success = this.successDrops.get(all.getName());
+			int fail = this.failedDrops.get(all.getName());
+			
+			addSuccessfulDrops(all, success);
+			System.out.println("Added " + success + " successes to " + all.getName() + " in database.");			
+			addFailedDrops(all, fail);
+			System.out.println("Added " + fail + " fails to " + all.getName() + " in database.");
+		}
 	}
 }

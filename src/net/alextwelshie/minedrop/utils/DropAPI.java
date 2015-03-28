@@ -64,7 +64,6 @@ public class DropAPI {
 	}
 
 	public void setupPlayer(Player player) {
-
 		notHadTurn.remove(player.getName());
 		Main.getPlugin().whosDropping = player.getName();
 		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§aPlayer " + board.getPlayerTeam(player).getPrefix()
@@ -203,7 +202,7 @@ public class DropAPI {
 				winnerName[i] = winners.get(i);
 				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §a" + winnerName[i]);
 				StatisticsManager.getInstance().addVictory(Bukkit.getPlayerExact(winnerName[i]));
-				Main.getPlugin().points.put(winnerName[i], (Main.getPlugin().points.get(winnerName[i]) + 150));
+				StatisticsManager.getInstance().points.put(winnerName[i], (StatisticsManager.getInstance().points.get(winnerName[i]) + 150));
 			}
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§b§lCONGRATULATIONS!!");
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + " ");
@@ -218,7 +217,7 @@ public class DropAPI {
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§b§lCONGRATULATIONS!!");
 			Bukkit.broadcastMessage("");
 			StatisticsManager.getInstance().addVictory(winner);
-			Main.getPlugin().points.put(winner.getName(), (Main.getPlugin().points.get(winner.getName()) + 150));
+			StatisticsManager.getInstance().points.put(winner.getName(), (StatisticsManager.getInstance().points.get(winner.getName()) + 150));
 		} else {
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§6§lWINNER: §cNobody");
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + "§b§lCONGRATULATIONS!!");
@@ -227,7 +226,8 @@ public class DropAPI {
 
 		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§cRestarting in §4§l10 seconds.");
 		Main.getPlugin().board.getObjective("scoreboard").setDisplaySlot(null);
-		StatisticsManager.getInstance().syncMapToDatabase();
+		StatisticsManager.getInstance().syncPointsToDatabase();
+		StatisticsManager.getInstance().syncDropsToDatabase();
 		Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
@@ -258,9 +258,9 @@ public class DropAPI {
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				if (!eliminated.contains(all.getName())) {
 					notHadTurn.add(all.getName());
-					Main.getPlugin().points.put(all.getName(), (Main.getPlugin().points.get(all.getName()) + 1));
+					StatisticsManager.getInstance().points.put(all.getName(), (StatisticsManager.getInstance().points.get(all.getName()) + 1));
 					all.sendMessage("§e[SurvivalMC] §aYou earned §b1 §apoints! You now have §b"
-							+ StatisticsManager.getInstance().getPoints(all) + " §apoints.");
+							+ (StatisticsManager.getInstance().getPoints(all) + 1) + " §apoints.");
 				}
 			}
 		} else {
