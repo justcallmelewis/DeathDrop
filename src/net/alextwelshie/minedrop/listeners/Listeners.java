@@ -210,33 +210,33 @@ public class Listeners implements Listener {
 			Main.getPlugin().updateScore(player, 2);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §alanded in the water and earned §b§l1 Bonus Points.");
-			player.sendMessage(Main.getPlugin().prefix + "§b§l+6 §6Points");
+			onepointeight.sendActionBarText(player, Main.getPlugin().prefix + "§b§l+6 §6points!");
 			StatisticsManager.getInstance().points.put(player.getName(), (StatisticsManager.getInstance().points.get(player.getName()) + 6));
 			break;
 		case 2:
 			Main.getPlugin().updateScore(player, 3);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §alanded in the water and earned §b§l2 Bonus Points.");
-			player.sendMessage(Main.getPlugin().prefix + "§b§l+7 §6Points");
+			onepointeight.sendActionBarText(player, Main.getPlugin().prefix + "§b§l+7 §6points!");
 			StatisticsManager.getInstance().points.put(player.getName(), (StatisticsManager.getInstance().points.get(player.getName()) + 7));
 			break;
 		case 3:
 			Main.getPlugin().updateScore(player, 4);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §alanded in the water and earned §b§l3 Bonus Points.");
-			player.sendMessage(Main.getPlugin().prefix + "§b§l+8 §6Points");
+			onepointeight.sendActionBarText(player, Main.getPlugin().prefix + "§b§l+8 §6points!");
 			StatisticsManager.getInstance().points.put(player.getName(), (StatisticsManager.getInstance().points.get(player.getName()) + 8));
 			break;
 		case 4:
 			Main.getPlugin().updateScore(player, 5);
 			Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 					+ player.getName() + " §alanded in the water and earned §b§l4 Bonus Points.");
-			player.sendMessage(Main.getPlugin().prefix + "§b§l+9 §6Points");
+			onepointeight.sendActionBarText(player, Main.getPlugin().prefix + "§b§l+9 §6points!");
 			StatisticsManager.getInstance().points.put(player.getName(), (StatisticsManager.getInstance().points.get(player.getName()) + 9));
 			break;
 		default:
 			dropapi.pickSuccessMessage();
-			player.sendMessage(Main.getPlugin().prefix + "§b§l+5 §6Points");
+			onepointeight.sendActionBarText(player, Main.getPlugin().prefix + "§b§l+5 §6points!");
 			Main.getPlugin().increaseScore(player);
 			StatisticsManager.getInstance().points.put(player.getName(), (StatisticsManager.getInstance().points.get(player.getName()) + 5));
 			break;

@@ -76,11 +76,12 @@ public class LobbyTimer implements Runnable {
 				VoteHandler.getInstance().pickMap();
 				Main.getPlugin().displayName = SettingsManager.getInstance().getData()
 						.getString(Main.getPlugin().mapName + ".displayName");
-				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b" + displayName
-						+ " §ahas won!");
+				
 				Main.getPlugin().setType(
 						GameType.valueOf(VoteHandler.getInstance().mapGametype.get(Main.getPlugin().mapName)));
 				Bukkit.getScheduler().callSyncMethod(Main.getPlugin(), new LoadWorldInRunnable());
+				Bukkit.broadcastMessage(Main.getPlugin().prefix + "§eVoting has ended! §aThe map §b" + displayName
+						+ " §ahas won!");
 				DropAPI.getInstance().broadcastMapData();
 			}
 			break;

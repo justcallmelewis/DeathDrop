@@ -259,8 +259,6 @@ public class DropAPI {
 				if (!eliminated.contains(all.getName())) {
 					notHadTurn.add(all.getName());
 					StatisticsManager.getInstance().points.put(all.getName(), (StatisticsManager.getInstance().points.get(all.getName()) + 1));
-					all.sendMessage("§e[SurvivalMC] §aYou earned §b1 §apoints! You now have §b"
-							+ (StatisticsManager.getInstance().getPoints(all) + 1) + " §apoints.");
 				}
 			}
 		} else {
