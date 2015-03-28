@@ -304,14 +304,15 @@ public class Listeners implements Listener {
 		Player player = event.getPlayer();
 		if (Main.getPlugin().getState() == GameState.LOBBY) {
 			event.setFormat("§e" + StatisticsManager.getInstance().chatPoints.get(player.getName()) + " §8\u2759 "
+					+ statistics.getChatRank(player) + " "
 					+ Main.getPlugin().board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY
 					+ " » " + ChatColor.WHITE + "%s");
 		} else {
 			if (!dropapi.eliminated.contains(player.getName())) {
-				event.setFormat(board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY + " » "
+				event.setFormat(statistics.getChatRank(player) + " " + board.getPlayerTeam(player).getPrefix() + "%s" + ChatColor.DARK_GRAY + " » "
 						+ ChatColor.WHITE + "%s");
 			} else {
-				event.setFormat("§c[Eliminated] " + board.getPlayerTeam(player).getPrefix() + "%s"
+				event.setFormat("§cEliminated §8\u2759 " + statistics.getChatRank(player) + " " + board.getPlayerTeam(player).getPrefix() + "%s"
 						+ ChatColor.DARK_GRAY + " » " + ChatColor.WHITE + "%s");
 			}
 		}

@@ -204,6 +204,25 @@ public class StatisticsManager {
 		}
 	}
 
+	public String getChatRank(Player player) {
+		int points = chatPoints.get(player.getName());
+		if(points >= 0 && points <= 1000) {
+			return "§6Dropper";
+		} else if(points >= 1001 && points <= 10000) {
+			return "§5Amateur";
+		} else if(points >= 10001 && points <= 25000) {
+			return "§eClumsy";
+		} else if(points >= 25001 && points <= 50000) {
+			return "§dPattern Creator";
+		} else if(points >= 50001 && points <= 100000) {
+			return "§cSemi-Pro";
+		} else if(points >= 100001 && points <= 250000) {
+			return "§bNoscoper";
+		} else {
+			return "§aHacker";
+		}
+	}
+	
 	public void syncPointsToDatabase() {
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			int points = this.points.get(all.getName());
