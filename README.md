@@ -7,9 +7,4 @@ For more information on our server visit our website at http://www.survivalmc.eu
 
 TO-DO LIST:
 ===========
-  - [X] Properly get EndGame working
-  - [X] AFK timer
-  - [X] New gametypes
-  - [X] Set gametype random to map
-  - [ ] Achievements
-  - [X] Statistics (70% Done)
+  - [X] Achievements (70% Done)

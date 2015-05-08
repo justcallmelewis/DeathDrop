@@ -25,11 +25,11 @@ public class AchievementMenu {
 			ItemStack item;
 			ArrayList<String> lore = new ArrayList<>();
 			if (PlayerManager.getInstance().hasAchievement(player, Achievement.FIRSTJOIN)) {
-				item = new ItemStack(Material.INK_SACK, 1, (short) 10);
+				item = new ItemStack(Material.WOOL, 1, (short) 5);
 				lore.add("§6Description: §b" + AchievementAPI.getInstance().getDescription(Achievement.FIRSTJOIN));
 				lore.add("§6Status: §aCompleted!");
 			} else {
-				item = new ItemStack(Material.INK_SACK, 1, (short) 8);
+				item = new ItemStack(Material.WOOL, 1, (short) 8);
 				lore.add("§6Description: §b" + AchievementAPI.getInstance().getDescription(Achievement.FIRSTJOIN));
 				lore.add("§6Status: §cUncompleted!");
 			}
@@ -43,12 +43,12 @@ public class AchievementMenu {
 			ItemStack item;
 			ArrayList<String> lore = new ArrayList<>();
 			if (PlayerManager.getInstance().hasAchievement(player, Achievement.FIRST_LAND_FAIL)) {
-				item = new ItemStack(Material.INK_SACK, 1, (short) 10);
+				item = new ItemStack(Material.WOOL, 1, (short) 5);
 				lore.add("§6Description: §b"
 						+ AchievementAPI.getInstance().getDescription(Achievement.FIRST_LAND_FAIL));
 				lore.add("§6Status: §aCompleted!");
 			} else {
-				item = new ItemStack(Material.INK_SACK, 1, (short) 8);
+				item = new ItemStack(Material.WOOL, 1, (short) 8);
 				lore.add("§6Description: §b"
 						+ AchievementAPI.getInstance().getDescription(Achievement.FIRST_LAND_FAIL));
 				lore.add("§6Status: §cUncompleted!");
@@ -64,12 +64,12 @@ public class AchievementMenu {
 			ItemStack item;
 			ArrayList<String> lore = new ArrayList<>();
 			if (PlayerManager.getInstance().hasAchievement(player, Achievement.FIRST_LAND_SUCCESS)) {
-				item = new ItemStack(Material.INK_SACK, 1, (short) 10);
+				item = new ItemStack(Material.INK_SACK, 1, (short) 5);
 				lore.add("§6Description: §b"
 						+ AchievementAPI.getInstance().getDescription(Achievement.FIRST_LAND_SUCCESS));
 				lore.add("§6Status: §aCompleted!");
 			} else {
-				item = new ItemStack(Material.INK_SACK, 1, (short) 8);
+				item = new ItemStack(Material.WOOL, 1, (short) 8);
 				lore.add("§6Description: §b"
 						+ AchievementAPI.getInstance().getDescription(Achievement.FIRST_LAND_SUCCESS));
 				lore.add("§6Status: §cUncompleted!");
@@ -85,11 +85,11 @@ public class AchievementMenu {
 			ItemStack item;
 			ArrayList<String> lore = new ArrayList<>();
 			if (PlayerManager.getInstance().hasAchievement(player, Achievement.PICKBLOCK)) {
-				item = new ItemStack(Material.INK_SACK, 1, (short) 10);
+				item = new ItemStack(Material.WOOL, 1, (short) 5);
 				lore.add("§6Description: §b" + AchievementAPI.getInstance().getDescription(Achievement.PICKBLOCK));
 				lore.add("§6Status: §aCompleted!");
 			} else {
-				item = new ItemStack(Material.INK_SACK, 1, (short) 8);
+				item = new ItemStack(Material.WOOL, 1, (short) 8);
 				lore.add("§6Description: §b" + AchievementAPI.getInstance().getDescription(Achievement.PICKBLOCK));
 				lore.add("§6Status: §cUncompleted!");
 			}
@@ -103,11 +103,11 @@ public class AchievementMenu {
 			ItemStack item;
 			ArrayList<String> lore = new ArrayList<>();
 			if (PlayerManager.getInstance().hasAchievement(player, Achievement.GOODGAME)) {
-				item = new ItemStack(Material.INK_SACK, 1, (short) 10);
+				item = new ItemStack(Material.WOOL, 1, (short) 5);
 				lore.add("§6Description: §b" + AchievementAPI.getInstance().getDescription(Achievement.GOODGAME));
 				lore.add("§6Status: §aCompleted!");
 			} else {
-				item = new ItemStack(Material.INK_SACK, 1, (short) 8);
+				item = new ItemStack(Material.WOOL, 1, (short) 8);
 				lore.add("§6Description: §b" + AchievementAPI.getInstance().getDescription(Achievement.GOODGAME));
 				lore.add("§6Status: §cUncompleted!");
 			}
@@ -121,11 +121,11 @@ public class AchievementMenu {
 			ItemStack item;
 			ArrayList<String> lore = new ArrayList<>();
 			if (PlayerManager.getInstance().hasAchievement(player, Achievement.COMPLETED)) {
-				item = new ItemStack(Material.INK_SACK, 1, (short) 10);
+				item = new ItemStack(Material.WOOL, 1, (short) 5);
 				lore.add("§6Description: §b" + AchievementAPI.getInstance().getDescription(Achievement.COMPLETED));
 				lore.add("§6Status: §aCompleted!");
 			} else {
-				item = new ItemStack(Material.INK_SACK, 1, (short) 8);
+				item = new ItemStack(Material.WOOL, 1, (short) 8);
 				lore.add("§6Description: §b" + AchievementAPI.getInstance().getDescription(Achievement.COMPLETED));
 				lore.add("§6Status: §cUncompleted!");
 			}
