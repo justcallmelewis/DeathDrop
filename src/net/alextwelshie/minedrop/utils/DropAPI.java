@@ -70,8 +70,6 @@ public class DropAPI {
 	public void setupPlayer(Player player) {
 		notHadTurn.remove(player.getName());
 		Main.getPlugin().whosDropping = player.getName();
-		Bukkit.broadcastMessage(Main.getPlugin().prefix + "§aPlayer " + board.getPlayerTeam(player).getPrefix()
-				+ player.getName() + "§a, you're up!");
 		teleportToDropZone(player);
 		timerTask = Bukkit.getScheduler().scheduleAsyncRepeatingTask(Main.getPlugin(), new Runnable() {
 			@Override

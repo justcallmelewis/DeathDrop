@@ -1,4 +1,4 @@
-package net.alextwelshie.minedrop.ranks;
+package net.alextwelshie.minedrop;
 
 
 

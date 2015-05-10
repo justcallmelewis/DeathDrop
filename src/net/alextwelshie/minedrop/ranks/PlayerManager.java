@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import net.alextwelshie.minedrop.HikariGFXDPool;
 import net.alextwelshie.minedrop.Main;
 import net.alextwelshie.minedrop.achievements.Achievement;
 import net.alextwelshie.minedrop.utils.DropAPI;

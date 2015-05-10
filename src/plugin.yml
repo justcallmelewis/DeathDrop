@@ -1,7 +1,7 @@
 name: MineDrop
 main: net.alextwelshie.minedrop.Main
-version: 1.5
-authors: [HowlingAbyss, AlexTWelshie, MylesLovesMemes]
+version: 1.6
+authors: [JustCallMeLewis, AlexTWelshie]
 commands:
   forcestart:
     description: Force start a game

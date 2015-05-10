@@ -7,10 +7,7 @@ import net.alextwelshie.minedrop.SettingsManager;
 import net.alextwelshie.minedrop.runnables.LoadWorldInRunnable;
 import net.alextwelshie.minedrop.runnables.TeleportInRunnable;
 import net.alextwelshie.minedrop.statistics.StatisticsManager;
-import net.alextwelshie.minedrop.utils.DropAPI;
-import net.alextwelshie.minedrop.utils.GameState;
-import net.alextwelshie.minedrop.utils.GameType;
-import net.alextwelshie.minedrop.utils.OnePointEight;
+import net.alextwelshie.minedrop.utils.*;
 import net.alextwelshie.minedrop.voting.VoteHandler;
 
 import org.bukkit.Bukkit;
@@ -26,7 +23,11 @@ public class LobbyTimer implements Runnable {
 
 	Scoreboard			board		= Bukkit.getScoreboardManager().getMainScoreboard();
 
-	@SuppressWarnings({ "unchecked", "deprecation", "incomplete-switch" })
+	OnePointEight onepointeight = OnePointEight.getInstance();
+	StatisticsManager statistics = StatisticsManager.getInstance();
+	GameTypeHelp gametypehelp = GameTypeHelp.getInstance();
+
+	@SuppressWarnings({ "unchecked", "deprecation"})
 	@Override
 	public void run() {
 		lobbyTimer--;
@@ -62,7 +63,7 @@ public class LobbyTimer implements Runnable {
 		case 20:
 			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().neededToStart) {
 				for (Player all : Bukkit.getOnlinePlayers()) {
-					OnePointEight.getInstance().sendTitleAndSubtitle(all, "§bChoose your block!",
+					onepointeight.sendTitleAndSubtitle(all, "§bChoose your block!",
 							"§620 seconds remaining..", 15, 80, 15);
 				}
 			}
@@ -86,39 +87,7 @@ public class LobbyTimer implements Runnable {
 			}
 			break;
 		case 5:
-			if (Bukkit.getOnlinePlayers().size() >= Main.getPlugin().config.getInt("neededToStart")
-					&& Main.getPlugin().getState() == GameState.LOBBY) {
-				switch (Main.getPlugin().getType()) {
-				case Normal:
-					Bukkit.broadcastMessage("");
-					Bukkit.broadcastMessage("§b—————————[ §a§lHow To Play §b]—————————");
-					Bukkit.broadcastMessage("§6— You goal is to land in the water.");
-					Bukkit.broadcastMessage("§6— Hitting a block has no penalty");
-					Bukkit.broadcastMessage("§6— The person with the most points wins.");
-					Bukkit.broadcastMessage("§b——————————————————————————————-————————");
-					Bukkit.broadcastMessage("");
-					break;
-				case Elimination:
-					Bukkit.broadcastMessage("");
-					Bukkit.broadcastMessage("§b—————————[ §a§lHow To Play §b]—————————");
-					Bukkit.broadcastMessage("§6— You goal is to land in the water.");
-					Bukkit.broadcastMessage("§6— If you hit a block, you are out.");
-					Bukkit.broadcastMessage("§6— The last person remaining wins.");
-					Bukkit.broadcastMessage("§b——————————————————————————————-————————");
-					Bukkit.broadcastMessage("");
-					break;
-				case Enhanced:
-					Bukkit.broadcastMessage("");
-					Bukkit.broadcastMessage("§b—————————[ §a§lHow To Play §b]—————————");
-					Bukkit.broadcastMessage("§6— You goal is to land in the water.");
-					Bukkit.broadcastMessage("§6— Jumping by blocks or in between gives you bonus points.");
-					Bukkit.broadcastMessage("§6— Hitting a block has no penalty");
-					Bukkit.broadcastMessage("§6— The person with the most points wins.");
-					Bukkit.broadcastMessage("§b——————————————————————————————-————————");
-					Bukkit.broadcastMessage("");
-					break;
-				}
-			}
+			gametypehelp.getHelp(Main.getPlugin().getType());
 			break;
 		case 0:
 			DropAPI dropapi = DropAPI.getInstance();
@@ -130,12 +99,11 @@ public class LobbyTimer implements Runnable {
 
 				board.getObjective("scoreboard").setDisplayName("§6#1 §7" + Main.getPlugin().displayName);
 
-				OnePointEight onepointeight = OnePointEight.getInstance();
 				for (Player all : Bukkit.getOnlinePlayers()) {
-					StatisticsManager.getInstance().addGamePlayed(all);
-					StatisticsManager.getInstance().points.put(all.getName(), 0);
-					StatisticsManager.getInstance().failedDrops.put(all.getName(), 0);
-					StatisticsManager.getInstance().successDrops.put(all.getName(), 0);
+					statistics.addGamePlayed(all);
+					statistics.points.put(all.getName(), 0);
+					statistics.failedDrops.put(all.getName(), 0);
+					statistics.successDrops.put(all.getName(), 0);
 					onepointeight.sendTitle(all, "§aHere.. §bwe.. §cgo!");
 					all.getInventory().clear();
 					if (!Main.getPlugin().blocks.containsKey(all.getName())

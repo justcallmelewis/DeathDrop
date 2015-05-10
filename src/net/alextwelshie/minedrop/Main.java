@@ -4,13 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import net.alextwelshie.minedrop.commands.EndGame;
-import net.alextwelshie.minedrop.commands.ForceStart;
-import net.alextwelshie.minedrop.commands.ForceVote;
-import net.alextwelshie.minedrop.commands.SetConfig;
-import net.alextwelshie.minedrop.commands.SetSpawn;
-import net.alextwelshie.minedrop.commands.ShortStart;
-import net.alextwelshie.minedrop.commands.Vote;
+import net.alextwelshie.minedrop.commands.*;
 import net.alextwelshie.minedrop.listeners.Listeners;
 import net.alextwelshie.minedrop.ranks.PlayerManager;
 import net.alextwelshie.minedrop.timers.LobbyTimer;

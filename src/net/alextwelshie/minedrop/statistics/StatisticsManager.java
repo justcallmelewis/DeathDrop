@@ -7,11 +7,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 
-import net.alextwelshie.minedrop.ranks.HikariGFXDPool;
+import net.alextwelshie.minedrop.HikariGFXDPool;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import javax.xml.transform.Result;
 
 public class StatisticsManager {
 
