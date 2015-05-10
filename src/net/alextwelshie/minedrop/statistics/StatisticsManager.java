@@ -3,12 +3,15 @@ package net.alextwelshie.minedrop.statistics;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 
-import net.alextwelshie.minedrop.ranks.ConnectionPoolManager;
 
+import net.alextwelshie.minedrop.ranks.HikariGFXDPool;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import javax.xml.transform.Result;
 
 public class StatisticsManager {
 
@@ -18,189 +21,394 @@ public class StatisticsManager {
 		return instance;
 	}
 
-	ConnectionPoolManager	cpm			= new ConnectionPoolManager();
-	Connection				connection	= cpm.getConnectionFromPool();
+	HikariGFXDPool hikari = HikariGFXDPool.getInstance();
 	
 	public HashMap<String, Integer>	successDrops = new HashMap<>();
 	public HashMap<String, Integer>	failedDrops = new HashMap<>();
 	public HashMap<String, Integer>	chatPoints = new HashMap<>();
 	public HashMap<String, Integer>	points = new HashMap<>();
 	
-	public int getPoints(Player p) {
+	public int getPoints(Player player) {
+		Connection connection = null;
+
+		String select = "SELECT points FROM minedrop WHERE uuid=?;";
+		PreparedStatement p = null;
+		ResultSet r = null;
 		int points = 0;
+
 		try {
-			PreparedStatement statement = connection
-					.prepareStatement("SELECT points FROM `minedrop` WHERE uuid=?;");
-			statement.setString(1, p.getUniqueId().toString().replace("-", ""));
-			ResultSet result = statement.executeQuery();
-			result.next();
+			connection = hikari.getConnection();
+			p = connection.prepareStatement(select);
+			p.setString(1, player.getUniqueId().toString().replace("-", ""));
+			r = p.executeQuery();
+			r.next();
 
-			points = result.getInt("points");
+			points = r.getInt("points");
 
-			statement.close();
-			result.close();
-
-			cpm.returnConnectionToPool(connection);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(p != null){
+				try {
+					p.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(r != null){
+				try {
+					r.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return points;
 	}
 
-	public int getSuccessfulDrops(Player p) {
+	public int getSuccessfulDrops(Player player) {
+		Connection connection = null;
+
+		String select = "SELECT successfulDrops FROM minedrop WHERE uuid=?;";
+		PreparedStatement p = null;
+		ResultSet r = null;
 		int drops = 0;
+
 		try {
-			PreparedStatement statement = connection.prepareStatement("SELECT successfulDrops FROM `minedrop` WHERE uuid=?;");
-			statement.setString(1, p.getUniqueId().toString().replace("-", ""));
-			ResultSet result = statement.executeQuery();
-			result.next();
+			connection = hikari.getConnection();
+			p = connection.prepareStatement(select);
+			p.setString(1, player.getUniqueId().toString().replace("-", ""));
+			r = p.executeQuery();
+			r.next();
 
-			drops = result.getInt("successfulDrops");
+			drops = r.getInt("successfulDrops");
 
-			statement.close();
-			result.close();
-
-			cpm.returnConnectionToPool(connection);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(p != null){
+				try {
+					p.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(r != null){
+				try {
+					r.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return drops;
 	}
 
-	public int getFailedDrops(Player p) {
-	int drops = 0;
-	try {
-		PreparedStatement statement = connection.prepareStatement("SELECT failedDrops FROM `minedrop` WHERE uuid=?;");
-		statement.setString(1, p.getUniqueId().toString().replace("-", ""));
-		ResultSet result = statement.executeQuery();
-		result.next();
+	public int getFailedDrops(Player player) {
+		Connection connection = null;
 
-		drops = result.getInt("failedDrops");
+		String select = "SELECT failedDrops FROM minedrop WHERE uuid=?;";
+		PreparedStatement p = null;
+		ResultSet r = null;
+		int drops = 0;
 
-		statement.close();
-		result.close();
-
-		cpm.returnConnectionToPool(connection);
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
-	return drops;
-	}
-
-	public int getVictories(Player p) {
-		int victories = 0;
 		try {
-			PreparedStatement statement = connection
-					.prepareStatement("SELECT victories FROM `minedrop` WHERE uuid=?;");
-			statement.setString(1, p.getUniqueId().toString().replace("-", ""));
-			ResultSet result = statement.executeQuery();
-			result.next();
+			connection = hikari.getConnection();
+			p = connection.prepareStatement(select);
+			p.setString(1, player.getUniqueId().toString().replace("-", ""));
+			r = p.executeQuery();
+			r.next();
 
-			victories = result.getInt("victories");
-			
-			statement.close();
-			result.close();
+			drops = r.getInt("failedDrops");
 
-			cpm.returnConnectionToPool(connection);
+		} catch (Exception e) {
+		e.printStackTrace();
+		} finally {
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(p != null){
+				try {
+					p.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(r != null){
+				try {
+					r.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return drops;
+	}
+
+	public int getVictories(Player player) {
+		Connection connection = null;
+
+		String select = "SELECT victories FROM minedrop WHERE uuid=?;";
+		PreparedStatement p = null;
+		ResultSet r = null;
+		int victories = 0;
+
+		try {
+			connection = hikari.getConnection();
+			p = connection.prepareStatement(select);
+			p.setString(1, player.getUniqueId().toString().replace("-", ""));
+			r = p.executeQuery();
+			r.next();
+
+			victories = r.getInt("victories");
+
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(p != null){
+				try {
+					p.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(r != null){
+				try {
+					r.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return victories;
 	}
 
-	public int getGamesPlayed(Player p) {
+	public int getGamesPlayed(Player player) {
+		Connection connection = null;
+		String select = "SELECT gamesPlayed FROM minedrop WHERE uuid=?;";
+		PreparedStatement p = null;
+		ResultSet r = null;
 		int games = 0;
+
 		try {
-			PreparedStatement statement = connection
-					.prepareStatement("SELECT gamesPlayed FROM `minedrop` WHERE uuid=?;");
-			statement.setString(1, p.getUniqueId().toString().replace("-", ""));
-			ResultSet result = statement.executeQuery();
-			result.next();
+			connection = hikari.getConnection();
+			p = connection.prepareStatement(select);
+			p.setString(1, player.getUniqueId().toString().replace("-", ""));
+			r = p.executeQuery();
+			r.next();
 
-			games = result.getInt("gamesPlayed");
+			games = r.getInt("gamesPlayed");
 
-			statement.close();
-			result.close();
-
-			cpm.returnConnectionToPool(connection);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(p != null){
+				try {
+					p.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(r != null){
+				try {
+					r.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return games;
 	}
 
-	public void addPoints(Player p, int points) {
-		try {
-			PreparedStatement achievement = connection
-					.prepareStatement("UPDATE `minedrop` SET points=? WHERE uuid=?;");
-			achievement.setInt(1, getPoints(p) + points);
-			achievement.setString(2, p.getUniqueId().toString().replace("-", ""));
-			achievement.execute();
-			achievement.close();
+	public void addPoints(Player player, int points) {
+		Connection connection = null;
+		String update = "UPDATE minedrop SET points=? WHERE uuid=?;";
+		PreparedStatement p = null;
 
-			cpm.returnConnectionToPool(connection);
+		try {
+			connection = hikari.getConnection();
+			p = connection.prepareStatement(update);
+			p.setInt(1, getPoints(player) + points);
+			p.setString(2, player.getUniqueId().toString().replace("-", ""));
+			p.execute();
+
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(p != null){
+				try {
+					p.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
-	public void addVictory(Player p) {
-		try {
-			PreparedStatement achievement = connection
-					.prepareStatement("UPDATE `minedrop` SET victories=? WHERE uuid=?;");
-			achievement.setInt(1, getVictories(p) + 1);
-			achievement.setString(2, p.getUniqueId().toString().replace("-", ""));
-			achievement.execute();
-			achievement.close();
+	public void addVictory(Player player) {
+		Connection connection = null;
+		String update = "UPDATE minedrop SET victories=? WHERE uuid=?;";
+		PreparedStatement p = null;
 
-			cpm.returnConnectionToPool(connection);
+		try {
+			connection = hikari.getConnection();
+			p = connection.prepareStatement(update);
+			p.setInt(1, getVictories(player) + 1);
+			p.setString(2, player.getUniqueId().toString().replace("-", ""));
+			p.execute();
+
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(p != null){
+				try {
+					p.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
-	public void addSuccessfulDrops(Player p, int amount) {
-		try {
-			PreparedStatement achievement = connection
-					.prepareStatement("UPDATE `minedrop` SET successfulDrops=? WHERE uuid=?;");
-			achievement.setInt(1, amount);
-			achievement.setString(2, p.getUniqueId().toString().replace("-", ""));
-			achievement.execute();
-			achievement.close();
+	public void addSuccessfulDrops(Player player, int amount) {
+		Connection connection = null;
+		String update = "UPDATE minedrop SET successfulDrops=? WHERE uuid=?;";
+		PreparedStatement p = null;
 
-			cpm.returnConnectionToPool(connection);
+		try {
+			connection = hikari.getConnection();
+			p = connection.prepareStatement(update);
+			p.setInt(1, getSuccessfulDrops(player) + amount);
+			p.setString(2, player.getUniqueId().toString().replace("-", ""));
+			p.execute();
+
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(p != null){
+				try {
+					p.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
-	public void addFailedDrops(Player p, int amount) {
-		try {
-			PreparedStatement achievement = connection
-					.prepareStatement("UPDATE `minedrop` SET failedDrops=? WHERE uuid=?;");
-			achievement.setInt(1, amount);
-			achievement.setString(2, p.getUniqueId().toString().replace("-", ""));
-			achievement.execute();
-			achievement.close();
+	public void addFailedDrops(Player player, int amount) {
+		Connection connection = null;
+		String update = "UPDATE minedrop SET failedDrops=? WHERE uuid=?;";
+		PreparedStatement p = null;
 
-			cpm.returnConnectionToPool(connection);
+		try {
+			connection = hikari.getConnection();
+			p = connection.prepareStatement(update);
+			p.setInt(1, getFailedDrops(player) + amount);
+			p.setString(2, player.getUniqueId().toString().replace("-", ""));
+			p.execute();
+
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(p != null){
+				try {
+					p.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
-	public void addGamePlayed(Player p) {
-		try {
-			PreparedStatement achievement = connection
-					.prepareStatement("UPDATE `minedrop` SET gamesPlayed=? WHERE uuid=?;");
-			achievement.setInt(1, getGamesPlayed(p) + 1);
-			achievement.setString(2, p.getUniqueId().toString().replace("-", ""));
-			achievement.execute();
-			achievement.close();
+	public void addGamePlayed(Player player) {
+		Connection connection = null;
+		String update = "UPDATE minedrop SET gamesPlayed=? WHERE uuid=?;";
+		PreparedStatement p = null;
 
-			cpm.returnConnectionToPool(connection);
+		try {
+			connection = hikari.getConnection();
+			p = connection.prepareStatement(update);
+			p.setInt(1, getGamesPlayed(player) + 1);
+			p.setString(2, player.getUniqueId().toString().replace("-", ""));
+			p.execute();
+
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(p != null){
+				try {
+					p.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 

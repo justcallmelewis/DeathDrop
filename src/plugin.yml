@@ -1,0 +1,25 @@
+name: MineDrop
+main: net.alextwelshie.minedrop.Main
+version: 1.5
+authors: [HowlingAbyss, AlexTWelshie, MylesLovesMemes]
+commands:
+  forcestart:
+    description: Force start a game
+    aliases: fs
+  endgame:
+    description: End the game instantly
+    aliases: eg
+  shortstart:
+    description:
+    aliases: ss
+  setconfig:
+    description: Set configuration values.
+    aliases: sc
+  setspawn:
+    description: set spawn points for map
+  vote:
+    description: Voting command
+    aliases: v
+  forcevote:
+    description: Boobs and things.
+    aliases: fv

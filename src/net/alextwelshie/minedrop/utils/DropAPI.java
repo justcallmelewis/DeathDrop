@@ -36,7 +36,7 @@ public class DropAPI {
 	public ArrayList<String>		notHadTurn		= new ArrayList<>();
 
 	private static final DropAPI	instance		= new DropAPI();
-	public int						timer			= 16;
+	public int						timer			= 21;
 	public int						timerTask;
 
 	public static DropAPI getInstance() {
@@ -52,7 +52,11 @@ public class DropAPI {
 		double jumpY = SettingsManager.getInstance().getData().getDouble(Main.getPlugin().mapName + ".jump.y");
 		timer--;
 		if (player.getLocation().getY() > jumpY - 1) {
-			if (timer == 5) {
+			if (timer == 10) {
+				player.playSound(player.getLocation(), Sound.NOTE_PLING, 5, 1);
+				player.sendMessage(Main.getPlugin().prefix + "§cAre you jumping?");
+				player.sendMessage(Main.getPlugin().prefix + "§cIf not, please use /hub.");
+			} else if (timer == 5) {
 				player.playSound(player.getLocation(), Sound.NOTE_PLING, 5, 1);
 				player.sendMessage(Main.getPlugin().prefix + "§c§lAre you jumping?");
 				player.sendMessage(Main.getPlugin().prefix + "§c§lIf not, please use /hub.");

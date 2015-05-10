@@ -48,7 +48,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -63,8 +62,6 @@ import com.google.common.io.ByteStreams;
 public class Listeners implements Listener {
 
 	Scoreboard			board			= Bukkit.getScoreboardManager().getMainScoreboard();
-
-	int					message			= 0;
 
 	OnePointEight		onepointeight	= OnePointEight.getInstance();
 	SettingsManager		settings		= SettingsManager.getInstance();
@@ -111,14 +108,12 @@ public class Listeners implements Listener {
 		} else if (Main.getPlugin().whosDropping.equalsIgnoreCase(player.getName())) {
 			if (loc.getY() < settings.getData().getDouble(Main.getPlugin().mapName + ".jump.y")) {
 				Bukkit.getScheduler().cancelTask(dropapi.timerTask);
-				dropapi.timer = 16;
+				dropapi.timer = 21;
 			}
 
 			if (block.getType() == Material.STATIONARY_WATER) {
 				Material type = Main.getPlugin().blocks.get(player.getName());
 				byte data = Main.getPlugin().blockData.get(player.getName());
-
-				onepointeight.sendActionBarText(player, "§aYou successfully landed in the water!");
 
 				if (Main.getPlugin().getType() == GameType.Enhanced) {
 					countBlocks(player, loc);
@@ -126,7 +121,7 @@ public class Listeners implements Listener {
 					Main.getPlugin().increaseScore(player);
 					Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 							+ player.getName() + "§a" + dropapi.pickSuccessMessage());
-					player.sendMessage(Main.getPlugin().prefix + "§b§l+5 §6Points");
+					onepointeight.sendActionBarText(player, "§b§l+5 §6Points");
 				}
 				player.playSound(loc, Sound.LEVEL_UP, 5, 1);
 
@@ -156,11 +151,6 @@ public class Listeners implements Listener {
 							player.setFireTicks(0);
 						}
 
-						for (Player all : Bukkit.getOnlinePlayers()) {
-							onepointeight.sendTitle(all, "§4Fail!", 5, 20, 5);
-						}
-
-						onepointeight.sendActionBarText(player, "§cYou failed to land in the water.");
 						dropapi.launchFirework("fail", loc);
 						Bukkit.broadcastMessage(Main.getPlugin().prefix + board.getPlayerTeam(player).getPrefix()
 								+ player.getName() + "§c" + dropapi.pickFailMessage());
@@ -170,7 +160,7 @@ public class Listeners implements Listener {
 						}
 						player.playSound(loc, Sound.HORSE_DEATH, 5, 1);
 						Bukkit.getScheduler().cancelTask(dropapi.timerTask);
-						dropapi.timer = 0;
+						dropapi.timer = 21;
 						dropapi.finishDrop(player);
 						//api.grantAchievement(player, Achievement.FIRST_LAND_FAIL);
 						statistics.failedDrops.put(player.getName(), statistics.failedDrops.get(player.getName()) + 1);
@@ -281,24 +271,7 @@ public class Listeners implements Listener {
 			}
 		}
 	}
-
-	@EventHandler
-	public void onPing(ServerListPingEvent event) {
-		if (Main.getPlugin().getState() == GameState.LOBBY) {
-			event.setMotd("Voting" 
-						+ "\n" 
-						+ "§d§lLobby");
-		} else if (Main.getPlugin().getState() == GameState.INGAME) {
-			event.setMotd(settings.getData().getString(Main.getPlugin().mapName + ".displayName") 
-					+ "\n"
-					+ "§8In-Game");
-		} else {
-			event.setMotd(settings.getData().getString(Main.getPlugin().mapName + ".displayName") 
-					+ "\n"
-					+ "§4Restarting");
-		}
-	}
-
+	
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();

@@ -3,6 +3,7 @@ package net.alextwelshie.minedrop.ranks;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import net.alextwelshie.minedrop.Main;
 import net.alextwelshie.minedrop.achievements.Achievement;
@@ -19,25 +20,57 @@ public class PlayerManager {
 		return instance;
 	}
 
-	ConnectionPoolManager	cpm			= new ConnectionPoolManager();
-	Connection				connection	= cpm.getConnectionFromPool();
+	HikariGFXDPool hikari = HikariGFXDPool.getInstance();
 
-	public String getRank(Player p) {
+	public String getRank(Player player)
+	{
+		Connection connection = null;
+
+		String select = "SELECT rank FROM players WHERE uuid=?;";
+
+		PreparedStatement p = null;
+		ResultSet r = null;
 		String rank = null;
-		try {
-			PreparedStatement getRank = connection.prepareStatement("SELECT rank FROM `players` WHERE uuid=?;");
-			getRank.setString(1, p.getUniqueId().toString().replace("-", ""));
-			ResultSet result = getRank.executeQuery();
-			result.next();
 
-			rank = result.getString("rank");
+		try
+		{
+			connection = hikari.getConnection();
 
-			getRank.close();
-			result.close();
+			p = connection.prepareStatement(select);
+			p.setString(1, player.getUniqueId().toString().replace("-", ""));
+			r = p.executeQuery();
+			r.next();
 
-			cpm.returnConnectionToPool(connection);
-		} catch (Exception e) {
+			rank = r.getString("rank");
+
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
+		} finally {
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if(p != null){
+				try {
+					p.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if(r != null){
+				try {
+					r.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return rank;
 	}
@@ -52,65 +85,133 @@ public class PlayerManager {
 
 	}
 
-	public boolean hasAchievement(Player p, Achievement a) {
-		boolean achievement = false;
-		try {
-			PreparedStatement hasAchievement = connection
-					.prepareStatement("SELECT internalname FROM `MineDrop_achievements` WHERE uuid=?;");
-			hasAchievement.setString(1, p.getUniqueId().toString().replace("-", ""));
-			ResultSet result = hasAchievement.executeQuery();
-			result.next();
+	public boolean hasAchievement(Player player, Achievement a) {
+		Connection connection = null;
 
-			String rank = result.getString("internalname");
+		String select = "SELECT internalname FROM MineDrop_achievements WHERE uuid=?;";
+
+		PreparedStatement p = null;
+		ResultSet r = null;
+		boolean achievement = false;
+
+		try {
+			connection = hikari.getConnection();
+			p = connection.prepareStatement(select);
+			p.setString(1, player.getUniqueId().toString().replace("-", ""));
+			r = p.executeQuery();
+			r.next();
+
+			String rank = r.getString("internalname");
 			if (rank.equalsIgnoreCase(a.name())) {
 				achievement = true;
 			}
 
-			hasAchievement.close();
-			result.close();
-
-			cpm.returnConnectionToPool(connection);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(p != null){
+				try {
+					p.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(r != null){
+				try {
+					r.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return achievement;
 	}
 
-	public int getAchievementEpoch(Player p, Achievement a) {
+	public int getAchievementEpoch(Player player, Achievement a) {
+		Connection connection = null;
+
+		String select = "SELECT timeachieved FROM MineDrop_achievements WHERE uuid=?;";
+
+		PreparedStatement p = null;
+		ResultSet r = null;
 		int epoch = 0;
 		try {
-			PreparedStatement getAchievementEpoch = connection
-					.prepareStatement("SELECT timeachieved FROM `MineDrop_achievements` WHERE uuid=?;");
-			getAchievementEpoch.setString(1, p.getUniqueId().toString().replace("-", ""));
-			ResultSet result = getAchievementEpoch.executeQuery();
-			result.next();
+			connection = hikari.getConnection();
+			p = connection.prepareStatement(select);
+			p.setString(1, player.getUniqueId().toString().replace("-", ""));
+			r = p.executeQuery();
+			r.next();
 
-			int time = result.getInt("timeachieved");
+			int time = r.getInt("timeachieved");
 			epoch = time;
 
-			getAchievementEpoch.close();
-			result.close();
-
-			cpm.returnConnectionToPool(connection);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(p != null){
+				try {
+					p.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(r != null){
+				try {
+					r.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return epoch;
 	}
 
-	public void grantAchievement(Player p, Achievement a) {
-		try {
-			PreparedStatement achievement = connection
-					.prepareStatement("INSERT INTO `MineDrop_achievements` values(?,?,?)");
-			achievement.setString(1, p.getUniqueId().toString().replace("-", ""));
-			achievement.setString(2, a.name());
-			achievement.setInt(3, ((int) System.currentTimeMillis() / 1000));
-			achievement.execute();
-			achievement.close();
+	public void grantAchievement(Player player, Achievement a) {
+		Connection connection = null;
 
-			cpm.returnConnectionToPool(connection);
+		String insert = "INSERT INTO MineDrop_achievements values(?,?,?)";
+
+		PreparedStatement p = null;
+
+		try {
+			connection = hikari.getConnection();
+			p = connection.prepareStatement(insert);
+			p.setString(1, player.getUniqueId().toString().replace("-", ""));
+			p.setString(2, a.name());
+			p.setInt(3, ((int) System.currentTimeMillis() / 1000));
+			p.execute();
+
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(p != null){
+				try {
+					p.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 }
